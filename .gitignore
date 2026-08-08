@@ -16,6 +16,11 @@ data/derived/
 data/uploads/
 data/poc/
 data/index/
+# Degerlendirme ara ciktilari: yayinlanmis korpus, FAISS indeksi, sorgu tamponu.
+# Sonuc ozetleri (data/eval/*.json) depoya girer; bunlar girmez.
+data/eval/published/
+data/eval/index/
+data/eval/sorgu.jpg
 
 # Gelistirme sertifikalari ve anahtarlar - asla surum kontrolune girmez.
 # Uretmek icin: python scripts/gen_dev_certs.py

@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "tarih": "08.08.2026 20:59",
+    "ortam": "cuda, indeks 200 içerik",
+    "tekrar": 5,
+    "indeks": 200
+  },
+  "adimlar": {
+    "yukleme_ozgun": {
+      "ortalama_ms": 665.9,
+      "min_ms": 577.7,
+      "max_ms": 718.9
+    },
+    "remix": {
+      "ortalama_ms": 568.7,
+      "min_ms": 417.1,
+      "max_ms": 862.9
+    },
+    "kurtarma_kimliksiz": {
+      "ortalama_ms": 475.5,
+      "min_ms": 412.8,
+      "max_ms": 587.1
+    },
+    "emek_karti": {
+      "ortalama_ms": 6.2,
+      "min_ms": 2.0,
+      "max_ms": 10.2
+    },
+    "kampanya_dagitimi": {
+      "ortalama_ms": 30.8,
+      "min_ms": 17.1,
+      "max_ms": 52.1
+    },
+    "itiraz_cozumu": {
+      "ortalama_ms": 79.2,
+      "min_ms": 74.5,
+      "max_ms": 84.1
+    }
+  }
+}

@@ -129,8 +129,22 @@ ATTACKS: dict[str, Attack] = {
     "kirpma+yazi": _crop_and_text,
 }
 
-# Bu senaryolarda kaynagin turevdeki gorunur alan orani (yaklasik dogru cevap).
-# Geometri asamasinin `visual_coverage` ciktisi bunlarla karsilastirilir.
+# Kaynagin turevdeki gorunur alan orani - olcumun karsilastirildigi
+# dogru cevap. Her deger, senaryoyu ureten donusumun geometrisinden
+# *hesaplandi*; goz karariyla yazilmadi. 800x600 korpus icin:
+#
+#   yazi_bandi   1 - 0.16              = 0.84   (opak alt bant)
+#   sticker      1 - pi*(0.16*600)^2/(800*600) = 0.94
+#   meme         600 / (600 + 2*0.14*600)      = 0.78   (ust/alt dolgu)
+#   kolaj        kaynak tuvalin sol yarisinda  = 0.50
+#   dondurme     dondurulmus dikdortgen ∩ cerceve / cerceve
+#                  5 derece = 0.96,  15 derece = 0.89
+#
+# Dondurme degerleri baslangicta 1.00 yazilmisti ve yanlisti: `_rotate`
+# BORDER_REPLICATE kullandigi icin bosalan koseler kenar pikselinin
+# yayilmasiyla doluyor - bunlar gercek kaynak icerigi degil. Hatali
+# dogru cevap, olcumu haksiz yere kotu gosteriyordu (olculen 0.876,
+# gercek 0.893; sozde hata 0.124, gercek hata 0.017).
 EXPECTED_COVERAGE: dict[str, float] = {
     "orijinal": 1.00,
     "jpeg_q50": 1.00,
@@ -142,12 +156,12 @@ EXPECTED_COVERAGE: dict[str, float] = {
     "kirpma_%50": 1.00,
     "kirpma_%30": 1.00,
     "yazi_bandi": 0.84,
-    "sticker": 0.92,
+    "sticker": 0.94,
     "meme": 0.78,
     "agir_renk": 1.00,
     "gri_ton": 1.00,
-    "dondurme_5d": 1.00,
-    "dondurme_15d": 1.00,
+    "dondurme_5d": 0.96,
+    "dondurme_15d": 0.89,
     "ayna": 1.00,
     "ekran_goruntusu": 1.00,
     "kolaj": 0.50,

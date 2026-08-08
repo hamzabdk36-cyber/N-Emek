@@ -22,7 +22,8 @@ Ayırt edici iddia: kaynağı *bulmak* değil, kullanılan içerik oranını **�
 
 Puan ağırlıkları: Yenilikçilik %20 · Teknik Yeterlilik %20 · Problem Çözme %20 · **UI/UX %20** · Sunum ve Prototip Kalitesi %10 · İş Modeli %10. Arayüz, AI motoruyla eşit ağırlıkta — "geliştirici demosu" görünümü puanın beşte birini götürür.
 
-Plan: `docs/PLAN.md` · Faz 0 ölçümleri: `docs/FAZ0-SONUCLARI.md`
+Plan: `docs/PLAN.md` · Mimari ve diyagramlar: `docs/MIMARI.md`
+Ölçümler: `docs/FAZ0-SONUCLARI.md` (risk kapatma) · `docs/DEGERLENDIRME.md` (tam korpus) · `docs/GECIKME.md` (uçtan uca)
 
 ## Kurulum
 
@@ -58,6 +59,20 @@ Faz 0 ölçüm betikleri (her biri sonunda `RISK n KAPANDI/ACIK` basar):
 .venv/Scripts/python.exe backend/poc/poc_watermark.py   # filigran dayanıklılığı
 ```
 
+Faz 2 kapsamlı ölçümler (`backend/` dizininden, çıktıyı doğrudan `docs/` altına yazarlar):
+
+```bash
+../.venv/Scripts/python.exe -m eval.run_benchmark              # ~2 sa; docs/DEGERLENDIRME.md
+../.venv/Scripts/python.exe -m eval.run_benchmark --corpus 20  # hızlı deneme
+../.venv/Scripts/python.exe -m eval.run_latency                # docs/GECIKME.md
+```
+
+PoC'lerden farkı: `run_benchmark` aşamaları tek tek değil **üretimdeki `recovery.recover()`
+fonksiyonunun kendisini** çağırır ve korpusun bir kısmını indekse hiç almaz (negatif
+kontrol) — o görsellerde önerilen *herhangi bir* bağ yanlış atıftır. Koşu uzun; her
+senaryo bitiminde ara sonuç `data/eval/sonuclar.json`'a yazılır, ilerleme oradan izlenir.
+`run_latency` kendi geçici veritabanını kullanır, demo verisine dokunmaz.
+
 Testler kendi geçici veritabanını kullanır (`tests/conftest.py`), demo verisini bozmaz.
 
 ## Mimari
@@ -79,6 +94,8 @@ backend/app/attribution/
 backend/app/services/     ingest (yükleme/remix), payout, dispute, registry (indeks)
 backend/app/api/          FastAPI uçları ve şemalar
 backend/eval/attacks.py   20 türev senaryosu — tüm ölçümlerin tek kaynağı
+backend/eval/run_benchmark.py  kapsamlı değerlendirme (üretim hattı + negatif kontrol)
+backend/eval/run_latency.py    altın senaryonun adım adım gecikmesi
 backend/poc/              Faz 0 doğrulama betikleri
 scripts/seed_demo.py      altın senaryoyu kurup anlatır (demo provası)
 
@@ -126,7 +143,7 @@ Sistem asla "sahibi budur" demez; kanıtlı **zincir önerisi** sunar. Kullanıc
 
 ## Çalışma kuralları
 
-- **Ölçmeden iddia etme.** Her performans iddiası `backend/poc/` veya `backend/eval/` altında çalıştırılabilir bir betikten gelmeli. `docs/FAZ0-SONUCLARI.md` bu betiklerin çıktısıdır; sayıları elle düzenleme, betiği çalıştır.
+- **Ölçmeden iddia etme.** Her performans iddiası `backend/poc/` veya `backend/eval/` altında çalıştırılabilir bir betikten gelmeli. `docs/FAZ0-SONUCLARI.md`, `docs/DEGERLENDIRME.md` ve `docs/GECIKME.md` bu betiklerin çıktısıdır; sayıları elle düzenleme, betiği çalıştır.
 - **Yanlış atıf, kaçırılmış atıftan ağırdır.** Eşik ayarlarında bu yönde hata payı bırak. Yanlış pozitifi sıfırlamak için geri getirmeden feragat etmek doğru karar.
 - **Dürüst sınırlar yaz.** Bir yöntemin çalışmadığı senaryolar dokümanda açıkça yazılır (örn. filigran kırpmaya dayanmaz). Jüri karşısında güvenilirliği bu sağlar.
 - **Türkçe imla, kullanıcıya görünen her yerde tam.** Arayüz metinleri, API'nin döndürdüğü `aciklama` / kural günlüğü / itiraz özeti gibi tüm kullanıcıya görünen dizgeler diakritikli ve doğru imlayla yazılır — jüri bunları okuyacak. Sayı biçimi Türkçe: ondalık ayracı virgül (`%82,0`), yüzde işareti sayıdan önce ve bitişik. Apostrofla ek almaktan kaçın (`%99,9'unun` yerine "oranı %99,9 olarak ölçüldü").
@@ -135,6 +152,7 @@ Sistem asla "sahibi budur" demez; kanıtlı **zincir önerisi** sunar. Kullanıc
 
 ## Bilinen tuzaklar
 
+- **Korpusta yinelenen görsel, değerlendirmeyi sessizce bozar.** picsum farklı tohumları aynı fotoğrafa eşleyebiliyor; ilk korpusta 320 dosyanın yalnızca 276'sı benzersizdi. İndekste birebir ikizi olan bir holdout görseli için bağ bulmak *doğru* davranıştır ama negatif kontrol sayacı bunu yanlış atıf yazar — ölçüm %32,5 yanlış atıf bildirdi, gerçek değil. `fetch_eval_images.py` artık tekilliği garanti ediyor, `run_benchmark.dedupe()` da ayrıca kontrol ediyor. Korpusu elle genişletirsen bu iki kapıyı atlama.
 - `c2pa.C2paSignerInfo(ta_url=b"")` → `Signature: empty string`. Zaman damgası sunucusu yoksa `None` ver.
 - `invisible-watermark` paketi bu ortamda çalışmıyor (kayıpsız çevrimde bile başarısız). Kendi `watermark.py` modülümüz kullanılıyor; pakete geri dönme.
 - CLIP modeli ilk çağrıda HuggingFace'ten iniyor (~600 MB), sonrası önbellekten.

@@ -42,6 +42,11 @@ ZNCC_RETAINED_THRESHOLD = 0.45
 ZNCC_WINDOW = 11
 # Bu degerin altindaki yerel varyans "dokusuz/duz" sayilir.
 FLAT_VARIANCE = 12.0
+# Bu inlier oraninin altinda kalan eslesme "zayif" sayilir ve kaynagin
+# aynalanmis hali de denenir. Olculen ayrim keskin: gercek eslesmelerde
+# oran 0.79-1.00, aynalanmis turevdeki sahte eslesmelerde 0.15-0.22.
+# Bu yuzden kapi, ayna disindaki senaryolarda pratikte hic tetiklenmiyor.
+MIRROR_RETRY_RATIO = 0.60
 
 
 @dataclass
@@ -63,6 +68,8 @@ class GeometricMatch:
     source_usage: float = 0.0
     scale: float = 0.0
     rotation_deg: float = 0.0
+    # Olcum, kaynagin yatay aynalanmis hali uzerinden yapildi mi.
+    mirrored: bool = False
     homography: np.ndarray | None = field(default=None, repr=False)
     # Turev cozunurlugunde, kaynaktan gelen pikselleri isaretleyen maske.
     # Arayuzdeki "eslesen bolge" vurgusu bundan uretilir.
@@ -73,9 +80,10 @@ class GeometricMatch:
         """Emek Karti'nda gosterilecek kanit satiri."""
         if self.matched:
             coverage = f"%{self.visual_coverage * 100:.1f}".replace(".", ",")
+            ayna = " (kaynak yatay olarak aynalanmış)" if self.mirrored else ""
             aciklama = (
                 f"Kaynak, türev içerikte {self.inlier_count} noktada geometrik "
-                f"olarak eşleşti. Piksel doğrulamasından sonra içeriğin bu "
+                f"olarak eşleşti{ayna}. Piksel doğrulamasından sonra içeriğin bu "
                 f"kaynaktan gelen oranı {coverage} olarak ölçüldü"
             )
             if self.source_usage:
@@ -98,6 +106,7 @@ class GeometricMatch:
             "source_usage": round(self.source_usage, 4),
             "scale": round(self.scale, 4),
             "rotation_deg": round(self.rotation_deg, 2),
+            "mirrored": self.mirrored,
         }
 
 
@@ -196,30 +205,23 @@ def _decompose(homography: np.ndarray) -> tuple[float, float]:
     return scale, rotation
 
 
-def measure_usage(
-    source: np.ndarray,
-    derivative: np.ndarray,
-    detector: str = "orb",
-    verify_pixels: bool = True,
+def _measure_pair(
+    src_gray: np.ndarray,
+    dst_gray: np.ndarray,
+    dst_scale: float,
+    detector: str,
+    verify_pixels: bool,
+    dst_features: tuple,
 ) -> GeometricMatch:
-    """Kaynagin turev icerikteki kullanim oranini olcer.
+    """Tek bir (kaynak yonelimi, turev) cifti icin olcum.
 
-    Args:
-        source: Kaynak gorsel (BGR veya gri, OpenCV dizisi).
-        derivative: Turev gorsel.
-        detector: "orb" (hizli, varsayilan) veya "sift" (daha hassas).
-        verify_pixels: Piksel dogrulamasi yapilsin mi. Kapatilirsa
-            `visual_coverage`, `geometric_coverage` ile ayni olur.
-
-    Returns:
-        GeometricMatch
+    `measure_usage` bunu en fazla iki kez cagirir: once kaynagin
+    kendisiyle, gerekirse aynalanmis haliyle.
     """
-    src_gray, src_scale = _to_working_gray(source)
-    dst_gray, dst_scale = _to_working_gray(derivative)
+    kp_dst, des_dst, norm = dst_features
 
-    det, norm = _build_detector(detector)
+    det, _ = _build_detector(detector)
     kp_src, des_src = det.detectAndCompute(src_gray, None)
-    kp_dst, des_dst = det.detectAndCompute(dst_gray, None)
 
     base = GeometricMatch(
         matched=False,
@@ -312,3 +314,55 @@ def measure_usage(
     base.homography = homography
     base.reason = "homografi doğrulandı"
     return base
+
+
+def measure_usage(
+    source: np.ndarray,
+    derivative: np.ndarray,
+    detector: str = "orb",
+    verify_pixels: bool = True,
+) -> GeometricMatch:
+    """Kaynagin turev icerikteki kullanim oranini olcer.
+
+    Olcum iki yonelimde denenebilir. Sebebi olculdu: ORB tanimlayicilari
+    yansimaya dayanikli degil, bu yuzden aynalanmis bir turevde kaynak
+    dogrudan eslesmiyor. Daha kotusu, eslesme *tamamen* de basarisiz
+    olmuyor - birkac tesadufi ozellik uzerinden zayif ama esigi gecen
+    sahte bir homografi kurulabiliyor ve yanlis bir kapsama olculuyor.
+
+    Bu yuzden kural "basarisiz olursa dene" degil, **daha iyi modeli
+    sec**: dogrudan eslesmenin inlier orani zayifsa kaynagin aynalanmis
+    hali de denenir ve daha cok inlier veren yonelim kazanir. Turevin
+    ozellikleri bir kez cikarilip iki denemede de kullanilir.
+
+    Args:
+        source: Kaynak gorsel (BGR veya gri, OpenCV dizisi).
+        derivative: Turev gorsel.
+        detector: "orb" (hizli, varsayilan) veya "sift" (daha hassas).
+        verify_pixels: Piksel dogrulamasi yapilsin mi. Kapatilirsa
+            `visual_coverage`, `geometric_coverage` ile ayni olur.
+
+    Returns:
+        GeometricMatch
+    """
+    src_gray, _ = _to_working_gray(source)
+    dst_gray, dst_scale = _to_working_gray(derivative)
+
+    det, norm = _build_detector(detector)
+    kp_dst, des_dst = det.detectAndCompute(dst_gray, None)
+    dst_features = (kp_dst, des_dst, norm)
+
+    direct = _measure_pair(
+        src_gray, dst_gray, dst_scale, detector, verify_pixels, dst_features
+    )
+    if direct.matched and direct.inlier_ratio >= MIRROR_RETRY_RATIO:
+        return direct
+
+    mirrored = _measure_pair(
+        cv2.flip(src_gray, 1), dst_gray, dst_scale, detector, verify_pixels, dst_features
+    )
+    if mirrored.matched and mirrored.inlier_count > direct.inlier_count:
+        mirrored.mirrored = True
+        mirrored.reason = "homografi doğrulandı (kaynak aynalanmış)"
+        return mirrored
+    return direct

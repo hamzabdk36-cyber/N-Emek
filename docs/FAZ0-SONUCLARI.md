@@ -6,6 +6,10 @@
 
 Bu belgedeki tüm sayılar `backend/poc/` altındaki çalıştırılabilir betiklerden üretilmiştir; teknik rapora buradan aktarılacaktır.
 
+> **Not (Faz 2'de tazelendi).** İlk ölçümlerde kullanılan korpusta yinelenen görseller vardı: picsum farklı tohumları aynı fotoğrafa eşlemiş, 320 dosyanın yalnızca 276'sı benzersizmiş. `fetch_eval_images.py` tekilliği garantileyecek şekilde düzeltildi ve bu belgedeki tüm PoC'ler **320 benzersiz görselden oluşan temiz korpusla yeniden koşuldu**. Değişen tek sonuç Risk 2'nin ortalaması oldu (%99,2 → %99,5); Risk 1, 3 ve 4 birebir aynı çıktı.
+>
+> Hattın tamamının (üretimdeki `recovery.recover()`) ölçümü için `DEGERLENDIRME.md`, uçtan uca süreler için `GECIKME.md`. Bu belge, o hattı kurmadan önce tek tek doğrulanan yapı taşlarını gösterir.
+
 ---
 
 ## Özet
@@ -13,7 +17,7 @@ Bu belgedeki tüm sayılar `backend/poc/` altındaki çalıştırılabilir betik
 | # | Risk | Durum | Ölçüm |
 |---|---|---|---|
 | 1 | C2PA imzalama ve türev zinciri | **Kapandı** | İmzalama, doğrulama, `parentOf` zinciri ve manifest kaybı tespiti çalışıyor |
-| 2 | Kaynak adayı bulma | **Kapandı** | 20 senaryoda ortalama **%99.2** geri getirme (320 görsellik korpus) |
+| 2 | Kaynak adayı bulma | **Kapandı** | 20 senaryoda ortalama **%99,5** geri getirme (320 görsellik korpus) |
 | 3 | Kullanılan alan oranı ölçümü | **Kapandı** | **MAE 0.0102** (hedef ≤0.05), yanlış atıf 0, kaçırma 0 |
 | 4 | Görünmez filigran | **Kapandı** | 8/20 senaryoda okunuyor, PSNR 41.6 dB, **yanlış kimlik okuması 0** |
 
@@ -48,22 +52,22 @@ Projeye özel `org.nemek.remix_policy` assertion'ı ile üreticinin remix izinle
 | orijinal | %100 | %100 | %100 | **%100** |
 | jpeg_q50 / q30 | %100 | %100 | %100 | **%100** |
 | ölçek %50 / %25 | %100 | %100 | %100 | **%100** |
-| kırpma %90 | %100 | %90 | %100 | **%100** |
-| kırpma %70 | %45 | %5 | %100 | **%100** |
+| kırpma %90 | %100 | %92 | %100 | **%100** |
+| kırpma %70 | %38 | %10 | %100 | **%100** |
 | kırpma %50 | %5 | %5 | %100 | **%100** |
-| kırpma %30 | %0 | %0 | %95 | **%95** |
-| yazı bandı | %85 | %100 | %98 | **%100** |
+| kırpma %30 | %2 | %0 | %98 | **%98** |
+| yazı bandı | %80 | %100 | %100 | **%100** |
 | sticker | %60 | %100 | %100 | **%100** |
-| meme | %55 | %5 | %100 | **%100** |
-| ağır renk | %98 | %100 | %98 | **%100** |
-| gri ton | %100 | %100 | %98 | **%100** |
-| döndürme 5° | %82 | %32 | %100 | **%100** |
-| döndürme 15° | %5 | %0 | %100 | **%100** |
+| meme | %40 | %12 | %100 | **%100** |
+| ağır renk | %100 | %100 | %98 | **%100** |
+| gri ton | %100 | %100 | %92 | **%100** |
+| döndürme 5° | %78 | %25 | %100 | **%100** |
+| döndürme 15° | %0 | %0 | %100 | **%100** |
 | ayna | %0 | %0 | %100 | **%100** |
-| ekran görüntüsü | %98 | %82 | %100 | **%100** |
+| ekran görüntüsü | %95 | %82 | %100 | **%100** |
 | kolaj | %100 | %0 | %100 | **%100** |
-| kırpma + yazı | %0 | %2 | %90 | **%90** |
-| **Ortalama** | | | | **%99.2** |
+| kırpma + yazı | %0 | %0 | %92 | **%92** |
+| **Ortalama** | | | | **%99,5** |
 
 ### Ölçümün yönlendirdiği tasarım kararı: çok bölgeli sorgu
 
@@ -161,4 +165,9 @@ Filigran kırpma ve döndürmeye dayanmıyor; blok hizası bozuluyor. Bu bir eks
 
 ## Sonraki adım
 
-Faz 1: yükleme + remix stüdyosu, beş aşamalı köken kurtarma hattının birleştirilmesi, katkı payı motoru, Emek Kartı veri katmanı, zincir görünümü.
+Faz 1: yükleme + remix stüdyosu, beş aşamalı köken kurtarma hattının birleştirilmesi, katkı payı motoru, Emek Kartı veri katmanı, zincir görünümü. — *Tamamlandı.*
+
+Faz 2'de bu yapı taşları birleştirilip **üretimdeki hattın kendisi** 6.400 sorguda ölçüldü: `DEGERLENDIRME.md`. O ölçüm, burada görünmeyen iki şeyi ortaya çıkardı:
+
+- **Ayna dönüşümünde hat çalışmıyordu.** Bu belgedeki tabloda ayna %100 görünüyor çünkü burada sorulan soru "kaynak aday listesinde var mı" idi. Tam hat koştuğunda ise Top-1 %15,7 çıktı: ORB tanımlayıcıları yansımaya dayanıklı olmadığı için geometri aşaması ya eşleşemiyor ya da birkaç tesadüfi noktadan sahte bir homografi kuruyordu. `geometry.measure_usage` artık zayıf eşleşmede kaynağın aynalanmış halini de deniyor ve daha çok inlier veren yönelimi seçiyor → **%99,6**.
+- **Döndürme senaryolarının doğru cevabı yanlıştı** (1,00 yazılmıştı). `_rotate` kenar tekrarı kullandığı için boşalan köşeler gerçek kaynak içeriği değil; doğru değerler 5° için 0,96 ve 15° için 0,89 olarak hesaplandı.

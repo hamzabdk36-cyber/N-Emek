@@ -1,0 +1,621 @@
+{
+  "meta": {
+    "tarih": "08.08.2026 21:49",
+    "ortam": "cuda, korpus 320 görsel",
+    "indeks": 280,
+    "pozitif": 280,
+    "holdout": 40,
+    "sure_sn": 2614.1
+  },
+  "senaryolar": {
+    "orijinal": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 1.0,
+      "top5": 1.0,
+      "bulundu": 1.0,
+      "yanlis_top1": 0,
+      "onerilen_bag": 286,
+      "yanlis_bag": 6,
+      "negatif_bag": 3,
+      "yanlis_atif_orani": 0.0094,
+      "kapsama_mae": 0.0,
+      "kapsama_ortalama": 1.0,
+      "kapsama_olculen": 280,
+      "kapsama_olculemedi": 0,
+      "karar_asamalari": {
+        "watermark": 280
+      },
+      "gecikme_p50_ms": 454.9,
+      "gecikme_p95_ms": 777.4,
+      "asama_gecikme_ms": {
+        "c2pa": 0.9,
+        "fingerprint": 29.0,
+        "watermark": 14.7,
+        "embed": 129.0,
+        "phash_search": 153.4,
+        "clip_search": 0.7,
+        "geometry": 170.0
+      }
+    },
+    "jpeg_q50": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 1.0,
+      "top5": 1.0,
+      "bulundu": 1.0,
+      "yanlis_top1": 0,
+      "onerilen_bag": 284,
+      "yanlis_bag": 4,
+      "negatif_bag": 4,
+      "yanlis_atif_orani": 0.0125,
+      "kapsama_mae": 0.0049,
+      "kapsama_ortalama": 0.9951,
+      "kapsama_olculen": 279,
+      "kapsama_olculemedi": 1,
+      "karar_asamalari": {
+        "watermark": 278,
+        "phash": 2
+      },
+      "gecikme_p50_ms": 421.5,
+      "gecikme_p95_ms": 762.9,
+      "asama_gecikme_ms": {
+        "c2pa": 0.7,
+        "fingerprint": 27.2,
+        "watermark": 14.1,
+        "embed": 126.3,
+        "phash_search": 148.6,
+        "clip_search": 0.7,
+        "geometry": 146.2
+      }
+    },
+    "jpeg_q30": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 1.0,
+      "top5": 1.0,
+      "bulundu": 1.0,
+      "yanlis_top1": 0,
+      "onerilen_bag": 284,
+      "yanlis_bag": 4,
+      "negatif_bag": 2,
+      "yanlis_atif_orani": 0.0063,
+      "kapsama_mae": 0.0101,
+      "kapsama_ortalama": 0.9899,
+      "kapsama_olculen": 279,
+      "kapsama_olculemedi": 1,
+      "karar_asamalari": {
+        "watermark": 238,
+        "phash": 42
+      },
+      "gecikme_p50_ms": 418.7,
+      "gecikme_p95_ms": 716.2,
+      "asama_gecikme_ms": {
+        "c2pa": 0.7,
+        "fingerprint": 27.3,
+        "watermark": 13.9,
+        "embed": 127.6,
+        "phash_search": 149.0,
+        "clip_search": 0.7,
+        "geometry": 140.5
+      }
+    },
+    "olcek_%50": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 0.9964,
+      "top5": 1.0,
+      "bulundu": 1.0,
+      "yanlis_top1": 1,
+      "onerilen_bag": 297,
+      "yanlis_bag": 17,
+      "negatif_bag": 0,
+      "yanlis_atif_orani": 0.0031,
+      "kapsama_mae": 0.0437,
+      "kapsama_ortalama": 0.9563,
+      "kapsama_olculen": 277,
+      "kapsama_olculemedi": 3,
+      "karar_asamalari": {
+        "watermark": 279
+      },
+      "gecikme_p50_ms": 250.8,
+      "gecikme_p95_ms": 484.0,
+      "asama_gecikme_ms": {
+        "c2pa": 0.6,
+        "fingerprint": 7.7,
+        "watermark": 13.4,
+        "embed": 87.9,
+        "phash_search": 68.1,
+        "clip_search": 0.7,
+        "geometry": 102.7
+      }
+    },
+    "olcek_%25": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 0.9643,
+      "top5": 0.9643,
+      "bulundu": 0.9643,
+      "yanlis_top1": 1,
+      "onerilen_bag": 308,
+      "yanlis_bag": 38,
+      "negatif_bag": 5,
+      "yanlis_atif_orani": 0.0187,
+      "kapsama_mae": 0.1245,
+      "kapsama_ortalama": 0.8755,
+      "kapsama_olculen": 270,
+      "kapsama_olculemedi": 0,
+      "karar_asamalari": {
+        "phash": 270
+      },
+      "gecikme_p50_ms": 150.2,
+      "gecikme_p95_ms": 283.1,
+      "asama_gecikme_ms": {
+        "c2pa": 0.5,
+        "fingerprint": 4.7,
+        "watermark": 0.0,
+        "embed": 64.6,
+        "phash_search": 47.1,
+        "clip_search": 0.7,
+        "geometry": 51.9
+      }
+    },
+    "kirpma_%90": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 1.0,
+      "top5": 1.0,
+      "bulundu": 1.0,
+      "yanlis_top1": 0,
+      "onerilen_bag": 287,
+      "yanlis_bag": 7,
+      "negatif_bag": 2,
+      "yanlis_atif_orani": 0.0063,
+      "kapsama_mae": 0.0081,
+      "kapsama_ortalama": 0.9919,
+      "kapsama_olculen": 280,
+      "kapsama_olculemedi": 0,
+      "karar_asamalari": {
+        "clip": 204,
+        "phash": 76
+      },
+      "gecikme_p50_ms": 417.1,
+      "gecikme_p95_ms": 802.7,
+      "asama_gecikme_ms": {
+        "c2pa": 0.6,
+        "fingerprint": 26.0,
+        "watermark": 14.0,
+        "embed": 124.6,
+        "phash_search": 140.9,
+        "clip_search": 0.7,
+        "geometry": 154.8
+      }
+    },
+    "kirpma_%70": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 0.9929,
+      "top5": 0.9929,
+      "bulundu": 0.9929,
+      "yanlis_top1": 0,
+      "onerilen_bag": 283,
+      "yanlis_bag": 5,
+      "negatif_bag": 2,
+      "yanlis_atif_orani": 0.0063,
+      "kapsama_mae": 0.0107,
+      "kapsama_ortalama": 0.9893,
+      "kapsama_olculen": 278,
+      "kapsama_olculemedi": 0,
+      "karar_asamalari": {
+        "clip": 273,
+        "phash": 5
+      },
+      "gecikme_p50_ms": 319.5,
+      "gecikme_p95_ms": 618.8,
+      "asama_gecikme_ms": {
+        "c2pa": 0.5,
+        "fingerprint": 9.0,
+        "watermark": 11.9,
+        "embed": 104.8,
+        "phash_search": 105.1,
+        "clip_search": 0.6,
+        "geometry": 118.3
+      }
+    },
+    "kirpma_%50": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 0.9786,
+      "top5": 0.9786,
+      "bulundu": 0.9786,
+      "yanlis_top1": 0,
+      "onerilen_bag": 278,
+      "yanlis_bag": 4,
+      "negatif_bag": 2,
+      "yanlis_atif_orani": 0.0063,
+      "kapsama_mae": 0.0224,
+      "kapsama_ortalama": 0.9776,
+      "kapsama_olculen": 274,
+      "kapsama_olculemedi": 0,
+      "karar_asamalari": {
+        "clip": 274
+      },
+      "gecikme_p50_ms": 271.6,
+      "gecikme_p95_ms": 466.9,
+      "asama_gecikme_ms": {
+        "c2pa": 0.5,
+        "fingerprint": 8.5,
+        "watermark": 12.2,
+        "embed": 93.0,
+        "phash_search": 86.0,
+        "clip_search": 0.6,
+        "geometry": 85.0
+      }
+    },
+    "kirpma_%30": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 0.925,
+      "top5": 0.925,
+      "bulundu": 0.925,
+      "yanlis_top1": 1,
+      "onerilen_bag": 269,
+      "yanlis_bag": 10,
+      "negatif_bag": 4,
+      "yanlis_atif_orani": 0.0156,
+      "kapsama_mae": 0.0235,
+      "kapsama_ortalama": 0.9765,
+      "kapsama_olculen": 259,
+      "kapsama_olculemedi": 0,
+      "karar_asamalari": {
+        "clip": 259
+      },
+      "gecikme_p50_ms": 222.2,
+      "gecikme_p95_ms": 376.0,
+      "asama_gecikme_ms": {
+        "c2pa": 0.5,
+        "fingerprint": 7.7,
+        "watermark": 12.5,
+        "embed": 82.7,
+        "phash_search": 67.8,
+        "clip_search": 0.6,
+        "geometry": 61.2
+      }
+    },
+    "yazi_bandi": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 1.0,
+      "top5": 1.0,
+      "bulundu": 1.0,
+      "yanlis_top1": 0,
+      "onerilen_bag": 284,
+      "yanlis_bag": 4,
+      "negatif_bag": 2,
+      "yanlis_atif_orani": 0.0063,
+      "kapsama_mae": 0.0422,
+      "kapsama_ortalama": 0.8811,
+      "kapsama_olculen": 279,
+      "kapsama_olculemedi": 1,
+      "karar_asamalari": {
+        "watermark": 280
+      },
+      "gecikme_p50_ms": 436.8,
+      "gecikme_p95_ms": 696.1,
+      "asama_gecikme_ms": {
+        "c2pa": 0.5,
+        "fingerprint": 25.2,
+        "watermark": 13.4,
+        "embed": 127.3,
+        "phash_search": 165.0,
+        "clip_search": 0.7,
+        "geometry": 124.5
+      }
+    },
+    "sticker": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 1.0,
+      "top5": 1.0,
+      "bulundu": 1.0,
+      "yanlis_top1": 0,
+      "onerilen_bag": 284,
+      "yanlis_bag": 4,
+      "negatif_bag": 3,
+      "yanlis_atif_orani": 0.0094,
+      "kapsama_mae": 0.0186,
+      "kapsama_ortalama": 0.9565,
+      "kapsama_olculen": 280,
+      "kapsama_olculemedi": 0,
+      "karar_asamalari": {
+        "watermark": 280
+      },
+      "gecikme_p50_ms": 392.1,
+      "gecikme_p95_ms": 635.5,
+      "asama_gecikme_ms": {
+        "c2pa": 0.6,
+        "fingerprint": 25.3,
+        "watermark": 13.3,
+        "embed": 123.0,
+        "phash_search": 145.2,
+        "clip_search": 0.6,
+        "geometry": 104.5
+      }
+    },
+    "meme": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 1.0,
+      "top5": 1.0,
+      "bulundu": 1.0,
+      "yanlis_top1": 0,
+      "onerilen_bag": 283,
+      "yanlis_bag": 3,
+      "negatif_bag": 2,
+      "yanlis_atif_orani": 0.0063,
+      "kapsama_mae": 0.0123,
+      "kapsama_ortalama": 0.7679,
+      "kapsama_olculen": 280,
+      "kapsama_olculemedi": 0,
+      "karar_asamalari": {
+        "clip": 279,
+        "phash": 1
+      },
+      "gecikme_p50_ms": 492.7,
+      "gecikme_p95_ms": 789.5,
+      "asama_gecikme_ms": {
+        "c2pa": 0.6,
+        "fingerprint": 26.9,
+        "watermark": 13.9,
+        "embed": 139.8,
+        "phash_search": 201.6,
+        "clip_search": 0.7,
+        "geometry": 135.0
+      }
+    },
+    "agir_renk": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 1.0,
+      "top5": 1.0,
+      "bulundu": 1.0,
+      "yanlis_top1": 0,
+      "onerilen_bag": 284,
+      "yanlis_bag": 4,
+      "negatif_bag": 4,
+      "yanlis_atif_orani": 0.0125,
+      "kapsama_mae": 0.0351,
+      "kapsama_ortalama": 0.9649,
+      "kapsama_olculen": 278,
+      "kapsama_olculemedi": 2,
+      "karar_asamalari": {
+        "watermark": 279,
+        "phash": 1
+      },
+      "gecikme_p50_ms": 387.2,
+      "gecikme_p95_ms": 663.9,
+      "asama_gecikme_ms": {
+        "c2pa": 0.6,
+        "fingerprint": 25.1,
+        "watermark": 12.9,
+        "embed": 120.2,
+        "phash_search": 143.1,
+        "clip_search": 0.6,
+        "geometry": 118.8
+      }
+    },
+    "gri_ton": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 1.0,
+      "top5": 1.0,
+      "bulundu": 1.0,
+      "yanlis_top1": 0,
+      "onerilen_bag": 285,
+      "yanlis_bag": 5,
+      "negatif_bag": 3,
+      "yanlis_atif_orani": 0.0094,
+      "kapsama_mae": 0.0,
+      "kapsama_ortalama": 1.0,
+      "kapsama_olculen": 280,
+      "kapsama_olculemedi": 0,
+      "karar_asamalari": {
+        "watermark": 280
+      },
+      "gecikme_p50_ms": 421.8,
+      "gecikme_p95_ms": 709.0,
+      "asama_gecikme_ms": {
+        "c2pa": 0.5,
+        "fingerprint": 25.2,
+        "watermark": 12.9,
+        "embed": 123.4,
+        "phash_search": 143.6,
+        "clip_search": 0.6,
+        "geometry": 146.4
+      }
+    },
+    "dondurme_5d": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 0.9964,
+      "top5": 0.9964,
+      "bulundu": 0.9964,
+      "yanlis_top1": 0,
+      "onerilen_bag": 287,
+      "yanlis_bag": 8,
+      "negatif_bag": 4,
+      "yanlis_atif_orani": 0.0125,
+      "kapsama_mae": 0.023,
+      "kapsama_ortalama": 0.9371,
+      "kapsama_olculen": 279,
+      "kapsama_olculemedi": 0,
+      "karar_asamalari": {
+        "phash": 21,
+        "clip": 258
+      },
+      "gecikme_p50_ms": 424.4,
+      "gecikme_p95_ms": 794.7,
+      "asama_gecikme_ms": {
+        "c2pa": 0.6,
+        "fingerprint": 25.4,
+        "watermark": 13.4,
+        "embed": 123.8,
+        "phash_search": 142.8,
+        "clip_search": 0.6,
+        "geometry": 163.6
+      }
+    },
+    "dondurme_15d": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 0.9929,
+      "top5": 0.9929,
+      "bulundu": 0.9929,
+      "yanlis_top1": 0,
+      "onerilen_bag": 287,
+      "yanlis_bag": 9,
+      "negatif_bag": 4,
+      "yanlis_atif_orani": 0.0125,
+      "kapsama_mae": 0.0163,
+      "kapsama_ortalama": 0.8738,
+      "kapsama_olculen": 278,
+      "kapsama_olculemedi": 0,
+      "karar_asamalari": {
+        "clip": 278
+      },
+      "gecikme_p50_ms": 404.6,
+      "gecikme_p95_ms": 726.8,
+      "asama_gecikme_ms": {
+        "c2pa": 0.6,
+        "fingerprint": 25.2,
+        "watermark": 13.2,
+        "embed": 121.7,
+        "phash_search": 142.2,
+        "clip_search": 0.6,
+        "geometry": 144.3
+      }
+    },
+    "ayna": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 0.9964,
+      "top5": 0.9964,
+      "bulundu": 0.9964,
+      "yanlis_top1": 0,
+      "onerilen_bag": 283,
+      "yanlis_bag": 4,
+      "negatif_bag": 3,
+      "yanlis_atif_orani": 0.0094,
+      "kapsama_mae": 0.0032,
+      "kapsama_ortalama": 0.9968,
+      "kapsama_olculen": 279,
+      "kapsama_olculemedi": 0,
+      "karar_asamalari": {
+        "clip": 279
+      },
+      "gecikme_p50_ms": 480.0,
+      "gecikme_p95_ms": 810.2,
+      "asama_gecikme_ms": {
+        "c2pa": 0.6,
+        "fingerprint": 25.2,
+        "watermark": 13.0,
+        "embed": 125.3,
+        "phash_search": 142.9,
+        "clip_search": 0.6,
+        "geometry": 201.3
+      }
+    },
+    "ekran_goruntusu": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 0.9857,
+      "top5": 0.9857,
+      "bulundu": 0.9857,
+      "yanlis_top1": 0,
+      "onerilen_bag": 282,
+      "yanlis_bag": 6,
+      "negatif_bag": 1,
+      "yanlis_atif_orani": 0.0031,
+      "kapsama_mae": 0.0275,
+      "kapsama_ortalama": 0.9725,
+      "kapsama_olculen": 276,
+      "kapsama_olculemedi": 0,
+      "karar_asamalari": {
+        "clip": 86,
+        "phash": 190
+      },
+      "gecikme_p50_ms": 254.3,
+      "gecikme_p95_ms": 450.9,
+      "asama_gecikme_ms": {
+        "c2pa": 0.5,
+        "fingerprint": 8.3,
+        "watermark": 11.9,
+        "embed": 90.2,
+        "phash_search": 85.9,
+        "clip_search": 0.6,
+        "geometry": 69.6
+      }
+    },
+    "kolaj": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 0.9964,
+      "top5": 0.9964,
+      "bulundu": 0.9964,
+      "yanlis_top1": 0,
+      "onerilen_bag": 287,
+      "yanlis_bag": 8,
+      "negatif_bag": 1,
+      "yanlis_atif_orani": 0.0031,
+      "kapsama_mae": 0.0156,
+      "kapsama_ortalama": 0.4844,
+      "kapsama_olculen": 279,
+      "kapsama_olculemedi": 0,
+      "karar_asamalari": {
+        "phash": 279
+      },
+      "gecikme_p50_ms": 513.8,
+      "gecikme_p95_ms": 736.6,
+      "asama_gecikme_ms": {
+        "c2pa": 0.7,
+        "fingerprint": 29.6,
+        "watermark": 15.8,
+        "embed": 174.3,
+        "phash_search": 211.7,
+        "clip_search": 0.6,
+        "geometry": 102.0
+      }
+    },
+    "kirpma+yazi": {
+      "pozitif_sorgu": 280,
+      "negatif_sorgu": 40,
+      "top1": 0.9107,
+      "top5": 0.9107,
+      "bulundu": 0.9107,
+      "yanlis_top1": 0,
+      "onerilen_bag": 260,
+      "yanlis_bag": 5,
+      "negatif_bag": 1,
+      "yanlis_atif_orani": 0.0031,
+      "kapsama_mae": 0.045,
+      "kapsama_ortalama": 0.8555,
+      "kapsama_olculen": 255,
+      "kapsama_olculemedi": 0,
+      "karar_asamalari": {
+        "clip": 250,
+        "phash": 5
+      },
+      "gecikme_p50_ms": 270.5,
+      "gecikme_p95_ms": 490.7,
+      "asama_gecikme_ms": {
+        "c2pa": 0.6,
+        "fingerprint": 9.0,
+        "watermark": 13.7,
+        "embed": 96.9,
+        "phash_search": 91.7,
+        "clip_search": 0.7,
+        "geometry": 75.9
+      }
+    }
+  }
+}
