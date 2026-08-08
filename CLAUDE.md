@@ -39,13 +39,21 @@ Sertifikalar ve korpus depoda değil; her ikisi de yukarıdaki komutlarla yenide
 ## Doğrulama
 
 ```bash
+cd backend && ../.venv/Scripts/python.exe -m pytest tests/   # 35 test: pay motoru + uçtan uca
+.venv/Scripts/python.exe scripts/seed_demo.py --reset        # altın senaryoyu kur ve anlat
+.venv/Scripts/python.exe -m uvicorn app.main:app --reload --app-dir backend
+```
+
+Faz 0 ölçüm betikleri (her biri sonunda `RISK n KAPANDI/ACIK` basar):
+
+```bash
 .venv/Scripts/python.exe backend/poc/poc_c2pa.py        # imzalama + türev zinciri
 .venv/Scripts/python.exe backend/poc/poc_similarity.py  # aday bulma, 20 senaryo
 .venv/Scripts/python.exe backend/poc/poc_geometry.py    # alan oranı ölçüm hatası
 .venv/Scripts/python.exe backend/poc/poc_watermark.py   # filigran dayanıklılığı
 ```
 
-Her betik sonunda `RISK n KAPANDI/ACIK` basar ve buna göre çıkış kodu döner.
+Testler kendi geçici veritabanını kullanır (`tests/conftest.py`), demo verisini bozmaz.
 
 ## Mimari
 
@@ -57,10 +65,28 @@ backend/app/provenance/   köken kurtarma hattı — projenin kalbi
   index.py                FAISS: IndexBinaryFlat (Hamming) + IndexFlatIP (kosinüs)
   geometry.py             ORB/SIFT + RANSAC + ZNCC piksel doğrulaması → kullanılan alan
   regions.py              çok bölgeli sorgu (kolaj/meme/kırpma+yazı için şart)
-backend/app/attribution/  katkı payı, açıklanabilirlik, ödeme dağıtımı
+  recovery.py             5 aşamanın orkestrasyonu + noisy-OR karar füzyonu
+  c2pa_service.py         manifest imzalama/okuma, org.nemek.remix_policy
+backend/app/attribution/
+  chain.py                zincir yürüyüşü, geçişli indirgeme, özel kapsama bölüntüsü
+  contribution.py         pay formülü (saf fonksiyon, DB'den bağımsız)
+  explain.py              Emek Kartı verisi
+backend/app/services/     ingest (yükleme/remix), payout, dispute, registry (indeks)
+backend/app/api/          FastAPI uçları ve şemalar
 backend/eval/attacks.py   20 türev senaryosu — tüm ölçümlerin tek kaynağı
 backend/poc/              Faz 0 doğrulama betikleri
+scripts/seed_demo.py      altın senaryoyu kurup anlatır (demo provası)
 ```
+
+### Pay hesabının iki kritik kuralı
+
+Bunlar sonradan "sadeleştirme" diye kaldırılmamalı; ikisi de ölçümdeki gerçek bir hatayı düzeltiyor.
+
+**Geçişli indirgeme** (`chain._redundant_edges`): geometri, Ayşe'nin içeriğini Ceyda'nın gönderisinde de bulur — pikselleri oraya Burak üzerinden gelmiştir. Bu doğrudan bağ pay hesabına girerse aynı emek iki kez ödüllendirilir. P'den C'ye uzunluğu ≥2 bir yol varsa doğrudan P→C bağı hesaptan düşülür (veritabanında kanıt olarak kalır).
+
+**Özel (exclusive) kapsama** (`chain.build_chain`): ölçülen kapsamalar iç içedir — Burak'ın %97'si Ayşe'nin %84'ünü de kapsar. Her düğüme yalnızca kendi kattığı pikseller yazılır: `özel(A) = toplam(A) − Σ toplam(A'nın zincirdeki doğrudan kaynakları)`. Böylece kapsamalar görselin tam bir bölüntüsü olur ve doğal olarak 1.0'a toplanır; pay normalizasyona değil ölçüme dayanır.
+
+Bu düzeltmeden önce kaynakların toplamı %182 çıkıyor ve tabana çarpıyordu.
 
 ### Köken kurtarma hattı
 

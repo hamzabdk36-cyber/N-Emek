@@ -71,10 +71,23 @@ class GeometricMatch:
 
     def as_evidence(self) -> dict:
         """Emek Karti'nda gosterilecek kanit satiri."""
+        if self.matched:
+            aciklama = (
+                f"Kaynak, turev icerikte {self.inlier_count} noktada geometrik olarak "
+                f"eslesti. Piksel dogrulamasindan sonra icerigin "
+                f"%{self.visual_coverage * 100:.1f}'inin bu kaynaktan geldigi olculdu"
+            )
+            if self.source_usage:
+                aciklama += f"; kaynagin %{self.source_usage * 100:.1f}'i kullanilmis"
+            aciklama += "."
+        else:
+            aciklama = f"Geometrik dogrulama yapilamadi: {self.reason}."
+
         return {
             "stage": "geometry",
             "matched": self.matched,
             "reason": self.reason,
+            "aciklama": aciklama,
             "good_matches": self.good_matches,
             "inlier_count": self.inlier_count,
             "inlier_ratio": round(self.inlier_ratio, 4),
