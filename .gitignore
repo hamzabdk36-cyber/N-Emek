@@ -1,0 +1,39 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+
+# Node
+node_modules/
+frontend/dist/
+
+# Veri: korpus ve uretilen turevler depoya girmez.
+# Korpus tekrar indirilebilir: python scripts/fetch_eval_images.py
+data/raw/
+data/derived/
+data/uploads/
+data/poc/
+data/index/
+
+# Gelistirme sertifikalari ve anahtarlar - asla surum kontrolune girmez.
+# Uretmek icin: python scripts/gen_dev_certs.py
+backend/certs/
+
+# Veritabani
+*.db
+*.sqlite3
+
+# Model onbellegi
+.cache/
+
+# Ortam
+.env
+.env.local
+
+# Editor / OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini

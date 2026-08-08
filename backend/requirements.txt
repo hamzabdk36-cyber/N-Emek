@@ -1,0 +1,35 @@
+# N-Emek backend bagimliliklari
+# Kurulum (Windows, Python 3.13):
+#   python -m venv .venv
+#   .venv/Scripts/python.exe -m pip install -r backend/requirements.txt
+#   .venv/Scripts/python.exe -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
+#
+# NOT: torch, CUDA surumu nedeniyle ayri indeksten kurulur. GPU yoksa
+# duz "pip install torch torchvision" yeterlidir; kod CPU'ya duser.
+
+# --- API ---
+fastapi==0.141.1
+uvicorn[standard]==0.52.1
+pydantic==2.13.4
+pydantic-settings==2.15.0
+python-multipart==0.0.32
+SQLAlchemy==2.0.51
+
+# --- Goruntu isleme ---
+pillow==12.3.0
+opencv-contrib-python==5.0.0.93
+numpy==2.5.1
+scipy==1.18.0
+ImageHash==4.3.2
+PyWavelets==1.9.0
+
+# --- Koken ve benzerlik ---
+c2pa-python==0.37.5     # C2PA manifest imzalama/dogrulama (Rust c2pa-rs baglantisi)
+cryptography==50.0.0    # gelistirme sertifika zinciri uretimi
+faiss-cpu==1.15.0       # pHash Hamming + CLIP kosinus indeksleri
+open_clip_torch==3.3.0  # CLIP ViT-B/32 gorsel gomme
+
+# --- Degerlendirme ve test ---
+scikit-image==0.26.0
+pytest==9.1.1
+httpx==0.28.1
