@@ -72,16 +72,18 @@ class GeometricMatch:
     def as_evidence(self) -> dict:
         """Emek Karti'nda gosterilecek kanit satiri."""
         if self.matched:
+            coverage = f"%{self.visual_coverage * 100:.1f}".replace(".", ",")
             aciklama = (
-                f"Kaynak, turev icerikte {self.inlier_count} noktada geometrik olarak "
-                f"eslesti. Piksel dogrulamasindan sonra icerigin "
-                f"%{self.visual_coverage * 100:.1f}'inin bu kaynaktan geldigi olculdu"
+                f"Kaynak, türev içerikte {self.inlier_count} noktada geometrik "
+                f"olarak eşleşti. Piksel doğrulamasından sonra içeriğin bu "
+                f"kaynaktan gelen oranı {coverage} olarak ölçüldü"
             )
             if self.source_usage:
-                aciklama += f"; kaynagin %{self.source_usage * 100:.1f}'i kullanilmis"
+                usage = f"%{self.source_usage * 100:.1f}".replace(".", ",")
+                aciklama += f"; kaynağın kullanılan bölümü {usage}"
             aciklama += "."
         else:
-            aciklama = f"Geometrik dogrulama yapilamadi: {self.reason}."
+            aciklama = f"Geometrik doğrulama yapılamadı: {self.reason}."
 
         return {
             "stage": "geometry",
@@ -227,7 +229,7 @@ def measure_usage(
     )
 
     if des_src is None or des_dst is None or len(kp_src) < 2 or len(kp_dst) < 2:
-        base.reason = "yeterli yerel ozellik bulunamadi"
+        base.reason = "yeterli yerel özellik bulunamadı"
         return base
 
     matcher = cv2.BFMatcher(norm, crossCheck=False)
@@ -236,7 +238,7 @@ def measure_usage(
     base.good_matches = len(good)
 
     if len(good) < MIN_GOOD_MATCHES:
-        base.reason = f"yetersiz eslesme ({len(good)} < {MIN_GOOD_MATCHES})"
+        base.reason = f"yetersiz eşleşme ({len(good)} < {MIN_GOOD_MATCHES})"
         return base
 
     src_pts = np.float32([kp_src[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
@@ -269,7 +271,7 @@ def measure_usage(
     base.source_quad = projected * (1.0 / dst_scale)
 
     if geometric_coverage <= 0.0:
-        base.reason = "izdusum turev cercevesinin disinda"
+        base.reason = "izdüşüm türev çerçevesinin dışında"
         return base
 
     # --- Kaynak kullanim orani: turev cercevesinin kaynaktaki karsiligi ------
@@ -308,5 +310,5 @@ def measure_usage(
 
     base.matched = True
     base.homography = homography
-    base.reason = "homografi dogrulandi"
+    base.reason = "homografi doğrulandı"
     return base

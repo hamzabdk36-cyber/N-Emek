@@ -149,7 +149,7 @@ def test_kampanya_kaynak_tabani_uygulanir():
     r = rules(source_floor=0.30, creator_ceiling=1.0)
     dist = compute_shares(LEAF, [node(coverage=0.10, confidence=0.5)], 1000.0, r)
     assert dist.sources[0].share == pytest.approx(0.30, abs=1e-6)
-    assert any("Kampanya kurali" in line for line in dist.rules_log)
+    assert any("Kampanya kuralı" in line for line in dist.rules_log)
 
 
 def test_kampanya_tabani_birden_fazla_kaynaga_oranli_dagilir():
@@ -180,7 +180,7 @@ def test_olculemeyen_kapsama_ihtiyatli_tavani_asamaz():
     )
     # Olcum yoksa beyan edilen 0.95 gecmez, ihtiyatli tavan uygulanir.
     assert dist.sources[0].share == pytest.approx(0.35, abs=1e-6)
-    assert any("olculemedi" in n for n in dist.sources[0].factors["notlar"])
+    assert any("ölçülemedi" in n for n in dist.sources[0].factors["notlar"])
 
 
 def test_olculemeyen_zincirde_ihtiyatli_varsayim_iki_kez_inmez():
@@ -224,7 +224,7 @@ def test_cok_kucuk_paylar_elenir():
     ids = {p.content_id for p in dist.sources}
     assert "kirinti" not in ids
     assert_sums_to_one(dist)
-    assert any("esigi" in line for line in dist.rules_log)
+    assert any("eşiği" in line for line in dist.rules_log)
 
 
 # ---------------------------------------------------------------------------

@@ -82,7 +82,7 @@ class Rules:
     coverage_exponent: float
     confidence_exponent: float
     unverified_coverage: float
-    source_label: str = "varsayilan kurallar"
+    source_label: str = "varsayılan kurallar"
 
     @classmethod
     def from_settings(cls, settings: Settings | None = None) -> "Rules":
@@ -158,7 +158,12 @@ class Distribution:
 
 
 def _pct(value: float) -> str:
-    return f"%{value * 100:.1f}"
+    """Orani Turkce yazim kurallarina gore bicimlendirir.
+
+    Ondalik ayraci virguldur. Yuzde isareti sayidan once gelir ve
+    bitisik yazilir: %12,5
+    """
+    return f"%{value * 100:.1f}".replace(".", ",")
 
 
 def compute_shares(
@@ -189,8 +194,8 @@ def compute_shares(
             # bir kapsamanin dogrulanmadan gecmesini engeller.
             capped = min(coverage, rules.unverified_coverage)
             node_notes.append(
-                f"Alan orani olculemedi; ihtiyatli tavan {_pct(rules.unverified_coverage)} "
-                f"uygulandi, kapsama {_pct(capped)} alindi."
+                f"Alan oranı ölçülemedi; ihtiyatlı tavan {_pct(rules.unverified_coverage)} "
+                f"uygulandı, kapsama {_pct(capped)} alındı."
             )
             coverage = capped
 
@@ -221,8 +226,8 @@ def compute_shares(
         scale = max_sources / sources_total
         weights = {k: v * scale for k, v in weights.items()}
         log.append(
-            f"Kaynaklarin toplami {_pct(sources_total)} idi; ureticiye birakilan "
-            f"{_pct(rules.creator_floor)} taban icin oranli olarak {_pct(max_sources)}'e cekildi."
+            f"Kaynakların toplamı {_pct(sources_total)} idi; üreticiye bırakılan "
+            f"{_pct(rules.creator_floor)} taban için oranlı olarak {_pct(max_sources)}'e çekildi."
         )
         sources_total = max_sources
 
@@ -235,8 +240,8 @@ def compute_shares(
             # Olculebilir agirlik yok ama kaynak var: tabani esit bol.
             weights = {n.content_id: rules.source_floor / len(chain) for n in chain}
         log.append(
-            f"Kampanya kurali: kaynaklara en az {_pct(rules.source_floor)} ayrilir. "
-            f"Hesaplanan {_pct(sources_total)} bu tabana yukseltildi."
+            f"Kampanya kuralı: kaynaklara en az {_pct(rules.source_floor)} ayrılır. "
+            f"Hesaplanan {_pct(sources_total)} bu tabana yükseltildi."
         )
         sources_total = rules.source_floor
 
@@ -250,8 +255,8 @@ def compute_shares(
         else:
             weights = {n.content_id: needed / len(chain) for n in chain}
         log.append(
-            f"Uretici tavani {_pct(rules.creator_ceiling)}; kaynaklarin payi "
-            f"{_pct(sources_total)} yerine {_pct(needed)} olarak alindi."
+            f"Üretici tavanı {_pct(rules.creator_ceiling)}; kaynakların payı "
+            f"{_pct(sources_total)} yerine {_pct(needed)} olarak alındı."
         )
         sources_total = needed
         creator_share = rules.creator_ceiling
@@ -269,14 +274,14 @@ def compute_shares(
         granted = min(gap, available)
         if granted <= 0:
             factors[node.content_id]["notlar"].append(
-                f"Uretici beyan ettigi asgari {_pct(node.min_source_share)} payi talep etti "
-                f"ancak uretici tabani nedeniyle uygulanamadi."
+                f"Üretici beyan ettiği asgari {_pct(node.min_source_share)} payı talep etti "
+                f"ancak üretici tabanı nedeniyle uygulanamadı."
             )
             continue
         weights[node.content_id] = current + granted
         factors[node.content_id]["notlar"].append(
-            f"Uretici manifestinde asgari {_pct(node.min_source_share)} pay beyan etmisti; "
-            f"pay {_pct(current)} yerine {_pct(current + granted)} olarak ayarlandi."
+            f"Üretici manifestinde asgari {_pct(node.min_source_share)} pay beyan etmişti; "
+            f"pay {_pct(current)} yerine {_pct(current + granted)} olarak ayarlandı."
         )
 
     creator_share = 1.0 - sum(weights.values())
@@ -288,8 +293,8 @@ def compute_shares(
         for k in dropped:
             weights.pop(k)
         log.append(
-            f"{len(dropped)} kaynagin payi odeme esigi {_pct(rules.min_payout_share)} "
-            f"altinda kaldi; toplam {_pct(freed)} kalan taraflara dagitildi."
+            f"{len(dropped)} kaynağın payı ödeme eşiği {_pct(rules.min_payout_share)} "
+            f"altında kaldı; toplam {_pct(freed)} kalan taraflara dağıtıldı."
         )
         creator_share += freed
 
@@ -305,9 +310,9 @@ def compute_shares(
             content_id=leaf.content_id,
             share=round(creator_share, 6),
             amount=round(distributable * creator_share, 2),
-            factors={"aciklama": "Kaynaklara ayrilan pay dusuldukten sonra kalan."},
+            factors={"aciklama": "Kaynaklara ayrılan pay düşüldükten sonra kalan."},
             rules_applied=[
-                f"Uretici tabani {_pct(rules.creator_floor)}, tavani {_pct(rules.creator_ceiling)}."
+                f"Üretici tabanı {_pct(rules.creator_floor)}, tavanı {_pct(rules.creator_ceiling)}."
             ],
         )
     ]
@@ -336,8 +341,8 @@ def compute_shares(
             content_id=None,
             share=round(rules.commission, 6),
             amount=round(commission_amount, 2),
-            factors={"aciklama": "Kampanya yonetimi ve analiz hizmeti komisyonu."},
-            rules_applied=[f"Brut gelirin {_pct(rules.commission)}'i."],
+            factors={"aciklama": "Kampanya yönetimi ve analiz hizmeti komisyonu."},
+            rules_applied=[f"Brüt gelir üzerinden {_pct(rules.commission)} oranında."],
         )
     )
 

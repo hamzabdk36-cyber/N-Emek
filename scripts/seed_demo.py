@@ -15,6 +15,11 @@ Calistirma:
 from __future__ import annotations
 
 import sys
+
+# Windows konsolu varsayilan olarak cp1254 kullaniyor; Turkce ciktinin
+# bozulmamasi icin akisi UTF-8'e sabitliyoruz.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 from pathlib import Path
 
 import cv2
@@ -84,35 +89,35 @@ def banner(step: str, text: str) -> None:
 
 
 def show_recovery(result) -> None:
-    print("  Koken kurtarma hatti:")
+    print("  Köken kurtarma hattı:")
     for entry in result.stage_log:
         mark = "BULDU " if entry["found"] else "yok   "
         print(f"    [{mark}] {entry['stage']:<10} {entry['detail']}")
     if not result.links:
-        print("    -> kaynak bulunamadi (ozgun icerik)")
+        print("    → kaynak bulunamadı (özgün içerik)")
         return
     print("  Bulunan kaynaklar:")
     for link in result.links:
         coverage = (
-            f"kullanilan alan %{link.visual_coverage * 100:.1f}"
+            f"kullanılan alan %{link.visual_coverage * 100:.1f}"
             if link.visual_coverage is not None
-            else "alan olculemedi"
+            else "alan ölçülemedi"
         )
         print(
             f"    - {link.parent_content_id}  asama={link.stage.value:<9} "
             f"guven={link.confidence:.2f}  {coverage}"
         )
     toplam = sum(result.timings_ms.values())
-    print(f"  Toplam sure: {toplam:.0f} ms  ({result.timings_ms})")
+    print(f"  Toplam süre: {toplam:.0f} ms  ({result.timings_ms})")
 
 
 def show_card(session, content_id: str) -> dict:
     card = build_labour_card(session, content_id)
     dist = card["distribution"]
     print(f"\n  EMEK KARTI - {card['content']['title']}")
-    print(f"  Brut gelir: {dist['gross_revenue']:.2f} TL   "
+    print(f"  Brüt gelir: {dist['gross_revenue']:.2f} TL   "
           f"Komisyon: {dist['commission_amount']:.2f} TL   "
-          f"Dagitilan: {dist['distributable']:.2f} TL")
+          f"Dağıtılan: {dist['distributable']:.2f} TL")
     print(f"  {'taraf':<22}{'rol':<10}{'pay':>8}{'tutar':>12}")
     print("  " + "-" * 52)
     for party in dist["parties"]:
@@ -128,7 +133,7 @@ def show_card(session, content_id: str) -> dict:
     if card["rules"]["log"]:
         print("  Uygulanan kurallar:")
         for line in card["rules"]["log"]:
-            print(f"woo    . {line}".replace("woo", ""))
+            print(f"      . {line}")
     return card
 
 
@@ -146,7 +151,7 @@ def reset_database() -> None:
 def main() -> int:
     if "--reset" in sys.argv:
         reset_database()
-        print("Veritabani ve yuklemeler sifirlandi.")
+        print("Veritabanı ve yüklemeler sıfırlandı.")
     create_schema()
 
     photos = sorted(RAW.glob("*.jpg"))
@@ -158,15 +163,15 @@ def main() -> int:
     index.rebuild(session)
 
     # --- Aktorler ---------------------------------------------------------
-    ayse = User(handle="ayse", display_name="Ayse Yilmaz", accent="#E8A838")
+    ayse = User(handle="ayse", display_name="Ayşe Yılmaz", accent="#E8A838")
     burak = User(handle="burak", display_name="Burak Demir", accent="#5B8DEF")
     ceyda = User(handle="ceyda", display_name="Ceyda Aksoy", accent="#4CC38A")
     session.add_all([ayse, burak, ceyda])
 
     campaign = Campaign(
         brand_name="Anadolu Kahve",
-        title="Sehrin Renkleri Remix Kampanyasi",
-        brief="Sehrinizin renklerini yakalayan icerikleri remixleyin.",
+        title="Şehrin Renkleri Remix Kampanyası",
+        brief="Şehrinizin renklerini yakalayan içerikleri remixleyin.",
         reward_pool=50_000.0,
         commission=0.10,
         source_floor=0.15,
@@ -176,30 +181,30 @@ def main() -> int:
     session.commit()
 
     # --- 1. Ayse ozgun icerik yukler --------------------------------------
-    banner("1/5", "Ayse ozgun fotografini yukluyor")
+    banner("1/5", "Ayşe özgün fotoğrafını yüklüyor")
     original_bgr = cv2.imread(str(photos[3]))
     ayse_result = ingest_service.ingest(
         session, index,
         raw_bytes=jpeg_bytes(original_bgr),
         owner=ayse,
-        title="Sabah isigi",
-        caption="Kendi cektigim kare.",
+        title="Sabah ışığı",
+        caption="Kendi çektiğim kare.",
         min_source_share=0.10,
         campaign_id=campaign.id,
     )
     show_recovery(ayse_result.recovery)
-    print(f"  Yayinlandi: manifest={'var' if ayse_result.content.manifest_present else 'yok'}, "
+    print(f"  Yayınlandı: manifest={'var' if ayse_result.content.manifest_present else 'yok'}, "
           f"filigran={ayse_result.content.watermark_tag}")
 
     # --- 2. Burak remixler -------------------------------------------------
-    banner("2/5", "Burak remixliyor: kirpma + yazi bandi + kendi cizimi")
+    banner("2/5", "Burak remixliyor: kırpma + yazı bandı + kendi çizimi")
     ayse_published = cv2.imread(ayse_result.content.file_path)
     burak_result = ingest_service.ingest(
         session, index,
         raw_bytes=jpeg_bytes(burak_remix(ayse_published)),
         owner=burak,
-        title="Sehrin Renkleri",
-        caption="Ayse'nin karesinden yola cikarak.",
+        title="Şehrin Renkleri",
+        caption="Ayşe'nin karesinden yola çıkarak.",
         declared_parent_id=ayse_result.content.id,
         remix_actions=["c2pa.cropped", "c2pa.drawing"],
         campaign_id=campaign.id,
@@ -207,22 +212,22 @@ def main() -> int:
     show_recovery(burak_result.recovery)
 
     # --- 3. Ceyda ekran goruntusu alip yukluyor ---------------------------
-    banner("3/5", "Ceyda ekran goruntusu aliyor - C2PA manifesti siliniyor")
+    banner("3/5", "Ceyda ekran görüntüsü alıyor — C2PA manifesti siliniyor")
     burak_published = cv2.imread(burak_result.content.file_path)
     stripped = ceyda_screenshot(burak_published)
-    print("  Ceyda'nin yukledigi dosyada icerik kimligi yok. Kaynak beyani da yok.")
+    print("  Ceyda'nın yüklediği dosyada içerik kimliği yok. Kaynak beyanı da yok.")
     ceyda_result = ingest_service.ingest(
         session, index,
         raw_bytes=jpeg_bytes(stripped),
         owner=ceyda,
-        title="Buldugum kare",
-        caption="Akista gordum, paylasiyorum.",
+        title="Bulduğum kare",
+        caption="Akışta gördüm, paylaşıyorum.",
         campaign_id=campaign.id,
     )
     show_recovery(ceyda_result.recovery)
 
     # --- 4. Gelir ve dagitim ----------------------------------------------
-    banner("4/5", "Kampanya odul havuzu dagitiliyor")
+    banner("4/5", "Kampanya ödül havuzu dağıtılıyor")
     for content, revenue in (
         (ayse_result.content, 1200.0),
         (burak_result.content, 2600.0),
@@ -241,7 +246,7 @@ def main() -> int:
               f"-> {row['allocation']:,.2f} TL  ({row['basis']})")
 
     # --- 5. Ayse itiraz ediyor --------------------------------------------
-    banner("5/5", "Ayse payina itiraz ediyor")
+    banner("5/5", "Ayşe payına itiraz ediyor")
     ayse_edge = next(
         (
             e
@@ -269,7 +274,7 @@ def main() -> int:
             session,
             edge_id=ayse_edge.id,
             raiser=ayse,
-            reason="Orijinalimin daha genis bir bolumu kullanilmis; pay dusuk hesaplandi.",
+            reason="Orijinalimin daha geniş bir bölümü kullanılmış; pay düşük hesaplandı.",
         )
         outcome = dispute_service.resolve(session, index, dispute.id)
         print(f"  Sonuc: {outcome.dispute.status.value}")
@@ -277,7 +282,7 @@ def main() -> int:
         show_card(session, ceyda_result.content.id)
 
     # --- Kazanc ozeti -----------------------------------------------------
-    banner("OZET", "Kullanici kazanclari")
+    banner("ÖZET", "Kullanıcı kazançları")
     for user in (ayse, burak, ceyda):
         earnings = payout_service.earnings_for_user(session, user.id)
         print(f"  {user.display_name:<18} toplam {earnings['total']:>10,.2f} TL   "

@@ -41,8 +41,13 @@ Sertifikalar ve korpus depoda değil; her ikisi de yukarıdaki komutlarla yenide
 ```bash
 cd backend && ../.venv/Scripts/python.exe -m pytest tests/   # 35 test: pay motoru + uçtan uca
 .venv/Scripts/python.exe scripts/seed_demo.py --reset        # altın senaryoyu kur ve anlat
-.venv/Scripts/python.exe -m uvicorn app.main:app --reload --app-dir backend
+
+# Uygulamayı çalıştır (iki terminal)
+.venv/Scripts/python.exe -m uvicorn app.main:app --reload --app-dir backend  # :8000
+cd frontend && npm run dev                                                   # :5173
 ```
+
+Vite `/api` isteklerini 8000'e vekilliyor; arayüz kodunda mutlak URL yok. **Backend'i `--reload` olmadan başlattıysanız, Python tarafında yaptığınız değişiklik sunucuya yansımaz** — tarayıcıda eski metinleri görürseniz önce bunu kontrol edin.
 
 Faz 0 ölçüm betikleri (her biri sonunda `RISK n KAPANDI/ACIK` basar):
 
@@ -76,7 +81,23 @@ backend/app/api/          FastAPI uçları ve şemalar
 backend/eval/attacks.py   20 türev senaryosu — tüm ölçümlerin tek kaynağı
 backend/poc/              Faz 0 doğrulama betikleri
 scripts/seed_demo.py      altın senaryoyu kurup anlatır (demo provası)
+
+frontend/src/
+  theme.css               koyu tema belirteçleri; renk disiplini burada tanımlı
+  api.ts                  tipli istemci — backend/app/api/schemas.py ile birebir
+  components/ui.tsx       Panel, Badge, ConfidenceBadge, ShareBar, Stat, Button
+  components/Pipeline.tsx StageTimeline (5 aşama) + EvidenceList (kanıt satırları)
+  components/ImageCompare.tsx  kaynak/türev + maskeli vurgu (canvas ile birleştirme)
+  components/ChainGraph.tsx    SVG DAG, katmanlı yerleşim
+  pages/                  Feed, ContentDetail (Emek Kartı), RemixStudio,
+                          Verify, Campaigns, Moderation
 ```
+
+### Arayüz renk disiplini
+
+Altın = para ve pay · yeşil = doğrulanmış / yüksek güven · turuncu = orta güven · kırmızı = düşük güven ve itiraz · mavi = zincir ve bağlantı. Bu eşleme her ekranda aynı; kullanıcı bir rengi bir kez öğrenince her yerde okuyabiliyor. Yeni bir renk eklemeden önce mevcut beşinden biri işe yarar mı diye bak.
+
+`ImageCompare` maskeyi CSS `mask-image` ile değil canvas üzerinde birleştirir: `mask-mode: luminance` tarayıcı desteği tutarsız ve bu ekran demonun en kritik görüntüsü. Ayrım renkle değil **kontrastla** kurulur — eşleşen bölge parlak kalır, eşleşmeyen griye düşer; kapsama %90'ı aştığında yoğun bir yeşil katman görüntüyü yutuyordu.
 
 ### Pay hesabının iki kritik kuralı
 
@@ -108,7 +129,8 @@ Sistem asla "sahibi budur" demez; kanıtlı **zincir önerisi** sunar. Kullanıc
 - **Ölçmeden iddia etme.** Her performans iddiası `backend/poc/` veya `backend/eval/` altında çalıştırılabilir bir betikten gelmeli. `docs/FAZ0-SONUCLARI.md` bu betiklerin çıktısıdır; sayıları elle düzenleme, betiği çalıştır.
 - **Yanlış atıf, kaçırılmış atıftan ağırdır.** Eşik ayarlarında bu yönde hata payı bırak. Yanlış pozitifi sıfırlamak için geri getirmeden feragat etmek doğru karar.
 - **Dürüst sınırlar yaz.** Bir yöntemin çalışmadığı senaryolar dokümanda açıkça yazılır (örn. filigran kırpmaya dayanmaz). Jüri karşısında güvenilirliği bu sağlar.
-- **Türkçe.** Kod içi yorumlar, dokümanlar ve arayüz metinleri Türkçe. Kaynak kodda ASCII kullan (Windows konsol kodlama sorunları için); Markdown dosyalarında tam Türkçe imla.
+- **Türkçe imla, kullanıcıya görünen her yerde tam.** Arayüz metinleri, API'nin döndürdüğü `aciklama` / kural günlüğü / itiraz özeti gibi tüm kullanıcıya görünen dizgeler diakritikli ve doğru imlayla yazılır — jüri bunları okuyacak. Sayı biçimi Türkçe: ondalık ayracı virgül (`%82,0`), yüzde işareti sayıdan önce ve bitişik. Apostrofla ek almaktan kaçın (`%99,9'unun` yerine "oranı %99,9 olarak ölçüldü").
+  Kod içi **yorumlar** ASCII kalır (mevcut dosyalarla tutarlılık için). `print()` kullanan betikler `sys.stdout.reconfigure(encoding="utf-8")` çağırır; Windows konsolu varsayılan cp1254 ile Türkçe çıktıyı bozuyor.
 - Yeni bir türev senaryosu gerekiyorsa `backend/eval/attacks.py` içine ekle — hem PoC hem kapsamlı değerlendirme oradan okuyor.
 
 ## Bilinen tuzaklar

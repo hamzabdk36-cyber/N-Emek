@@ -37,7 +37,7 @@ def distribute_content(
     """Tek bir gonderinin gelirini zincire dagitir."""
     content = session.get(Content, content_id)
     if content is None:
-        raise ValueError(f"icerik bulunamadi: {content_id}")
+        raise ValueError(f"İçerik bulunamadı: {content_id}")
     owner = session.get(User, content.owner_id)
     campaign = campaign or (
         session.get(Campaign, content.campaign_id) if content.campaign_id else None
@@ -92,7 +92,7 @@ def distribute_campaign(session: Session, campaign_id: str) -> CampaignDistribut
     """
     campaign = session.get(Campaign, campaign_id)
     if campaign is None:
-        raise ValueError(f"kampanya bulunamadi: {campaign_id}")
+        raise ValueError(f"Kampanya bulunamadı: {campaign_id}")
 
     contents = list(
         session.scalars(select(Content).where(Content.campaign_id == campaign_id))
@@ -109,10 +109,10 @@ def distribute_campaign(session: Session, campaign_id: str) -> CampaignDistribut
     for content in contents:
         if total_signal > 0:
             weight = content.revenue / total_signal
-            basis = "gonderi geliri orani"
+            basis = "gönderi geliri oranı"
         else:
             weight = 1.0 / len(contents)
-            basis = "esit bolusme (henuz gelir yok)"
+            basis = "eşit bölüşme (henüz gelir yok)"
         allocation = campaign.reward_pool * weight
 
         distribution, payouts = distribute_content(session, content.id, allocation, campaign)

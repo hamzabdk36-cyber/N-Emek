@@ -184,14 +184,14 @@ def recover(
                     "manifest_urn": manifest.urn,
                     "issuer": manifest.issuer,
                     "validation": manifest.validation_state,
-                    "aciklama": "Imzali manifest bu kaynagi beyan ediyor.",
+                    "aciklama": "İmzalı manifest bu kaynağı beyan ediyor.",
                 },
             )
         stage_log.append(
             {
                 "stage": "c2pa",
                 "found": bool(resolved),
-                "detail": f"manifest var, {len(resolved)} kaynak cozuldu",
+                "detail": f"manifest var, {len(resolved)} kaynak çözüldü",
             }
         )
     else:
@@ -200,7 +200,7 @@ def recover(
                 "stage": "c2pa",
                 "found": False,
                 "detail": manifest.error or "manifest yok",
-                "aciklama": "Icerik kimligi silinmis veya hic olusturulmamis.",
+                "aciklama": "İçerik kimliği silinmiş veya hiç oluşturulmamış.",
             }
         )
 
@@ -212,7 +212,7 @@ def recover(
             {
                 "stage": "declared",
                 "found": True,
-                "aciklama": "Uretici remix studyosunda bu kaynagi secti.",
+                "aciklama": "Üretici remix stüdyosunda bu kaynağı seçti.",
             },
         )
 
@@ -230,7 +230,7 @@ def recover(
                 "stage": "exact",
                 "found": True,
                 "content_hash": finger.content_hash[:16] + "...",
-                "aciklama": "Dosya bayt bayt ayni: birebir kopya.",
+                "aciklama": "Dosya bayt bayt aynı: birebir kopya.",
             },
         )
     stage_log.append({"stage": "exact", "found": bool(exact_id), "detail": "SHA-256"})
@@ -250,14 +250,14 @@ def recover(
                 "found": True,
                 "tag": wm_tag,
                 "vote_confidence": round(extracted[1], 3) if extracted else None,
-                "aciklama": "Piksellere gomulu icerik kimligi okundu (CRC dogrulandi).",
+                "aciklama": "Piksellere gömülü içerik kimliği okundu (CRC doğrulandı).",
             },
         )
     stage_log.append(
         {
             "stage": "watermark",
             "found": bool(wm_owner),
-            "detail": f"kimlik={wm_tag}" if wm_tag else "filigran okunamadi",
+            "detail": f"kimlik={wm_tag}" if wm_tag else "filigran okunamadı",
         }
     )
 
@@ -282,7 +282,7 @@ def recover(
                     "region": region_name,
                     "hamming": int(hit.score),
                     "esik": fp.PHASH_MATCH_THRESHOLD,
-                    "aciklama": f"'{region_name}' bolgesinin algisal ozeti kaynakla ortusuyor.",
+                    "aciklama": f"'{region_name}' bölgesinin algısal özeti kaynakla örtüşüyor.",
                 },
             )
         if region_name == "tam":
@@ -294,7 +294,7 @@ def recover(
                         "stage": "phash_blok",
                         "found": True,
                         "hamming": int(hit.score),
-                        "aciklama": "Gorselin bloklari kaynagin bloklariyla eslesiyor.",
+                        "aciklama": "Görselin blokları kaynağın bloklarıyla eşleşiyor.",
                     },
                 )
     timings["phash_search"] = (time.perf_counter() - t0) * 1000
@@ -312,7 +312,7 @@ def recover(
                     "found": True,
                     "region": region_name,
                     "cosine": round(hit.score, 4),
-                    "aciklama": f"'{region_name}' bolgesi kaynakla gorsel olarak benzer.",
+                    "aciklama": f"'{region_name}' bölgesi kaynakla görsel olarak benzer.",
                 },
             )
     timings["clip_search"] = (time.perf_counter() - t0) * 1000
@@ -370,8 +370,8 @@ def recover(
                 {
                     "stage": "geometry",
                     "matched": False,
-                    "reason": match.reason if match else "kaynak gorseli yuklenemedi",
-                    "aciklama": "Geometrik dogrulama yapilamadi; alan orani olculemedi.",
+                    "reason": match.reason if match else "kaynak görseli yüklenemedi",
+                    "aciklama": "Geometrik doğrulama yapılamadı; alan oranı ölçülemedi.",
                 }
             )
 
@@ -397,7 +397,7 @@ def recover(
         {
             "stage": "geometry",
             "found": any(link.geometry_verified for link in links),
-            "detail": f"{len(ordered)} aday dogrulandi, {len(links)} bag kaldi",
+            "detail": f"{len(ordered)} aday doğrulandı, {len(links)} bağ kaldı",
         }
     )
 

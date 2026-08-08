@@ -53,7 +53,7 @@ def open_dispute(
 ) -> Dispute:
     edge = session.get(AttributionEdge, edge_id)
     if edge is None:
-        raise ValueError(f"bag bulunamadi: {edge_id}")
+        raise ValueError(f"Bağ bulunamadı: {edge_id}")
 
     dispute = Dispute(
         edge_id=edge_id,
@@ -80,10 +80,10 @@ def resolve(
     settings = get_settings()
     dispute = session.get(Dispute, dispute_id)
     if dispute is None:
-        raise ValueError(f"itiraz bulunamadi: {dispute_id}")
+        raise ValueError(f"İtiraz bulunamadı: {dispute_id}")
     edge = session.get(AttributionEdge, dispute.edge_id)
     if edge is None:
-        raise ValueError("itiraza konu bag silinmis")
+        raise ValueError("İtiraza konu bağ silinmiş.")
 
     before = {
         "confidence": edge.confidence,
@@ -104,8 +104,8 @@ def resolve(
         dispute.status = DisputeStatus.ESCALATED
         edge.status = LinkStatus.DISPUTED
         summary = (
-            "Yeniden olcum de sonuc vermedi. Bag insan incelemesine yonlendirildi; "
-            "karar verilene kadar mevcut pay gecerli."
+            "Yeniden ölçüm de sonuç vermedi. Bağ insan incelemesine yönlendirildi; "
+            "karar verilene kadar mevcut pay geçerli."
         )
     elif changed:
         dispute.status = DisputeStatus.RESOLVED_ACCEPTED
@@ -114,12 +114,12 @@ def resolve(
             if after["confidence"] >= settings.auto_confirm_confidence
             else LinkStatus.PROPOSED
         )
-        yon = "yukseldi" if coverage_delta > 0 else "dusuk"
+        yon = "yükseldi" if coverage_delta > 0 else "düştü"
+        onceki = f"%{(before['visual_coverage'] or 0) * 100:.1f}".replace(".", ",")
+        sonraki = f"%{(after['visual_coverage'] or 0) * 100:.1f}".replace(".", ",")
         summary = (
-            f"Itiraz kabul edildi. Yeniden olcumde kullanilan alan orani "
-            f"%{(before['visual_coverage'] or 0) * 100:.1f} yerine "
-            f"%{(after['visual_coverage'] or 0) * 100:.1f} cikti ({yon}). "
-            f"Paylar guncellendi."
+            f"İtiraz kabul edildi. Yeniden ölçümde kullanılan alan oranı "
+            f"{onceki} yerine {sonraki} çıktı ({yon}). Paylar güncellendi."
         )
     else:
         dispute.status = DisputeStatus.RESOLVED_REJECTED
@@ -129,8 +129,8 @@ def resolve(
             else LinkStatus.PROPOSED
         )
         summary = (
-            "Itiraz reddedildi. Daha hassas dedektorle yapilan yeniden olcum "
-            "ayni sonucu verdi; anlamli bir degisiklik yok."
+            "İtiraz reddedildi. Daha hassas dedektörle yapılan yeniden ölçüm "
+            "aynı sonucu verdi; anlamlı bir değişiklik yok."
         )
 
     dispute.resolution = {
@@ -184,7 +184,7 @@ def moderator_decision(
     """Insan moderatorun nihai karari."""
     dispute = session.get(Dispute, dispute_id)
     if dispute is None:
-        raise ValueError(f"itiraz bulunamadi: {dispute_id}")
+        raise ValueError(f"İtiraz bulunamadı: {dispute_id}")
     edge = session.get(AttributionEdge, dispute.edge_id)
 
     if accept:

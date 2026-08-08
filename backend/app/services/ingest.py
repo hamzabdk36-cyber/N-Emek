@@ -101,7 +101,7 @@ def ingest(
     incoming_path.write_bytes(raw_bytes)
     incoming_bgr = cv2.imdecode(np.frombuffer(raw_bytes, np.uint8), cv2.IMREAD_COLOR)
     if incoming_bgr is None:
-        raise ValueError("gorsel cozulemedi")
+        raise ValueError("Görsel çözülemedi.")
 
     # --- 1. Koken kurtarma: gelen dosya uzerinde --------------------------
     result = recovery.recover(
@@ -277,7 +277,7 @@ def remeasure(
     evidence.append(
         {
             **match.as_evidence(),
-            "aciklama": "Itiraz uzerine SIFT ile yeniden olculdu.",
+            "aciklama": "İtiraz üzerine SIFT ile yeniden ölçüldü.",
             "remeasured": True,
         }
     )

@@ -24,20 +24,20 @@ from app.models.entities import AttributionEdge, Campaign, Content, LinkStatus, 
 
 # Guven duzeyinin insan okuyabilir karsiligi.
 CONFIDENCE_BANDS = [
-    (0.85, "yuksek", "Kanitlar guclu ve birbirini destekliyor."),
-    (0.60, "orta", "Kaynak buyuk olasilikla dogru; itiraza acik."),
-    (0.0, "dusuk", "Zayif kanit. Bu bag bir oneridir, kesin karar degildir."),
+    (0.85, "yuksek", "Kanıtlar güçlü ve birbirini destekliyor."),
+    (0.60, "orta", "Kaynak büyük olasılıkla doğru; itiraza açık."),
+    (0.0, "dusuk", "Zayıf kanıt. Bu bağ bir öneridir, kesin karar değildir."),
 ]
 
 STAGE_LABELS = {
-    "c2pa": "Imzali icerik kimligi (C2PA)",
-    "exact": "Birebir dosya eslesmesi",
-    "watermark": "Piksele gomulu kimlik",
-    "phash": "Algisal parmak izi",
-    "phash_blok": "Blok bazli algisal parmak izi",
-    "clip": "Gorsel benzerlik modeli",
-    "declared": "Uretici beyani",
-    "geometry": "Geometrik dogrulama ve alan olcumu",
+    "c2pa": "İmzalı içerik kimliği (C2PA)",
+    "exact": "Birebir dosya eşleşmesi",
+    "watermark": "Piksele gömülü kimlik",
+    "phash": "Algısal parmak izi",
+    "phash_blok": "Blok bazlı algısal parmak izi",
+    "clip": "Görsel benzerlik modeli",
+    "declared": "Üretici beyanı",
+    "geometry": "Geometrik doğrulama ve alan ölçümü",
 }
 
 
@@ -103,7 +103,7 @@ def build_labour_card(session: Session, content_id: str, revenue: float | None =
     """Bir icerik icin tam Emek Karti verisi."""
     content = session.get(Content, content_id)
     if content is None:
-        raise ValueError(f"icerik bulunamadi: {content_id}")
+        raise ValueError(f"İçerik bulunamadı: {content_id}")
     owner = session.get(User, content.owner_id)
     campaign = session.get(Campaign, content.campaign_id) if content.campaign_id else None
 
@@ -171,21 +171,21 @@ def _provenance_summary(session: Session, content: Content) -> dict:
     if content.provenance_recovered:
         durum = "yeniden_kuruldu"
         aciklama = (
-            "Yuklenen dosyada icerik kimligi yoktu ve kaynak beyan edilmemisti. "
-            "Koken, kanit zinciriyle yeniden kuruldu."
+            "Yüklenen dosyada içerik kimliği yoktu ve kaynak beyan edilmemişti. "
+            "Köken, kanıt zinciriyle yeniden kuruldu."
         )
     elif content.incoming_manifest_present:
         durum = "kimlik_korundu"
-        aciklama = "Yuklenen dosyada icerik kimligi korunmustu; koken manifestten okundu."
+        aciklama = "Yüklenen dosyada içerik kimliği korunmuştu; köken manifestten okundu."
     elif edges:
         durum = "beyan_dogrulandi"
         aciklama = (
-            "Yuklenen dosyada icerik kimligi yoktu; uretici kaynagi beyan etti ve "
-            "beyan olcumle dogrulandi."
+            "Yüklenen dosyada içerik kimliği yoktu; üretici kaynağı beyan etti ve "
+            "beyan ölçümle doğrulandı."
         )
     else:
         durum = "ozgun"
-        aciklama = "Kaynak bulunamadi; icerik ozgun kabul edildi."
+        aciklama = "Kaynak bulunamadı; içerik özgün kabul edildi."
 
     return {
         "durum": durum,

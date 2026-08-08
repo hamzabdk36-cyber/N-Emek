@@ -37,3 +37,6 @@ backend/certs/
 .idea/
 Thumbs.db
 desktop.ini
+
+# Frontend build ciktisi
+frontend/dist/

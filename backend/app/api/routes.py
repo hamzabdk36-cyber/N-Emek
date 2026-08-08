@@ -122,14 +122,14 @@ def _recovery_out(session: Session, result: recovery.RecoveryResult) -> Recovery
 def _require_user(session: Session, user_id: str) -> User:
     user = session.get(User, user_id)
     if user is None:
-        raise HTTPException(404, f"kullanici bulunamadi: {user_id}")
+        raise HTTPException(404, f"Kullanıcı bulunamadı: {user_id}")
     return user
 
 
 def _require_content(session: Session, content_id: str) -> Content:
     content = session.get(Content, content_id)
     if content is None:
-        raise HTTPException(404, f"icerik bulunamadi: {content_id}")
+        raise HTTPException(404, f"İçerik bulunamadı: {content_id}")
     return content
 
 
@@ -178,7 +178,7 @@ def get_content_image(content_id: str, session: Session = Depends(get_session)):
     content = _require_content(session, content_id)
     path = Path(content.file_path)
     if not path.exists():
-        raise HTTPException(404, "dosya bulunamadi")
+        raise HTTPException(404, "Dosya bulunamadı.")
     return FileResponse(path, media_type="image/jpeg")
 
 
@@ -243,7 +243,7 @@ async def create_remix(
     """
     parent = _require_content(session, parent_id)
     if not parent.remix_allowed:
-        raise HTTPException(403, "bu icerik remixlenemez (uretici izni yok)")
+        raise HTTPException(403, "Bu içerik remixlenemez: üretici remix iznini kapatmış.")
     owner = _require_user(session, owner_id)
     raw = await file.read()
 
@@ -278,7 +278,7 @@ async def verify(
     raw = await file.read()
     image = cv2.imdecode(np.frombuffer(raw, np.uint8), cv2.IMREAD_COLOR)
     if image is None:
-        raise HTTPException(400, "gorsel cozulemedi")
+        raise HTTPException(400, "Görsel çözülemedi.")
 
     with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
         tmp.write(raw)
@@ -305,10 +305,10 @@ def edge_mask(edge_id: str, session: Session = Depends(get_session)):
     """Eslesen bolge maskesi - arayuzdeki vurgu katmani."""
     edge = session.get(AttributionEdge, edge_id)
     if edge is None or not edge.mask_path:
-        raise HTTPException(404, "maske yok")
+        raise HTTPException(404, "Bu bağ için maske üretilmedi.")
     path = Path(edge.mask_path)
     if not path.exists():
-        raise HTTPException(404, "maske dosyasi bulunamadi")
+        raise HTTPException(404, "Maske dosyası bulunamadı.")
     return FileResponse(path, media_type="image/png")
 
 
