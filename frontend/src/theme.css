@@ -20,7 +20,12 @@
 
   --color-ink: #e8ecf3;
   --color-ink-2: #a8b1c0;
-  --color-ink-3: #6b7482;
+  /* Ucuncul metin. Deger olculerek secildi: onceki #6b7482 en acik
+     zeminde bile 4.15:1 veriyordu ve arayuzdeki kucuk metinlerin cogu
+     bu renkte - yani WCAG AA (4.5:1) uygulama genelinde karsilanmiyordu.
+     #7a8494 ayni mavi-gri tonu koruyup uc zeminde de geciyor:
+     bg 5.18 · surface 4.84 · surface-2 4.52 */
+  --color-ink-3: #7a8494;
 
   /* Para ve pay */
   --color-gold: #f2b134;

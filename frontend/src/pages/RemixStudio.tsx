@@ -323,6 +323,13 @@ export default function RemixStudio() {
             onMouseMove={onMove}
             onMouseUp={onUp}
             onMouseLeave={onUp}
+            role="img"
+            aria-label={
+              `Remix tuvali. Kaynak: ${source.title}. ` +
+              `${crop ? "Kırpılmış. " : ""}` +
+              `${texts.length} yazı katmanı, ${strokes.length} çizim, ` +
+              `filtre: ${filter === "yok" ? "uygulanmadı" : filter}.`
+            }
             className="w-full rounded-lg border border-[var(--color-line)]"
             style={{
               cursor:
@@ -366,6 +373,15 @@ export default function RemixStudio() {
                 Seçimi bırak
               </ToolButton>
             </div>
+
+            {tool === "kirp" && (
+              <KeyboardCrop
+                image={image}
+                crop={crop}
+                pendingCrop={pendingCrop}
+                onChange={setPendingCrop}
+              />
+            )}
 
             <div className="mt-4 space-y-3">
               <Field label="Yazı metni" hint="Tuvale tıklayarak yerleştirin.">
@@ -474,5 +490,78 @@ function ToolButton({
     >
       {children}
     </button>
+  );
+}
+
+/**
+ * Kirpmanin klavyeyle yapilabilen karsiligi.
+ *
+ * Tuval uzerinde surukleyerek kirpmak fareye bagli. WCAG 2.1.1,
+ * kullanicinin *hareket yoluna* bagli girdileri (serbest el cizim gibi)
+ * bu kuraldan muaf tutuyor - ama kirpma oyle degil: bir dikdortgen,
+ * dort sayiyla ifade edilebilir. Bu yuzden kirpma araci secildiginde
+ * sayisal alanlar da aciliyor ve klavyeyle gezen kullanici ayni isi
+ * yapabiliyor.
+ */
+function KeyboardCrop({
+  image,
+  crop,
+  pendingCrop,
+  onChange,
+}: {
+  image: HTMLImageElement | null;
+  crop: Rect | null;
+  pendingCrop: Rect | null;
+  onChange: (rect: Rect | null) => void;
+}) {
+  if (!image) return null;
+  const area: Rect = crop ?? {
+    x: 0,
+    y: 0,
+    w: image.naturalWidth,
+    h: image.naturalHeight,
+  };
+  const rect = pendingCrop ?? area;
+
+  const set = (key: keyof Rect, value: number) => {
+    const next = { ...rect, [key]: Math.max(0, Math.round(value)) };
+    // Secim kaynak alaninin disina tasmasin.
+    next.w = Math.min(next.w, area.x + area.w - next.x);
+    next.h = Math.min(next.h, area.y + area.h - next.y);
+    onChange(next);
+  };
+
+  const alanlar: { key: keyof Rect; label: string; max: number }[] = [
+    { key: "x", label: "Sol", max: area.x + area.w - 32 },
+    { key: "y", label: "Üst", max: area.y + area.h - 32 },
+    { key: "w", label: "Genişlik", max: area.w },
+    { key: "h", label: "Yükseklik", max: area.h },
+  ];
+
+  return (
+    <fieldset className="mt-4 rounded-lg border border-[var(--color-line)] px-3 py-2.5">
+      <legend className="px-1 text-[11px] font-medium tracking-wide text-[var(--color-ink-3)] uppercase">
+        Sayısal kırpma
+      </legend>
+      <p className="mb-2 text-[11.5px] leading-relaxed text-[var(--color-ink-3)]">
+        Tuvalde sürükleyebilir ya da değerleri buradan girebilirsiniz. Piksel
+        cinsinden.
+      </p>
+      <div className="grid grid-cols-2 gap-2">
+        {alanlar.map((a) => (
+          <Field key={a.key} label={a.label}>
+            <input
+              type="number"
+              inputMode="numeric"
+              min={a.key === "w" || a.key === "h" ? 32 : 0}
+              max={Math.round(a.max)}
+              value={Math.round(rect[a.key])}
+              onChange={(e) => set(a.key, Number(e.target.value))}
+              className={inputClass}
+            />
+          </Field>
+        ))}
+      </div>
+    </fieldset>
   );
 }

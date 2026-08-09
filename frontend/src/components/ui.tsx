@@ -141,21 +141,37 @@ export function Stat({
 }
 
 /* -------------------------------------------------------------------------- */
-/** Pay dagilimini tek bir yatay serit olarak gosterir. */
+/**
+ * Pay dagilimini tek bir yatay serit olarak gosterir.
+ *
+ * Serit bilgiyi yalnizca *renk ve genislikle* tasiyor; `title` bir
+ * `div` uzerinde ekran okuyuculara guvenilir sekilde ulasmiyor. Bu
+ * yuzden serit tek bir `img` rolu olarak sunuluyor ve dagilimin tamami
+ * metne cevriliyor: gorsel olmayan kullanici da "Ayse %68,0 · Burak
+ * %12,0" bilgisini aliyor.
+ */
 export function ShareBar({
   segments,
 }: {
   segments: { label: string; value: number; color: string }[];
 }) {
   const total = segments.reduce((sum, s) => sum + s.value, 0) || 1;
+  const pay = (value: number) =>
+    `%${((value / total) * 100).toFixed(1)}`.replace(".", ",");
+  const ozet = segments.map((s) => `${s.label} ${pay(s.value)}`).join(" · ");
+
   return (
-    <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-[var(--color-surface-2)]">
+    <div
+      role="img"
+      aria-label={`Pay dağılımı: ${ozet}`}
+      className="flex h-2.5 w-full overflow-hidden rounded-full bg-[var(--color-surface-2)]"
+    >
       {segments.map((s, i) => (
         <div
           key={i}
           className="h-full transition-[width] duration-500"
           style={{ width: `${(s.value / total) * 100}%`, background: s.color }}
-          title={`${s.label}: ${((s.value / total) * 100).toFixed(1)}%`}
+          title={`${s.label}: ${pay(s.value)}`}
         />
       ))}
     </div>
@@ -172,14 +188,18 @@ export function roleColor(role: string, index = 0): string {
 
 /* -------------------------------------------------------------------------- */
 export function Spinner({ label }: { label?: string }) {
+  // role="status" sarmalayicida: canli bolge donen halkanin kendisinde
+  // olursa yanindaki metin okuyucuya hic ulasmiyor.
   return (
-    <div className="flex items-center gap-3 text-[13px] text-[var(--color-ink-2)]">
+    <div
+      role="status"
+      className="flex items-center gap-3 text-[13px] text-[var(--color-ink-2)]"
+    >
       <span
         className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-[var(--color-line)] border-t-[var(--color-link)]"
-        role="status"
-        aria-label="Yükleniyor"
+        aria-hidden
       />
-      {label}
+      {label ?? "Yükleniyor"}
     </div>
   );
 }
@@ -207,8 +227,13 @@ export function EmptyState({
 }
 
 export function ErrorNote({ error }: { error: string }) {
+  // role="alert" olmadan hata mesaji ekran okuyucuya hic bildirilmiyordu:
+  // gorsel kullanici kirmizi kutuyu goruyor, digeri hicbir sey duymuyordu.
   return (
-    <div className="rounded-lg border border-[var(--color-alert)]/40 bg-[var(--color-alert-dim)]/40 px-4 py-3 text-[13px] text-[var(--color-alert)]">
+    <div
+      role="alert"
+      className="rounded-lg border border-[var(--color-alert)]/40 bg-[var(--color-alert-dim)]/40 px-4 py-3 text-[13px] text-[var(--color-alert)]"
+    >
       {error}
     </div>
   );
@@ -276,8 +301,11 @@ export function Field({
   );
 }
 
+// `focus:outline-none` bilerek yok: temadaki genel `:focus-visible`
+// halkasini eziyordu ve klavyeyle gezen kullanici alanin secili oldugunu
+// yalnizca 1 piksellik bir kenar renginden anlamak zorunda kaliyordu.
 export const inputClass =
-  "w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-bg)] px-3 py-2 text-[13px] text-[var(--color-ink)] placeholder:text-[var(--color-ink-3)] focus:border-[var(--color-link)] focus:outline-none";
+  "w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-bg)] px-3 py-2 text-[13px] text-[var(--color-ink)] placeholder:text-[var(--color-ink-3)] focus:border-[var(--color-link)]";
 
 /* -------------------------------------------------------------------------- */
 export function Avatar({

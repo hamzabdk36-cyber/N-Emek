@@ -19,8 +19,16 @@ export default function App() {
   return (
     <SessionProvider>
       <div className="min-h-dvh">
+        {/* Klavyeyle gezen kullanici her sayfada once basligi ve alti
+            gezinme baglantisini gecmek zorunda kalmasin. */}
+        <a
+          href="#icerik"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:border focus:border-[var(--color-line)] focus:bg-[var(--color-surface)] focus:px-3.5 focus:py-2 focus:text-[13px] focus:text-[var(--color-ink)]"
+        >
+          İçeriğe atla
+        </a>
         <Header />
-        <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+        <main id="icerik" className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
           <Routes>
             <Route path="/" element={<Feed />} />
             <Route path="/icerik/:id" element={<ContentDetail />} />
@@ -93,7 +101,7 @@ function Header() {
                   const next = users.find((u) => u.id === e.target.value);
                   if (next) setCurrentUser(next);
                 }}
-                className="rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-2.5 py-1.5 text-[13px] text-[var(--color-ink)] focus:border-[var(--color-link)] focus:outline-none"
+                className="rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-2.5 py-1.5 text-[13px] text-[var(--color-ink)] focus:border-[var(--color-link)]"
               >
                 {users.map((u) => (
                   <option key={u.id} value={u.id}>

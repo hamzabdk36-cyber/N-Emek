@@ -198,7 +198,10 @@ function UploadPanel({ onDone }: { onDone: () => void }) {
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-3">
           <Field label="Görsel">
-            <div
+            {/* Buton, div degil: gizli dosya alani sekme sirasinda
+                olmadigi icin tiklanabilir bir div klavyeyle acilamiyordu. */}
+            <button
+              type="button"
               onClick={() => inputRef.current?.click()}
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => {
@@ -206,14 +209,15 @@ function UploadPanel({ onDone }: { onDone: () => void }) {
                 const dropped = e.dataTransfer.files?.[0];
                 if (dropped) setFile(dropped);
               }}
-              className="flex cursor-pointer items-center justify-center rounded-lg border border-dashed border-[var(--color-line)] bg-[var(--color-bg)] px-4 py-6 text-center text-[13px] text-[var(--color-ink-3)] hover:border-[var(--color-link)]"
+              aria-label={file ? `Seçilen dosya: ${file.name}. Değiştir` : "Yüklenecek görseli seç"}
+              className="flex w-full cursor-pointer items-center justify-center rounded-lg border border-dashed border-[var(--color-line)] bg-[var(--color-bg)] px-4 py-6 text-center text-[13px] text-[var(--color-ink-3)] hover:border-[var(--color-link)]"
             >
               {file ? (
                 <span className="text-[var(--color-ink)]">{file.name}</span>
               ) : (
                 "Sürükleyin ya da seçmek için tıklayın"
               )}
-            </div>
+            </button>
             <input
               ref={inputRef}
               type="file"

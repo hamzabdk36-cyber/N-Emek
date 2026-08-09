@@ -62,23 +62,32 @@ export default function Verify() {
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)]">
         <Panel title="Sorgulanacak görsel">
-          <div
+          {/* Buton, div degil: dosya alani `hidden` oldugu icin sekme
+              sirasinda yok ve tiklanabilir bir div klavyeyle acilamiyordu -
+              yani klavyeyle gezen kullanici hic gorsel yukleyemiyordu. */}
+          <button
+            type="button"
             onClick={() => inputRef.current?.click()}
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => {
               e.preventDefault();
               pick(e.dataTransfer.files?.[0] ?? null);
             }}
-            className="cursor-pointer overflow-hidden rounded-lg border border-dashed border-[var(--color-line)] bg-[var(--color-bg)] hover:border-[var(--color-link)]"
+            aria-label={
+              preview
+                ? "Sorgulanacak görseli değiştir"
+                : "Sorgulanacak görseli seç"
+            }
+            className="block w-full cursor-pointer overflow-hidden rounded-lg border border-dashed border-[var(--color-line)] bg-[var(--color-bg)] hover:border-[var(--color-link)]"
           >
             {preview ? (
               <img src={preview} alt="Sorgulanacak görsel" className="w-full" />
             ) : (
-              <p className="px-4 py-14 text-center text-[13px] text-[var(--color-ink-3)]">
+              <span className="block px-4 py-14 text-center text-[13px] text-[var(--color-ink-3)]">
                 Görseli sürükleyin ya da seçmek için tıklayın
-              </p>
+              </span>
             )}
-          </div>
+          </button>
           <input
             ref={inputRef}
             type="file"

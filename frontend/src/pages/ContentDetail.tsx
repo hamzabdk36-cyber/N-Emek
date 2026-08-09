@@ -164,6 +164,7 @@ export default function ContentDetail() {
                 value={revenueDraft}
                 onChange={(e) => setRevenueDraft(e.target.value)}
                 inputMode="decimal"
+                aria-label="Gönderinin ürettiği gelir, TL"
               />
               <Button
                 onClick={async () => {
