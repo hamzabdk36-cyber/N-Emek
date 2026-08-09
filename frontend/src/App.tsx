@@ -50,7 +50,7 @@ function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--color-line)] bg-[var(--color-bg)]/92 backdrop-blur">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-3 px-4 py-3 sm:px-6">
-        <NavLink to="/" className="flex items-center gap-2.5">
+        <NavLink to="/" className="order-1 flex items-center gap-2.5">
           <Logo />
           <span className="leading-tight">
             <span className="block text-[15px] font-semibold tracking-tight">
@@ -62,7 +62,13 @@ function Header() {
           </span>
         </NavLink>
 
-        <nav className="flex items-center gap-1" aria-label="Ana gezinme">
+        {/* Dar ekranda gezinme kendi satirina duser (order-3 + w-full);
+            boylece baslik uc satir yerine iki satir oluyor. Yapiskan
+            baslik telefonda ekranin bestebirini kaliciolarak yiyordu. */}
+        <nav
+          className="order-3 flex w-full items-center gap-1 overflow-x-auto sm:order-2 sm:w-auto"
+          aria-label="Ana gezinme"
+        >
           {NAV.map((item) => (
             <NavLink
               key={item.to}
@@ -81,7 +87,7 @@ function Header() {
           ))}
         </nav>
 
-        <div className="ml-auto flex items-center gap-3">
+        <div className="order-2 ml-auto flex items-center gap-3 sm:order-3">
           {health && (
             <span
               className="hidden items-center gap-1.5 text-[11px] text-[var(--color-ink-3)] md:flex"
