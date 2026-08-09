@@ -21,7 +21,29 @@ Mimari ve diyagramlar: [`docs/MIMARI.md`](docs/MIMARI.md)
 
 ---
 
-## Kurulum — üç adım
+## Kurulum
+
+İki yol var. Docker daha az adım, yerel kurulum daha hızlı çalışır (GPU kullanır).
+
+### Docker ile — tek komut
+
+```bash
+docker compose up --build
+```
+
+Tarayıcıda **http://localhost:5173**. Sertifikalar, test görselleri ve demo verisi
+kapsayıcı içinde otomatik üretilir; ikinci açılışta hepsi hazır gelir.
+
+İlk açılış ~10–15 dakika: bağımlılıklar kurulur ve yapay zekâ modeli iner (~600 MB).
+Docker'da PyTorch bilerek CPU sürümü — jüri makinesinde NVIDIA sürücüsü olmayabilir ve
+tek komutla çalışması hızdan önemli. Sıfırlamak için `docker compose down -v`.
+
+> **Not:** Docker kurulumu bu makinede çalıştırılamadı (Docker yüklü değil). Dosyalar
+> yazıldı ve doğrulanabilen her şey doğrulandı — compose şeması, kabuk sözdizimi, betik
+> yolları, tüm bağımlılıkların Linux/Python 3.13 tekerleklerinin varlığı — ama gerçek bir
+> `docker compose up` henüz denenmedi. Jüriye göstermeden önce bir kez koşturun.
+
+### Yerel kurulum — üç adım
 
 Gereksinimler: **Python 3.13**, **Node 24**, ~3 GB disk. GPU zorunlu değil; yoksa kod
 CPU'ya düşer (yavaşlar ama çalışır).

@@ -1,0 +1,25 @@
+# Derleme baglami kucuk kalsin: bunlar imaja girmez, kapsayici icinde
+# yeniden uretilir.
+.venv/
+**/__pycache__/
+**/*.py[cod]
+.pytest_cache/
+
+frontend/node_modules/
+frontend/dist/
+
+# Korpus, yuklemeler, indeks ve veritabani: birim (volume) uzerinde
+# olusur. Yerel veriyi imaja tasimak hem gereksiz hem yaniltici olurdu.
+data/
+
+# Sertifikalar asla imaja girmez; kapsayici kendi uretir.
+backend/certs/
+
+.git/
+.gitignore
+*.db
+*.sqlite3
+.env
+.env.local
+.vscode/
+.idea/

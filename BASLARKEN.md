@@ -9,6 +9,22 @@ zincirini kanıtlarıyla geri kuruyor ve geliri ölçüme dayalı olarak paylaş
 
 ---
 
+## En kısa yol: Docker
+
+Bilgisayarında Docker varsa tek komut yeter:
+
+```bash
+docker compose up --build
+```
+
+Sonra **http://localhost:5173**. Aşağıdaki adımların hepsi kapsayıcı içinde otomatik
+yapılır. İlk açılış 10–15 dakika sürer (bağımlılıklar + yapay zekâ modeli).
+
+*Bu yol henüz gerçek bir makinede denenmedi; tökezlerse aşağıdaki elle kurulum kesin
+çalışıyor.*
+
+---
+
 ## Gerekenler
 
 - **Python 3.13** ve **Node 24**

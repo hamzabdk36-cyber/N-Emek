@@ -1,0 +1,10 @@
+# Kabuk betikleri ve kapsayici dosyalari her zaman LF ile kullanima alinir.
+#
+# Sebep: Windows'ta git varsayilan olarak LF'i CRLF'e ceviriyor. CRLF ile
+# biten bir `entrypoint.sh` Linux kapsayicisinda calismaz - `#!/bin/sh\r`
+# yorumlanamaz ve "bad interpreter" hatasi verir. Depoyu Windows'ta klonlayip
+# `docker compose up` diyen biri icin bu hata tamamen gorunmez bir tuzak.
+*.sh text eol=lf
+Dockerfile text eol=lf
+*.conf text eol=lf
+docker-compose.yml text eol=lf

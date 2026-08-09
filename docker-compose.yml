@@ -1,0 +1,63 @@
+# N-Emek — tek komutla kurulum
+#
+#     docker compose up --build
+#     tarayicida http://localhost:5173
+#
+# Ilk acilis uzun surer (~10-15 dk): bagimliliklar kurulur, CLIP modeli
+# iner (~600 MB) ve demo senaryosu kurulur. Sonraki acilislar saniyeler
+# icinde; uretilenler asagidaki birimlerde (volume) kalici.
+#
+# Her seyi sifirlamak icin:  docker compose down -v
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      # Demo icin indirilecek test gorseli sayisi. Tam degerlendirmeyi
+      # (backend/eval) kosacaksaniz 320 verin.
+      NEMEK_CORPUS_COUNT: "24"
+    volumes:
+      - nemek-data:/app/data
+      - nemek-certs:/app/backend/certs
+      # Model onbellegi ayri birimde: kapsayici silinse de model
+      # yeniden inmez.
+      - nemek-model-cache:/cache/huggingface
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 15s
+      timeout: 10s
+      # Ilk acilis model indirmesi yuzunden uzun; saglikli sayilmadan
+      # once bol sure taniyoruz.
+      retries: 40
+      start_period: 120s
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  nemek-data:
+  nemek-certs:
+  nemek-model-cache:
+# GPU kullanmak isterseniz (NVIDIA surucusu + nvidia-container-toolkit
+# gerekir): backend/Dockerfile icindeki torch kurulumunu CUDA indeksine
+# cevirin ve bu servise su blogu ekleyin:
+#
+#   deploy:
+#     resources:
+#       reservations:
+#         devices:
+#           - driver: nvidia
+#             count: 1
+#             capabilities: [gpu]
+#
+# Gerekli degil: sistem CPU'da da calisir, yalnizca yavaslar.
