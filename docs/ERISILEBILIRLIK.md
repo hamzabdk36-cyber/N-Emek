@@ -160,8 +160,9 @@ Dürüstlük gereği: aşağıdakiler henüz yapılmadı ve sonuçları bu belge
 - **Lighthouse erişilebilirlik skoru.** Hedef ≥90; henüz ölçülmedi.
 - **Küçültme ve yeniden akış** (WCAG 1.4.4 / 1.4.10). Arayüz şu an masaüstü ağırlıklı;
   mobil düzen ayrı bir iş kalemi olarak duruyor.
-- **Hareket azaltma tercihi** (`prefers-reduced-motion`). Arayüzde hâlihazırda çok az
-  animasyon var, ama mikro animasyonlar eklenirken bu tercih dikkate alınmalı.
+*(Bu listede önce `prefers-reduced-motion` de vardı; kontrol edince temada zaten
+karşılandığı görüldü — `theme.css` hem animasyon yardımcılarını kapatıyor hem tüm
+geçiş sürelerini sıfırlıyor. Madde yanlış yazılmıştı, kaldırıldı.)*
 
 ---
 

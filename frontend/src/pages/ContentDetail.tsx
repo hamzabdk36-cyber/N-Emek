@@ -29,7 +29,7 @@ import {
   Field,
   Panel,
   ShareBar,
-  Spinner,
+  Skeleton,
   Stat,
   inputClass,
   roleColor,
@@ -71,7 +71,7 @@ export default function ContentDetail() {
   useEffect(load, [load]);
 
   if (error) return <ErrorNote error={error} />;
-  if (!card) return <Spinner label="Emek Kartı hesaplanıyor…" />;
+  if (!card) return <EmekKartiIskeleti />;
 
   const { content, provenance, distribution, rules, chain, campaign } = card;
   const durum = DURUM_META[provenance.durum] ?? DURUM_META.ozgun;
@@ -515,6 +515,59 @@ function DisputeBox({ edgeId, onDone }: { edgeId: string; onDone: () => void }) 
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+/**
+ * Emek Karti yuklenirken sayfanin yerlesimini onceden cizer.
+ *
+ * Bu ekran demonun kapak karesi ve hesabi (zincir yurutme + pay
+ * dagilimi) sunucuda birkac milisaniye suruyor; yine de bos ekrandan
+ * ani sicrama urunu yarim gosteriyordu. Iskelet gercek duzeni taklit
+ * ediyor: baslik, koken kutusu, solda gorsel, sagda pay dagilimi.
+ */
+function EmekKartiIskeleti() {
+  return (
+    <div className="space-y-5">
+      <span className="sr-only" role="status">
+        Emek Kartı hesaplanıyor
+      </span>
+      <div className="space-y-2">
+        <Skeleton className="h-7 w-64" />
+        <Skeleton className="h-5 w-80" gecikme={60} />
+      </div>
+      <Panel title="Köken">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="space-y-2">
+              <Skeleton className="h-3 w-24" gecikme={i * 60} />
+              <Skeleton className="h-6 w-32" gecikme={i * 60 + 30} />
+            </div>
+          ))}
+        </div>
+      </Panel>
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)]">
+        <Panel title="Görsel">
+          <Skeleton className="aspect-4/3 w-full" />
+        </Panel>
+        <Panel title="Emek Kartı">
+          <div className="space-y-4">
+            <div className="grid grid-cols-3 gap-4">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="space-y-2">
+                  <Skeleton className="h-3 w-20" gecikme={i * 60} />
+                  <Skeleton className="h-6 w-24" gecikme={i * 60 + 30} />
+                </div>
+              ))}
+            </div>
+            <Skeleton className="h-2.5 w-full" gecikme={180} />
+            {[0, 1, 2, 3].map((i) => (
+              <Skeleton key={i} className="h-14 w-full" gecikme={220 + i * 70} />
+            ))}
+          </div>
+        </Panel>
+      </div>
     </div>
   );
 }

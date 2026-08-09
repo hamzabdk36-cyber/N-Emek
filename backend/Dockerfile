@@ -17,11 +17,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# Bagimliliklar once: kod degistiginde bu katman onbellekten gelir.
+# SIRA ONEMLI: torch once ve CPU indeksinden kurulur.
+#
+# Ters sirada calismiyor - ilk denemede oyle yazilmisti ve gercek build
+# hatayi gosterdi: `requirements.txt` icindeki `open_clip_torch`, torch'u
+# bagimlilik olarak cekiyor ve pip bunu varsayilan PyPI'den, yani CUDA'li
+# halinden aliyor. Arkasindan gelen CPU komutu "zaten kurulu" deyip
+# geciyor. Sonuc: 750 MB'lik nvidia_* paketleri (cudnn, nccl, cusparselt)
+# ve ~8 GB'lik bir imaj - hem de GPU'su olmayan makineler icin.
+#
+# Torch once kurulunca `requirements.txt` onu karsilanmis buluyor ve
+# CUDA surumune hic dokunmuyor.
 COPY backend/requirements.txt backend/requirements.txt
-RUN pip install --no-cache-dir -r backend/requirements.txt \
-    && pip install --no-cache-dir torch torchvision \
-        --index-url https://download.pytorch.org/whl/cpu
+RUN pip install --no-cache-dir torch torchvision \
+        --index-url https://download.pytorch.org/whl/cpu \
+    && pip install --no-cache-dir -r backend/requirements.txt
 
 COPY backend/ backend/
 COPY scripts/ scripts/

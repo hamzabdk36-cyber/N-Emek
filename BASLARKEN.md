@@ -18,10 +18,10 @@ docker compose up --build
 ```
 
 Sonra **http://localhost:5173**. Aşağıdaki adımların hepsi kapsayıcı içinde otomatik
-yapılır. İlk açılış 10–15 dakika sürer (bağımlılıklar + yapay zekâ modeli).
+yapılır — sertifikalar, test görselleri, demo verisi. İlk açılış 10–15 dakika sürer
+(bağımlılıklar + yapay zekâ modeli); sonraki açılışlar saniyeler.
 
-*Bu yol henüz gerçek bir makinede denenmedi; tökezlerse aşağıdaki elle kurulum kesin
-çalışıyor.*
+Docker yoksa aşağıdaki elle kurulum da çalışıyor.
 
 ---
 

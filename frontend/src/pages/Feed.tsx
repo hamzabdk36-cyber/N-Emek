@@ -12,10 +12,10 @@ import {
   Avatar,
   Badge,
   Button,
+  CardSkeleton,
   ErrorNote,
   Field,
   Panel,
-  Spinner,
   inputClass,
 } from "../components/ui";
 import { useSession } from "../session";
@@ -62,7 +62,6 @@ export default function Feed() {
       )}
 
       {error && <ErrorNote error={error} />}
-      {!items && !error && <Spinner label="Akış yükleniyor…" />}
 
       {items && items.length === 0 && (
         <Panel>
@@ -77,17 +76,23 @@ export default function Feed() {
       )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {items?.map((item) => (
-          <ContentCard key={item.id} content={item} />
+        {!items && !error && <CardSkeleton adet={3} />}
+        {items?.map((item, i) => (
+          // Kartlar sirayla beliriyor; hepsinin ayni anda patlamasi
+          // yerine gozun akisi takip etmesini kolaylastiriyor.
+          <ContentCard key={item.id} content={item} sira={i} />
         ))}
       </div>
     </div>
   );
 }
 
-function ContentCard({ content }: { content: Content }) {
+function ContentCard({ content, sira = 0 }: { content: Content; sira?: number }) {
   return (
-    <article className="fade-in panel group overflow-hidden transition-colors hover:border-[#3a4250]">
+    <article
+      className="fade-in panel group overflow-hidden transition-colors hover:border-[#3a4250]"
+      style={{ animationDelay: `${Math.min(sira, 8) * 45}ms` }}
+    >
       <Link to={`/icerik/${content.id}`} className="block">
         <div className="aspect-4/3 overflow-hidden bg-[var(--color-bg)]">
           <img

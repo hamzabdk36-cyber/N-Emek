@@ -204,6 +204,54 @@ export function Spinner({ label }: { label?: string }) {
   );
 }
 
+/**
+ * Yukleme iskeleti.
+ *
+ * Bos ekrandan icerige ani sicrama, urunun "yarim" hissettirmesinin en
+ * yaygin sebebi. Iskelet, gelecek duzeni onceden cizerek hem bekleyisi
+ * kisa gosteriyor hem sayfanin yerlesimi oturunca zipla(ma)masini
+ * sagliyor.
+ *
+ * `aria-hidden`: ekran okuyucu icin anlamsiz kutular; yukleme durumunu
+ * yaninda duran `role="status"` bildiriyor.
+ */
+export function Skeleton({
+  className = "",
+  gecikme = 0,
+}: {
+  className?: string;
+  gecikme?: number;
+}) {
+  return (
+    <span
+      aria-hidden
+      className={`pulse-soft block rounded-md bg-[var(--color-surface-2)] ${className}`}
+      style={gecikme ? { animationDelay: `${gecikme}ms` } : undefined}
+    />
+  );
+}
+
+/** Akistaki kart yerlesimini taklit eden iskelet. */
+export function CardSkeleton({ adet = 3 }: { adet?: number }) {
+  return (
+    <>
+      <span className="sr-only" role="status">
+        Akış yükleniyor
+      </span>
+      {Array.from({ length: adet }, (_, i) => (
+        <div key={i} className="panel overflow-hidden">
+          <Skeleton className="aspect-4/3 rounded-none" gecikme={i * 120} />
+          <div className="space-y-2.5 p-4">
+            <Skeleton className="h-4 w-2/3" gecikme={i * 120} />
+            <Skeleton className="h-3.5 w-1/3" gecikme={i * 120 + 60} />
+            <Skeleton className="h-8 w-full" gecikme={i * 120 + 120} />
+          </div>
+        </div>
+      ))}
+    </>
+  );
+}
+
 export function EmptyState({
   title,
   hint,

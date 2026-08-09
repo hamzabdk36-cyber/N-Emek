@@ -1,4 +1,4 @@
-import { NavLink, Route, Routes } from "react-router-dom";
+import { NavLink, Route, Routes, useLocation } from "react-router-dom";
 import { Avatar } from "./components/ui";
 import { SessionProvider, useSession } from "./session";
 import Feed from "./pages/Feed";
@@ -29,18 +29,36 @@ export default function App() {
         </a>
         <Header />
         <main id="icerik" className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
-          <Routes>
-            <Route path="/" element={<Feed />} />
-            <Route path="/icerik/:id" element={<ContentDetail />} />
-            <Route path="/remix/:id" element={<RemixStudio />} />
-            <Route path="/kaynak-bul" element={<Verify />} />
-            <Route path="/kampanyalar" element={<Campaigns />} />
-            <Route path="/inceleme" element={<Moderation />} />
-          </Routes>
+          <Sayfalar />
         </main>
         <Footer />
       </div>
     </SessionProvider>
+  );
+}
+
+/**
+ * Rota degistiginde icerik yeniden belirir.
+ *
+ * `key`, yolun kendisi: React agaci sifirlaniyor ve `fade-in` yeniden
+ * calisiyor. Sayfalar arasi gecisin ani olmamasi, arayuzun "sayfa
+ * yenileniyor" degil "ayni uygulama icinde gezinliyorum" hissi
+ * vermesini sagliyor. Hareket azaltma tercihi acikken tema bu
+ * animasyonu zaten kapatiyor.
+ */
+function Sayfalar() {
+  const location = useLocation();
+  return (
+    <div key={location.pathname} className="fade-in">
+      <Routes location={location}>
+        <Route path="/" element={<Feed />} />
+        <Route path="/icerik/:id" element={<ContentDetail />} />
+        <Route path="/remix/:id" element={<RemixStudio />} />
+        <Route path="/kaynak-bul" element={<Verify />} />
+        <Route path="/kampanyalar" element={<Campaigns />} />
+        <Route path="/inceleme" element={<Moderation />} />
+      </Routes>
+    </div>
   );
 }
 
