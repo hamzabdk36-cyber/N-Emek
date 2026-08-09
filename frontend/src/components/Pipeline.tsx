@@ -131,7 +131,39 @@ function timingKey(stage: string): string {
 }
 
 /* -------------------------------------------------------------------------- */
-/** Bir bagin kanit satirlari. Her satir bir asamanin ne bulduğunu soyler. */
+/**
+ * Bir bagin kanit satirlari, asamaya gore gruplanmis.
+ *
+ * Gruplama sart: cok bolgeli sorgu ayni asamadan bolge basina bir kanit
+ * uretiyor. Ayse'nin bagi 4 ayri "Gorsel benzerlik modeli" satiri
+ * dogurmustu ve hepsi neredeyse ayni cumleyi yaziyordu; buyuk bir
+ * korpusta bu 11'e cikar. Juri bu ekranda "hangi asama ne buldu"
+ * sorusunun cevabini ariyor - satir sayisini degil.
+ *
+ * Ozet satirda en fazla iki farkli aciklama gosterilir; gerisi sayiya
+ * doner. Hicbir olcum atilmaz, hepsi acilir panelde duruyor.
+ */
+type Detail = Record<string, unknown>;
+
+function rowLabel(row: EvidenceRow | EvidenceItem): string {
+  return (
+    (row as EvidenceRow).label ??
+    STAGE_META[row.stage as string]?.title ??
+    String(row.stage)
+  );
+}
+
+function rowDetail(row: EvidenceRow | EvidenceItem): Detail {
+  return (
+    (row as EvidenceRow).detay ??
+    Object.fromEntries(
+      Object.entries(row).filter(
+        ([k]) => !["stage", "found", "matched", "aciklama"].includes(k),
+      ),
+    )
+  );
+}
+
 export function EvidenceList({
   rows,
   compact = false,
@@ -152,24 +184,35 @@ export function EvidenceList({
     );
   }
 
+  // Asamaya gore grupla, ilk gorulme sirasini koru.
+  const groups: { key: string; label: string; items: (EvidenceRow | EvidenceItem)[] }[] = [];
+  for (const row of visible) {
+    const key = String(row.stage ?? rowLabel(row));
+    const found = groups.find((g) => g.key === key);
+    if (found) found.items.push(row);
+    else groups.push({ key, label: rowLabel(row), items: [row] });
+  }
+
   return (
     <ul className="space-y-1.5">
-      {visible.map((row, i) => {
-        const label =
-          (row as EvidenceRow).label ??
-          STAGE_META[row.stage as string]?.title ??
-          row.stage;
-        const detail =
-          (row as EvidenceRow).detay ??
-          Object.fromEntries(
-            Object.entries(row).filter(
-              ([k]) => !["stage", "found", "matched", "aciklama"].includes(k),
-            ),
-          );
-        const hasDetail = Object.keys(detail ?? {}).length > 0;
+      {groups.map((group, i) => {
+        const aciklamalar = [
+          ...new Set(
+            group.items
+              .map((r) => r.aciklama)
+              .filter((a): a is string => Boolean(a)),
+          ),
+        ];
+        const gosterilen = aciklamalar.slice(0, 2);
+        const gizli = aciklamalar.length - gosterilen.length;
+        const detaylar = group.items
+          .map(rowDetail)
+          .filter((d) => Object.keys(d).length > 0);
+        const hasDetail = detaylar.length > 0;
+
         return (
           <li
-            key={i}
+            key={group.key}
             className="rounded-lg border border-[var(--color-line-soft)] bg-[var(--color-surface-2)]/60"
           >
             <button
@@ -182,12 +225,28 @@ export function EvidenceList({
                 ✓
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-[12.5px] font-medium text-[var(--color-ink)]">
-                  {label}
+                <span className="flex flex-wrap items-center gap-2">
+                  <span className="text-[12.5px] font-medium text-[var(--color-ink)]">
+                    {group.label}
+                  </span>
+                  {group.items.length > 1 && (
+                    <span className="num rounded border border-[var(--color-line)] px-1.5 py-px text-[10.5px] text-[var(--color-ink-3)]">
+                      {group.items.length} ölçüm
+                    </span>
+                  )}
                 </span>
-                {!compact && row.aciklama && (
-                  <span className="mt-0.5 block text-[12px] leading-relaxed text-[var(--color-ink-2)]">
-                    {row.aciklama}
+                {!compact &&
+                  gosterilen.map((a) => (
+                    <span
+                      key={a}
+                      className="mt-0.5 block text-[12px] leading-relaxed text-[var(--color-ink-2)]"
+                    >
+                      {a}
+                    </span>
+                  ))}
+                {!compact && gizli > 0 && (
+                  <span className="mt-0.5 block text-[11.5px] text-[var(--color-ink-3)]">
+                    +{gizli} ölçüm daha
                   </span>
                 )}
               </span>
@@ -198,18 +257,25 @@ export function EvidenceList({
               )}
             </button>
             {open === i && hasDetail && (
-              <dl className="fade-in grid grid-cols-2 gap-x-4 gap-y-1 border-t border-[var(--color-line-soft)] px-3 py-2.5 sm:grid-cols-3">
-                {Object.entries(detail).map(([key, value]) => (
-                  <div key={key} className="min-w-0">
-                    <dt className="truncate text-[10.5px] tracking-wide text-[var(--color-ink-3)] uppercase">
-                      {key}
-                    </dt>
-                    <dd className="num truncate text-[12px] text-[var(--color-ink)]">
-                      {formatValue(value)}
-                    </dd>
-                  </div>
+              <div className="fade-in border-t border-[var(--color-line-soft)]">
+                {detaylar.map((detail, j) => (
+                  <dl
+                    key={j}
+                    className="grid grid-cols-2 gap-x-4 gap-y-1 px-3 py-2.5 not-first:border-t not-first:border-[var(--color-line-soft)] sm:grid-cols-3"
+                  >
+                    {Object.entries(detail).map(([key, value]) => (
+                      <div key={key} className="min-w-0">
+                        <dt className="truncate text-[10.5px] tracking-wide text-[var(--color-ink-3)] uppercase">
+                          {key}
+                        </dt>
+                        <dd className="num truncate text-[12px] text-[var(--color-ink)]">
+                          {formatValue(value)}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
                 ))}
-              </dl>
+              </div>
             )}
           </li>
         );
