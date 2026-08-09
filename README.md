@@ -93,9 +93,16 @@ kaydetmeden hattan geçirir.
 cd backend && ../.venv/Scripts/python.exe -m pytest tests/
 ```
 
-35 test: 22'si pay motorunun değişmez kuralları (paylar 1,0'a toplanır, derin kaynak daha
-az alır, taban/tavan ihlal edilmez), 13'ü uçtan uca altın senaryo. Testler kendi geçici
-veritabanını kullanır, demo verisini bozmaz.
+71 test, üç katman:
+
+- **22** — pay motorunun değişmez kuralları (paylar 1,0'a toplanır, derin kaynak daha az
+  alır, taban/tavan ihlal edilmez)
+- **13** — uçtan uca altın senaryo (servis katmanı)
+- **36** — API uç noktalarının sözleşmesi: her ucun döndürdüğü alanlar, durum kodları ve
+  hatalı girdiye verdiği tepki
+
+Üçüncüsü olmadan `schemas.py`'de bir alan adı değişse ilk 35 test yeşil kalıyor ama arayüz
+sessizce kırılıyordu. Testler kendi geçici veritabanını kullanır, demo verisini bozmaz.
 
 ### Ölçüm betikleri
 

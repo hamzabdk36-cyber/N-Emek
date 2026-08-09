@@ -40,7 +40,7 @@ Sertifikalar ve korpus depoda değil; her ikisi de yukarıdaki komutlarla yenide
 ## Doğrulama
 
 ```bash
-cd backend && ../.venv/Scripts/python.exe -m pytest tests/   # 35 test: pay motoru + uçtan uca
+cd backend && ../.venv/Scripts/python.exe -m pytest tests/   # 71 test: pay motoru + uçtan uca + API
 .venv/Scripts/python.exe scripts/seed_demo.py --reset        # altın senaryoyu kur ve anlat
 
 # Uygulamayı çalıştır (iki terminal)
@@ -74,6 +74,12 @@ senaryo bitiminde ara sonuç `data/eval/sonuclar.json`'a yazılır, ilerleme ora
 `run_latency` kendi geçici veritabanını kullanır, demo verisine dokunmaz.
 
 Testler kendi geçici veritabanını kullanır (`tests/conftest.py`), demo verisini bozmaz.
+
+Üç katman ayrı ayrı ölçülüyor ve biri diğerinin yerine geçmez: `test_contribution.py`
+pay formülünün değişmez kurallarını, `test_e2e_altin_senaryo.py` servis katmanını,
+`test_api_ucnoktalari.py` ise HTTP sözleşmesini sınar. Sonuncusu olmadan `schemas.py`'de
+bir alan adı değişse diğer 35 test yeşil kalıyor ama arayüz sessizce kırılıyordu — bu
+mutasyonla doğrulandı. Ağır iki test `slow` işaretli: `-m "not slow"` ile atlanabilir.
 
 ## Mimari
 

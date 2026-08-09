@@ -129,7 +129,7 @@ cd backend
 ../.venv/Scripts/python.exe -m pytest tests/
 ```
 
-35 test. Ayrıca `docs/` altında ölçüm sonuçları var: `DEGERLENDIRME.md` (6.400
+71 test. Ayrıca `docs/` altında ölçüm sonuçları var: `DEGERLENDIRME.md` (6.400
 sorguluk değerlendirme), `GECIKME.md` (süreler), `MIMARI.md` (diyagramlar).
 Bu dosyalardaki hiçbir sayı elle yazılmadı; hepsi `backend/eval/` ve `backend/poc/`
 altındaki betiklerin çıktısı ve yeniden koşturulabilir.
