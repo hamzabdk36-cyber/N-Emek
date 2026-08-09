@@ -156,6 +156,22 @@ Sistem asla "sahibi budur" demez; kanıtlı **zincir önerisi** sunar. Kullanıc
   Kod içi **yorumlar** ASCII kalır (mevcut dosyalarla tutarlılık için). `print()` kullanan betikler `sys.stdout.reconfigure(encoding="utf-8")` çağırır; Windows konsolu varsayılan cp1254 ile Türkçe çıktıyı bozuyor.
 - Yeni bir türev senaryosu gerekiyorsa `backend/eval/attacks.py` içine ekle — hem PoC hem kapsamlı değerlendirme oradan okuyor.
 
+## Sıradaki iş: arayüz tasarım revizyonu
+
+Yazılım tarafı bitti (71 test, Docker doğrulandı, erişilebilirlik ve mobil tamam).
+Kalan tek yazılım işi arayüzün **görsel** revizyonu. Takımın geri bildirimi:
+
+1. **Atıf zinciri grafiğinde rakamlar çizgilerin üstüne biniyor.** `ChainGraph.tsx`
+   içindeki kenar etiketi (`%87` gibi) ile bağlantı eğrisi çakışıyor. Kodda rect,
+   path'ten sonra çiziliyor — yani teoride örtmesi gerekiyor; gerçek render'a bakıp
+   teşhis edilmeli, varsayımla düzeltilmemeli.
+2. **Tasarım "yapay zekâ ürünü" olduğunu belli ediyor.** Somut örnek verilmedi;
+   revizyona başlamadan önce hangi ekranların rahatsız ettiği sorulmalı.
+
+**Yedek alındı:** `arayuz-v1` etiketi ve masaüstünde
+`N-Emek-arayuz-yedek-20260810.zip`. Geri dönmek için:
+`git checkout arayuz-v1 -- frontend/src`
+
 ## Bilinen tuzaklar
 
 - **Korpusta yinelenen görsel, değerlendirmeyi sessizce bozar.** picsum farklı tohumları aynı fotoğrafa eşleyebiliyor; ilk korpusta 320 dosyanın yalnızca 276'sı benzersizdi. İndekste birebir ikizi olan bir holdout görseli için bağ bulmak *doğru* davranıştır ama negatif kontrol sayacı bunu yanlış atıf yazar — ölçüm %32,5 yanlış atıf bildirdi, gerçek değil. `fetch_eval_images.py` artık tekilliği garanti ediyor, `run_benchmark.dedupe()` da ayrıca kontrol ediyor. Korpusu elle genişletirsen bu iki kapıyı atlama.
