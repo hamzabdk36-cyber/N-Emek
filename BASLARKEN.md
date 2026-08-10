@@ -1,7 +1,9 @@
 # Başlarken
 
-N-Emek'i kendi bilgisayarında çalıştırmak için kısa yol. Ayrıntı gerekirse
-[`README.md`](README.md), tasarım kararları için [`CLAUDE.md`](CLAUDE.md).
+N-Emek'i kendi bilgisayarında çalıştırmak için kısa yol. Sistemin nasıl işlediğini
+ve her ekranın ne işe yaradığını anlatan tam rehber:
+[`docs/REHBER.md`](docs/REHBER.md). Ayrıntı gerekirse [`README.md`](README.md),
+tasarım kararları için [`CLAUDE.md`](CLAUDE.md).
 
 **Bu ne?** Sosyal medyada bir görsel kırpılıp, üstüne yazı eklenip, ekran görüntüsü
 alınarak paylaşıldığında ilk üreticinin emeği kayboluyor. N-Emek içeriğin kaynak
