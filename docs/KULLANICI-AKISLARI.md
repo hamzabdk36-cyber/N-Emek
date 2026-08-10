@@ -114,7 +114,7 @@ Burak'ın satırında yok.
 flowchart TD
     A["Ayşe: özgün içerik yükler"] --> A1["filigran, C2PA imza, indeks"]
     A1 --> B["Burak: Remix Stüdyosu'nda düzenler"]
-    B --> B1["kaynak beyan edilir; pay ölçüme dayanır: %87,4"]
+    B --> B1["kaynak beyan edilir ama pay ölçüme dayanır — %87,4"]
     B1 --> C["Ceyda: ekran görüntüsü paylaşır — kimlik silinmiş"]
     C --> C1["köken kurtarma hattı: filigran, pHash, CLIP, geometri"]
     C1 --> D["Emek Kartı — her pay gerekçesiyle"]
