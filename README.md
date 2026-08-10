@@ -21,7 +21,9 @@ emeği görünmez oluyor ve gelir adil paylaşılamıyor. N-Emek, içerik zincir
 | Faz 0 risk kapatma | dört teknik varsayım | [`docs/FAZ0-SONUCLARI.md`](docs/FAZ0-SONUCLARI.md) |
 
 Sistemin nasıl çalıştığı ve ekran ekran kullanımı: [`docs/REHBER.md`](docs/REHBER.md)
+Kullanıcı gözünden yolculuk ve akış diyagramları: [`docs/KULLANICI-AKISLARI.md`](docs/KULLANICI-AKISLARI.md)
 Mimari ve diyagramlar: [`docs/MIMARI.md`](docs/MIMARI.md)
+Ekran görüntüleri: [`docs/gorseller/`](docs/gorseller/)
 
 ---
 

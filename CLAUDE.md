@@ -23,6 +23,7 @@ Ayırt edici iddia: kaynağı *bulmak* değil, kullanılan içerik oranını **�
 Puan ağırlıkları: Yenilikçilik %20 · Teknik Yeterlilik %20 · Problem Çözme %20 · **UI/UX %20** · Sunum ve Prototip Kalitesi %10 · İş Modeli %10. Arayüz, AI motoruyla eşit ağırlıkta — "geliştirici demosu" görünümü puanın beşte birini götürür.
 
 Plan: `docs/PLAN.md` · Mimari ve diyagramlar: `docs/MIMARI.md` · Rapor içeriği: `docs/RAPOR-ICERIK.md`
+Kullanıcı gözünden: `docs/KULLANICI-AKISLARI.md` (yolculuk + akış diyagramları) · `docs/REHBER.md` (ekran ekran) · `docs/gorseller/` (ekran görüntüleri)
 Ölçümler: `docs/FAZ0-SONUCLARI.md` (risk kapatma) · `docs/DEGERLENDIRME.md` (tam korpus) · `docs/GECIKME.md` (uçtan uca) · `docs/ACILIS-SURESI.md` (indeks kalıcılığı)
 
 ## Kurulum
