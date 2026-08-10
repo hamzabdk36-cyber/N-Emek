@@ -52,7 +52,7 @@ jobs:
       # kurtarma hattinin tamamini calistirdigi icin modele ihtiyac var;
       # onbellek olmadan her kosu bastan indirir.
       - name: CLIP model önbelleği
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/.hf-cache
           key: clip-vit-b-32-laion2b-v1
