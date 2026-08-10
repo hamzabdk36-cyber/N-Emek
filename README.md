@@ -22,6 +22,7 @@ emeği görünmez oluyor ve gelir adil paylaşılamıyor. N-Emek, içerik zincir
 
 Sistemin nasıl çalıştığı ve ekran ekran kullanımı: [`docs/REHBER.md`](docs/REHBER.md)
 Kullanıcı gözünden yolculuk ve akış diyagramları: [`docs/KULLANICI-AKISLARI.md`](docs/KULLANICI-AKISLARI.md)
+İş ve gelir modeli: [`docs/IS-MODELI.md`](docs/IS-MODELI.md)
 Mimari ve diyagramlar: [`docs/MIMARI.md`](docs/MIMARI.md)
 Ekran görüntüleri: [`docs/gorseller/`](docs/gorseller/)
 

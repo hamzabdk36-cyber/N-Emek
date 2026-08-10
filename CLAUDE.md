@@ -24,6 +24,7 @@ Puan ağırlıkları: Yenilikçilik %20 · Teknik Yeterlilik %20 · Problem Çö
 
 Plan: `docs/PLAN.md` · Mimari ve diyagramlar: `docs/MIMARI.md` · Rapor içeriği: `docs/RAPOR-ICERIK.md`
 Kullanıcı gözünden: `docs/KULLANICI-AKISLARI.md` (yolculuk + akış diyagramları) · `docs/REHBER.md` (ekran ekran) · `docs/gorseller/` (ekran görüntüleri)
+İş modeli: `docs/IS-MODELI.md` — dağıtım rakamları kayıtlı `Payout` satırlarından okundu, uydurulmadı
 Ölçümler: `docs/FAZ0-SONUCLARI.md` (risk kapatma) · `docs/DEGERLENDIRME.md` (tam korpus) · `docs/GECIKME.md` (uçtan uca) · `docs/ACILIS-SURESI.md` (indeks kalıcılığı)
 
 ## Kurulum
