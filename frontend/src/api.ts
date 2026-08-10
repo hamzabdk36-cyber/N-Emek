@@ -133,6 +133,8 @@ export interface ChainNodeView {
   id: string;
   depth: number;
   role: "leaf" | "source";
+  /** false = zincirde ara halka ama katkisi pay esiginin altinda. */
+  contributes: boolean;
   title: string;
   owner: string;
   accent: string;

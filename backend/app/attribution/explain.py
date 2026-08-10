@@ -203,60 +203,95 @@ def _provenance_summary(session: Session, content: Content) -> dict:
 
 
 def _chain_graph(session: Session, leaf_id: str, nodes) -> dict:
-    """Zincir gorunumu (DAG) icin dugum ve kenar listesi."""
+    """Zincir gorunumu (DAG) icin dugum ve kenar listesi.
+
+    Iki kural, ikisi de ekranda gorulen bir hatadan cikti:
+
+    1. Kenarlar `chain.reduced_subgraph`ten gelir, ham tablodan degil.
+       Ham tabloda Ayse -> Ceyda dogrudan bagi da var; pay hesabi onu
+       gecisli indirgemeyle dusuyor ama grafik ciziyordu. Sonuc, ayni
+       sutundaki uc dugumu birlestiren ucuncu bir dikey cizgiydi ve
+       diger kenarlarin yuzde rozetlerinin ustunden geciyordu.
+
+    2. Pay esiginin altinda kalip zincirden dusen *ara* halkalar
+       grafige geri konur. `build_chain` katkisi cok kucuk dugumleri
+       eler; ama o dugum zincirin ortasindaysa grafik ikiye bolunuyor
+       ve derinlik 2 ile 0 arasinda hicbir bag gorunmuyordu. Bu
+       dugumler `contributes: false` ile isaretlenir - zincirde var,
+       payi yok.
+    """
+    reduced = chain_builder.reduced_subgraph(session, leaf_id)
+
+    # Yapraktan yukari BFS: her icerigin yapraga uzakligi = satir derinligi.
+    uzaklik: dict[str, int] = {leaf_id: 0}
+    sira = [leaf_id]
+    i = 0
+    while i < len(sira):
+        current = sira[i]
+        i += 1
+        for edge in reduced.get(current, []):
+            if edge.parent_id not in uzaklik:
+                uzaklik[edge.parent_id] = uzaklik[current] + 1
+                sira.append(edge.parent_id)
+
+    # Turetme yonu (kaynak -> turev), ara halkalari bulmak icin.
+    cocuklar: dict[str, set[str]] = {}
+    for child_id, edges in reduced.items():
+        for edge in edges:
+            cocuklar.setdefault(edge.parent_id, set()).add(child_id)
+
+    pay_alan = {n.content_id for n in nodes}
+    gerekli = {leaf_id} | (pay_alan & set(uzaklik))
+    for kaynak in list(gerekli):
+        yigin = [kaynak]
+        gorulen = {kaynak}
+        while yigin:
+            current = yigin.pop()
+            for child_id in cocuklar.get(current, ()):
+                if child_id in gorulen:
+                    continue
+                gorulen.add(child_id)
+                yigin.append(child_id)
+        # Yalnizca yapragin atalari; digerleri bu zincire ait degil.
+        gerekli |= gorulen & set(uzaklik)
+
     graph_nodes = []
-    graph_edges = []
-    seen = {leaf_id}
-
-    leaf = session.get(Content, leaf_id)
-    leaf_owner = session.get(User, leaf.owner_id) if leaf else None
-    graph_nodes.append(
-        {
-            "id": leaf_id,
-            "depth": 0,
-            "role": "leaf",
-            "title": leaf.title if leaf else "",
-            "owner": leaf_owner.display_name if leaf_owner else "",
-            "accent": leaf_owner.accent if leaf_owner else "#5B8DEF",
-        }
-    )
-
-    for node in nodes:
-        content = session.get(Content, node.content_id)
-        owner = session.get(User, node.owner_id)
-        if node.content_id not in seen:
-            graph_nodes.append(
-                {
-                    "id": node.content_id,
-                    "depth": node.depth,
-                    "role": "source",
-                    "title": content.title if content else "",
-                    "owner": owner.display_name if owner else "",
-                    "accent": owner.accent if owner else "#5B8DEF",
-                }
-            )
-            seen.add(node.content_id)
-
-    # Kenarlar: zincirdeki tum icerikler arasindaki gercek baglar
-    ids = list(seen)
-    stmt = select(AttributionEdge).where(
-        AttributionEdge.child_id.in_(ids), AttributionEdge.parent_id.in_(ids)
-    )
-    for edge in session.scalars(stmt):
-        graph_edges.append(
+    for content_id in sorted(gerekli, key=lambda cid: uzaklik[cid]):
+        content = session.get(Content, content_id)
+        owner = session.get(User, content.owner_id) if content else None
+        graph_nodes.append(
             {
-                "id": edge.id,
-                "from": edge.parent_id,
-                "to": edge.child_id,
-                "stage": edge.stage.value,
-                "stage_label": STAGE_LABELS.get(edge.stage.value, edge.stage.value),
-                "status": edge.status.value,
-                "confidence": confidence_band(edge.confidence),
-                "visual_coverage": edge.visual_coverage,
-                "source_usage": edge.source_usage,
-                "mask_path": edge.mask_path,
+                "id": content_id,
+                "depth": uzaklik[content_id],
+                "role": "leaf" if content_id == leaf_id else "source",
+                "contributes": content_id == leaf_id or content_id in pay_alan,
+                "title": content.title if content else "",
+                "owner": owner.display_name if owner else "",
+                "accent": owner.accent if owner else "#5B8DEF",
             }
         )
+
+    graph_edges = []
+    for child_id, edges in reduced.items():
+        if child_id not in gerekli:
+            continue
+        for edge in edges:
+            if edge.parent_id not in gerekli:
+                continue
+            graph_edges.append(
+                {
+                    "id": edge.id,
+                    "from": edge.parent_id,
+                    "to": edge.child_id,
+                    "stage": edge.stage.value,
+                    "stage_label": STAGE_LABELS.get(edge.stage.value, edge.stage.value),
+                    "status": edge.status.value,
+                    "confidence": confidence_band(edge.confidence),
+                    "visual_coverage": edge.visual_coverage,
+                    "source_usage": edge.source_usage,
+                    "mask_path": edge.mask_path,
+                }
+            )
 
     return {"nodes": graph_nodes, "edges": graph_edges}
 

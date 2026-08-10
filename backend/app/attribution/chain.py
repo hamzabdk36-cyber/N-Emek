@@ -110,6 +110,24 @@ def _redundant_edges(graph: dict[str, list[AttributionEdge]]) -> set[str]:
     return redundant
 
 
+def reduced_subgraph(session: Session, leaf_id: str) -> dict[str, list[AttributionEdge]]:
+    """Yapraga baglanan alt grafik, gecisli indirgeme uygulanmis hali.
+
+    `build_chain` zaten bunu kendi icinde yapiyor; disari acmamizin
+    sebebi zincir gorunumunun ayni kenar kumesini gormesi. Aksi halde
+    ekranda Ayse -> Ceyda dogrudan bagi da cizilir ve izleyici
+    kapsamalari toplayip %100'u astigini gorur - oysa o bag pay
+    hesabina hic girmemistir.
+    """
+    settings = get_settings()
+    graph = _collect_subgraph(session, leaf_id, settings.max_chain_depth)
+    redundant = _redundant_edges(graph)
+    return {
+        child_id: [e for e in edges if e.id not in redundant]
+        for child_id, edges in graph.items()
+    }
+
+
 def build_chain(session: Session, content_id: str) -> list[ChainNode]:
     """Yapraktan yukari tum atalari toplar."""
     settings = get_settings()
