@@ -24,6 +24,7 @@ Sistemin nasıl çalıştığı ve ekran ekran kullanımı: [`docs/REHBER.md`](d
 Kullanıcı gözünden yolculuk ve akış diyagramları: [`docs/KULLANICI-AKISLARI.md`](docs/KULLANICI-AKISLARI.md)
 İş ve gelir modeli: [`docs/IS-MODELI.md`](docs/IS-MODELI.md)
 Yapay zekâ mimarisi: [`docs/YZ-MIMARISI.md`](docs/YZ-MIMARISI.md)
+Veri, model, etik ve performans: [`docs/VERI-MODEL-ETIK.md`](docs/VERI-MODEL-ETIK.md)
 Mimari ve diyagramlar: [`docs/MIMARI.md`](docs/MIMARI.md)
 Ekran görüntüleri: [`docs/gorseller/`](docs/gorseller/)
 
