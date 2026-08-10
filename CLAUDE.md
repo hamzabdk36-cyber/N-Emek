@@ -23,7 +23,7 @@ Ayırt edici iddia: kaynağı *bulmak* değil, kullanılan içerik oranını **�
 Puan ağırlıkları: Yenilikçilik %20 · Teknik Yeterlilik %20 · Problem Çözme %20 · **UI/UX %20** · Sunum ve Prototip Kalitesi %10 · İş Modeli %10. Arayüz, AI motoruyla eşit ağırlıkta — "geliştirici demosu" görünümü puanın beşte birini götürür.
 
 Plan: `docs/PLAN.md` · Mimari ve diyagramlar: `docs/MIMARI.md` · Rapor içeriği: `docs/RAPOR-ICERIK.md`
-Ölçümler: `docs/FAZ0-SONUCLARI.md` (risk kapatma) · `docs/DEGERLENDIRME.md` (tam korpus) · `docs/GECIKME.md` (uçtan uca)
+Ölçümler: `docs/FAZ0-SONUCLARI.md` (risk kapatma) · `docs/DEGERLENDIRME.md` (tam korpus) · `docs/GECIKME.md` (uçtan uca) · `docs/ACILIS-SURESI.md` (indeks kalıcılığı)
 
 ## Kurulum
 
@@ -40,7 +40,7 @@ Sertifikalar ve korpus depoda değil; her ikisi de yukarıdaki komutlarla yenide
 ## Doğrulama
 
 ```bash
-cd backend && ../.venv/Scripts/python.exe -m pytest tests/   # 82 test: pay motoru + uçtan uca + API + yetki
+cd backend && ../.venv/Scripts/python.exe -m pytest tests/   # 92 test: pay motoru + uçtan uca + API + yetki + indeks
 cd frontend && npm test                                      # 87 test: yerleşim + bileşenler + ekranlar + oturum
 .venv/Scripts/python.exe scripts/seed_demo.py --reset        # altın senaryoyu kur ve anlat
 
@@ -66,6 +66,7 @@ Faz 2 kapsamlı ölçümler (`backend/` dizininden, çıktıyı doğrudan `docs/
 ../.venv/Scripts/python.exe -m eval.run_benchmark              # ~2 sa; docs/DEGERLENDIRME.md
 ../.venv/Scripts/python.exe -m eval.run_benchmark --corpus 20  # hızlı deneme
 ../.venv/Scripts/python.exe -m eval.run_latency                # docs/GECIKME.md
+../.venv/Scripts/python.exe -m eval.run_startup                # docs/ACILIS-SURESI.md
 ```
 
 PoC'lerden farkı: `run_benchmark` aşamaları tek tek değil **üretimdeki `recovery.recover()`
@@ -140,7 +141,7 @@ React 19'da da hata sınırı yazmanın tek yolu sınıf bileşeni;
 
 | İş | Ne koşar |
 |---|---|
-| backend | torch **önce** ve CPU indeksinden → `requirements.txt` → C2PA sertifikaları → 8 görsellik test korpusu → `pytest -m "not slow" -rs` (79 test) |
+| backend | torch **önce** ve CPU indeksinden → `requirements.txt` → C2PA sertifikaları → 8 görsellik test korpusu → `pytest -m "not slow" -rs` (89 test) |
 | arayüz | `npm ci` → `tsc --noEmit` → `vitest run` → `npm run build` |
 
 **Yeşil rozet gerçekten bir şey söylemeli.** İlk CI koşusu korpussuz çalıştı ve yeşil
@@ -215,6 +216,34 @@ Bunlar sonradan "sadeleştirme" diye kaldırılmamalı; ikisi de ölçümdeki ge
 **Özel (exclusive) kapsama** (`chain.build_chain`): ölçülen kapsamalar iç içedir — Burak'ın %97'si Ayşe'nin %84'ünü de kapsar. Her düğüme yalnızca kendi kattığı pikseller yazılır: `özel(A) = toplam(A) − Σ toplam(A'nın zincirdeki doğrudan kaynakları)`. Böylece kapsamalar görselin tam bir bölüntüsü olur ve doğal olarak 1.0'a toplanır; pay normalizasyona değil ölçüme dayanır.
 
 Bu düzeltmeden önce kaynakların toplamı %182 çıkıyor ve tabana çarpıyordu.
+
+### İndeks kalıcılığı ve açılış süresi
+
+İndeks eskiden her açılışta **veritabanındaki her içeriğin görselini okuyup CLIP'i
+yeniden çalıştırarak** kuruluyordu. Üç içerikle fark yoktu; maliyet içerik başına bir
+model çıkarımı olduğu için açılış içerik sayısıyla doğrusal büyüyordu.
+
+Üç kademeli açılış (`services/registry.py::load_or_rebuild`):
+
+| Kademe | Ne yapıyor |
+|---|---|
+| **anlık görüntü** | `data/index/snapshot/` altındaki FAISS dosyaları okunur; kimlik kümesi veritabanıyla aynıysa kullanılır |
+| **veritabanı** | parmak izi `phash/dhash/whash` + `tile_hashes`'ten, vektör `clip_vector`'dan kurulur; görsele ve modele dokunulmaz |
+| **görseller** | yalnızca vektörü eksik içerikler için; hesaplananlar veritabanına geri yazılır, yani içerik başına **bir kez** |
+
+Ölçüldü (`docs/ACILIS-SURESI.md`, 280 içerik): görsellerden **11,5 sn** · veritabanından
+**32 ms** · anlık görüntüden **16 ms**. Docker'da gerçek demo verisiyle 4.899 ms → 27 ms.
+
+Anlık görüntü bir **önbellek**, kaynak doğru değil: bayatsa ya da bozuksa sessizce atılıp
+veritabanı kademesine düşülüyor. Bu yüzden her yüklemede güncellenmiyor — kapanışta bir
+kez yazmak yetiyor. Hazır olma ölçütü yalnızca `clip_vector`: boş bir blok hash listesi
+"hesaplanmadı" demek değil, geçerli bir değer.
+
+**Şema göçü.** `create_all` var olan tabloya sütun eklemiyor, Alembic de bu ölçekte fazla.
+`core/database.py::_eksik_sutunlari_ekle` eksik sütunları `ALTER TABLE` ile ekliyor —
+yoksa demo veritabanı Docker biriminde yaşadığı için yeni bir sütun jüri makinesindeki
+mevcut veritabanını `no such column` ile kırardı. Yalnızca *eklemeli* değişiklikler için;
+tip değişimi veya silme gerekirse `docker compose down -v`.
 
 ### Oturum ve yetki
 

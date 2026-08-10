@@ -25,6 +25,7 @@ from sqlalchemy import (
     Float,
     ForeignKey,
     Integer,
+    LargeBinary,
     String,
     Text,
     UniqueConstraint,
@@ -141,6 +142,20 @@ class Content(Base):
     campaign_id: Mapped[str | None] = mapped_column(ForeignKey("campaigns.id"), nullable=True)
     # Gonderinin urettigi ham gelir (kampanya disi; bahsis, reklam payi vb.).
     revenue: Mapped[float] = mapped_column(Float, default=0.0)
+
+    # --- Indeks kaliciligi ------------------------------------------------
+    # Parmak izinin indekste kullanilan ama yukaridaki sutunlarda
+    # karsiligi olmayan parcasi: 3x3 blok hash'leri, onaltilik dizge
+    # listesi olarak (phash gibi; isaretsiz 64 bit SQLite'in isaretli
+    # INTEGER'ina sigmaz).
+    tile_hashes: Mapped[list] = mapped_column(JSON, default=list)
+    # CLIP gommesi, float32 ham baytlar (512 x 4 = 2048 bayt).
+    #
+    # Neden saklaniyor: acilista indeks veritabanindan kuruluyor ve bu,
+    # her icerik icin CLIP'i yeniden calistirmak demekti. Vektor burada
+    # durunca acilis, model hic yuklenmeden yalnizca FAISS'e ekleme
+    # maliyetine iniyor (bkz. services/registry.py, docs/ACILIS-SURESI.md).
+    clip_vector: Mapped[bytes | None] = mapped_column(LargeBinary, nullable=True)
 
     owner: Mapped[User] = relationship(back_populates="contents")
     campaign: Mapped["Campaign | None"] = relationship(back_populates="contents")

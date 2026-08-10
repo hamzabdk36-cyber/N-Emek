@@ -17,6 +17,7 @@ emeği görünmez oluyor ve gelir adil paylaşılamıyor. N-Emek, içerik zincir
 | Kaynak bulma (20 türev senaryosu) | Top-1 ve Top-5 doğruluk | [`docs/DEGERLENDIRME.md`](docs/DEGERLENDIRME.md) |
 | Kullanılan alan oranı hatası | MAE ≤ 0,05 hedefi | [`docs/DEGERLENDIRME.md`](docs/DEGERLENDIRME.md) |
 | Uçtan uca gecikme | adım adım | [`docs/GECIKME.md`](docs/GECIKME.md) |
+| Açılış süresi (280 içerik) | 11,5 sn → 16 ms | [`docs/ACILIS-SURESI.md`](docs/ACILIS-SURESI.md) |
 | Faz 0 risk kapatma | dört teknik varsayım | [`docs/FAZ0-SONUCLARI.md`](docs/FAZ0-SONUCLARI.md) |
 
 Sistemin nasıl çalıştığı ve ekran ekran kullanımı: [`docs/REHBER.md`](docs/REHBER.md)

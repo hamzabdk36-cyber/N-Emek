@@ -13,7 +13,6 @@ tercih teknik raporda olceklenebilirlik bolumunde gerekcelendirilir.
 from __future__ import annotations
 
 import json
-import pickle
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -131,6 +130,16 @@ class ProvenanceIndex:
         return out
 
     # -- kalicilik ---------------------------------------------------------
+    def content_ids(self) -> set[str]:
+        """Indekste temsil edilen icerik kimlikleri.
+
+        Diskten yuklenen bir indeksin veritabaniyla uyusup uyusmadigini
+        anlamak icin kullaniliyor (bkz. services/registry.py). pHash
+        listesi olcut: her icerik icin tam bir satir var, blok ve CLIP
+        indeksleri ise bos olabiliyor.
+        """
+        return set(self._phash_ids)
+
     def save(self, directory: Path) -> None:
         directory.mkdir(parents=True, exist_ok=True)
         faiss.write_index_binary(self.phash_index, str(directory / "phash.faiss"))

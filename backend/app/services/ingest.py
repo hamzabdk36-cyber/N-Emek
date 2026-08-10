@@ -35,7 +35,7 @@ from app.models.entities import (
 )
 from app.provenance import c2pa_service, embedding, recovery, watermark
 from app.provenance import fingerprint as fp
-from app.services.registry import IndexService
+from app.services.registry import IndexService, tile_hex, vektor_bayta
 
 JPEG_QUALITY = 92
 
@@ -171,6 +171,10 @@ def ingest(
         phash=f"{published_finger.phash:016x}",
         dhash=f"{published_finger.dhash:016x}",
         whash=f"{published_finger.whash:016x}",
+        # Indeksin acilista gorsel okumadan ve CLIP calistirmadan
+        # kurulabilmesi icin (bkz. services/registry.py).
+        tile_hashes=tile_hex(published_finger),
+        clip_vector=vektor_bayta(published_vector),
         manifest_present=manifest_urn is not None,
         incoming_manifest_present=result.manifest.present,
         # Kaynak, beyan veya manifest olmadan yalnizca kanitlarla bulunduysa

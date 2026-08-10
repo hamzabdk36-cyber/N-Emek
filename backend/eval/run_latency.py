@@ -150,7 +150,10 @@ def arka_plan_yukle(session, index, sayi: int) -> int:
             )
         )
     session.commit()
-    return index.rebuild(session)
+    # `rebuild` artik "gorselden hesaplanmak zorunda kalinan icerik
+    # sayisi"ni donuyor; buradaki olcum indeksin *buyuklugunu* istiyor.
+    index.rebuild(session)
+    return len(index)
 
 
 def senaryo_kos(session, index, foto: Path, kampanya_id: str, olcum: dict) -> None:

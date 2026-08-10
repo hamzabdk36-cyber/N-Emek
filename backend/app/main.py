@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import time
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -19,14 +20,30 @@ log = logging.getLogger("nemek")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_schema()
-    # Indeks bellekte tutuluyor; acilista veritabanindan yeniden kurulur.
+    # Indeks bellekte tutulur. Acilista once diskteki anlik goruntu
+    # denenir, olmazsa veritabanindaki vektorlerden kurulur; gorsel
+    # okuyup CLIP calistirmak yalnizca vektoru eksik icerikler icin
+    # gerekiyor (bkz. services/registry.py, docs/ACILIS-SURESI.md).
+    servis = get_index_service()
     session = SessionLocal()
+    started = time.perf_counter()
     try:
-        count = get_index_service().rebuild(session)
-        log.info("indeks kuruldu: %s icerik", count)
+        count, kademe = servis.load_or_rebuild(session)
+        log.info(
+            "indeks hazir: %s icerik, kaynak=%s, %.0f ms",
+            count,
+            kademe,
+            (time.perf_counter() - started) * 1000,
+        )
     finally:
         session.close()
+
     yield
+
+    # Kapanista anlik goruntuyu tazele: bir sonraki acilis en hizli
+    # kademeden baslasin. Surec aniden olduruluse anlik goruntu bayat
+    # kalir ama bu yalnizca bir onbellek - veritabani yolu yine hizli.
+    servis.save_snapshot()
 
 
 app = FastAPI(
