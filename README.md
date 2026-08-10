@@ -124,18 +124,20 @@ kaydetmeden hattan geçirir.
 ## Doğrulama
 
 ```bash
-cd backend && ../.venv/Scripts/python.exe -m pytest tests/   # 102 test
+cd backend && ../.venv/Scripts/python.exe -m pytest tests/   # 118 test
 cd frontend && npm test                                      # 87 test
 ```
 
-Backend — 102 test, beş katman:
+Backend — 118 test, beş katman:
 
 - **22** — pay motorunun değişmez kuralları (paylar 1,0'a toplanır, derin kaynak daha az
   alır, taban/tavan ihlal edilmez)
 - **13** — uçtan uca altın senaryo (servis katmanı)
-- **50** — API uç noktalarının sözleşmesi: döndürülen alanlar, durum kodları, hatalı
-  girdiye tepki, ve oturum/yetki kuralları (jetonsuz **401**, başkasının payına **403**)
-- **10** — indeks kalıcılığı: açılışta CLIP'in yeniden çalışmadığı doğrudan sınanıyor
+- **64** — API uç noktalarının sözleşmesi: döndürülen alanlar, durum kodları, hatalı
+  girdiye tepki, oturum/yetki kuralları (jetonsuz **401**, başkasının payına **403**,
+  moderatörsüz moderasyon **403**) ve silme (**409** ödemesi olan içerikte)
+- **12** — indeks kalıcılığı: açılışta CLIP'in yeniden çalışmadığı ve model değişince
+  yeniden hesaplandığı doğrudan sınanıyor
 - **7** — Emek Kartı'nın maliyeti: alt grafik bir kez hesaplanıyor, sorgu sayısı zincir
   uzunluğuyla artmıyor
 

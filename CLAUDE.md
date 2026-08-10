@@ -45,7 +45,7 @@ Sertifikalar ve korpus depoda değil; her ikisi de yukarıdaki komutlarla yenide
 ## Doğrulama
 
 ```bash
-cd backend && ../.venv/Scripts/python.exe -m pytest tests/   # 102 test: pay motoru + uçtan uca + API + yetki + indeks + maliyet
+cd backend && ../.venv/Scripts/python.exe -m pytest tests/   # 118 test: pay motoru + uçtan uca + API + yetki + silme + indeks + maliyet
 cd frontend && npm test                                      # 87 test: yerleşim + bileşenler + ekranlar + oturum
 .venv/Scripts/python.exe scripts/seed_demo.py --reset        # altın senaryoyu kur ve anlat
 
@@ -146,7 +146,7 @@ React 19'da da hata sınırı yazmanın tek yolu sınıf bileşeni;
 
 | İş | Ne koşar |
 |---|---|
-| backend | torch **önce** ve CPU indeksinden → `requirements.txt` → C2PA sertifikaları → 8 görsellik test korpusu → `pytest -m "not slow" -rs` (99 test) |
+| backend | torch **önce** ve CPU indeksinden → `requirements.txt` → C2PA sertifikaları → 8 görsellik test korpusu → `pytest -m "not slow" -rs` (115 test) |
 | arayüz | `npm ci` → `tsc --noEmit` → `vitest run` → `npm run build` |
 
 **Yeşil rozet gerçekten bir şey söylemeli.** İlk CI koşusu korpussuz çalıştı ve yeşil
@@ -253,6 +253,25 @@ zaman sınırdan fazla olmuyor.
 `frontend/nginx.conf` içindeki `client_max_body_size` ile ayarlardaki `max_upload_mb` aynı
 değerde (32 MB) tutulmalı — ayrılırlarsa aynı istek ortama göre farklı yerde reddedilir.
 
+### Silme ve yetki haritası
+
+`DELETE /api/contents/{id}` — yalnızca sahibi. Silme beş yerdeki izi birlikte götürüyor:
+görsel dosyası, eşleşme maskeleri, parmak izi + vektör (satırla), bağlar ve o bağlara
+açılmış itirazlar, arama indeksi. İndeks silmeden sonra veritabanından yeniden kuruluyor —
+FAISS "flat" indekste tek satır silmek satır → içerik eşlemesini kaydırıyor; yeniden
+kurmak hem basit hem güvenli ve indeks kalıcılığı sayesinde milisaniyeler sürüyor.
+
+**Ödemesi olan içerik silinmiyor (409).** `Payout` gerçekleşmiş bir ödemenin dondurulmuş
+kaydı; gelir dağıtan bir sistemde silinemez. Bu, silme hakkının tam karşılanmadığı bir
+sınır ve `VERI-MODEL-ETIK.md` §10'da açıkça yazılı.
+
+**Durum değiştiren hiçbir uç oturumsuz çalışmıyor.** Sahiplik gerektirenler: `revenue`,
+`delete`, `distribute` (içerik), `disputes` (payın sahibi), `resolve` (itirazı açan).
+**Moderatör** (`User.role = "moderator"`) yalnızca ikisine yetiyor:
+`disputes/{id}/moderate` ve `campaigns/{id}/distribute` — ikisi de geri alınamaz sonuç
+doğuruyor. Demo verisinde atanmış moderatör **yok**; rol açıkça verilmeli. Tam harita:
+`VERI-MODEL-ETIK.md` §11.
+
 ### İndeks kalıcılığı ve açılış süresi
 
 İndeks eskiden her açılışta **veritabanındaki her içeriğin görselini okuyup CLIP'i
@@ -265,7 +284,12 @@ model çıkarımı olduğu için açılış içerik sayısıyla doğrusal büyü
 |---|---|
 | **anlık görüntü** | `data/index/snapshot/` altındaki FAISS dosyaları okunur; kimlik kümesi veritabanıyla aynıysa kullanılır |
 | **veritabanı** | parmak izi `phash/dhash/whash` + `tile_hashes`'ten, vektör `clip_vector`'dan kurulur; görsele ve modele dokunulmaz |
-| **görseller** | yalnızca vektörü eksik içerikler için; hesaplananlar veritabanına geri yazılır, yani içerik başına **bir kez** |
+| **görseller** | yalnızca vektörü eksik **ya da başka bir modelden gelen** içerikler için; hesaplananlar veritabanına geri yazılır |
+
+Hazır olma ölçütü iki şey: vektör var mı, ve `embedding_model` bugünkü modelle aynı mı.
+İkincisi olmadan model değiştirildiğinde eski vektörler geçerli sayılıyor ve sorgular
+başka bir gömme uzayında aranıyordu — **hiçbir hata vermeden** yanlış sonuç. Anlık görüntü
+de aynı kontrolden geçiyor.
 
 Ölçüldü (`docs/ACILIS-SURESI.md`, 280 içerik): görsellerden **11,5 sn** · veritabanından
 **32 ms** · anlık görüntüden **16 ms**. Docker'da gerçek demo verisiyle 4.899 ms → 27 ms.

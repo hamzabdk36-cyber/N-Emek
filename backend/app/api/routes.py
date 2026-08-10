@@ -34,11 +34,13 @@ from app.models.entities import (
     AttributionEdge,
     Campaign,
     Content,
+    Dispute,
     LinkStatus,
     User,
 )
 from app.provenance import recovery
 from app.services import dispute as dispute_service
+from app.services import erasure as erasure_service
 from app.services import ingest as ingest_service
 from app.services import payout as payout_service
 from app.services.registry import IndexService, get_index_service
@@ -187,6 +189,18 @@ def current_user(
     user = session.get(User, payload.user_id)
     if user is None:
         raise HTTPException(401, "Oturum açan kullanıcı artık kayıtlı değil.")
+    return user
+
+
+def current_moderator(user: User = Depends(current_user)) -> User:
+    """Yalnizca moderator rolu.
+
+    Tek bir uc bunu istiyor: insan incelemesine dusen itirazi karara
+    baglamak. Rol acikca veriliyor; demo verisinde kimse moderator
+    degil, cunku atanmis bir moderator yok (bkz. VERI-MODEL-ETIK.md).
+    """
+    if not user.is_moderator:
+        raise HTTPException(403, "Bu işlem için moderatör yetkisi gerekli.")
     return user
 
 
@@ -409,10 +423,57 @@ def set_revenue(
     return {"content_id": content_id, "revenue": content.revenue}
 
 
-@router.post("/contents/{content_id}/distribute")
-def distribute(content_id: str, session: Session = Depends(get_session)):
-    """Gonderinin gelirini zincire dagitir ve odemeleri kaydeder."""
+@router.delete("/contents/{content_id}")
+def delete_content(
+    content_id: str,
+    session: Session = Depends(get_session),
+    index: IndexService = Depends(index_dep),
+    user: User = Depends(current_user),
+):
+    """Icerigi ve ondan turemis her izi siler.
+
+    Yetki: yalnizca icerigin sahibi.
+
+    Silinen: gorsel dosyasi, eslesme maskeleri, parmak izleri ve CLIP
+    vektoru (satirla birlikte), baglar, o baglara acilmis itirazlar, ve
+    arama indeksindeki girdiler.
+
+    Odemesi olan icerik silinmez (**409**): gerceklesmis bir odemenin
+    kaydi, gelir dagitan bir sistemde silinemez. Ayrintili gerekce
+    `services/erasure.py` basinda.
+    """
     content = _require_content(session, content_id)
+    if content.owner_id != user.id:
+        raise HTTPException(403, "İçeriği yalnızca sahibi silebilir.")
+
+    try:
+        sonuc = erasure_service.delete_content(session, content)
+    except erasure_service.SilinemezIcerik as exc:
+        raise HTTPException(409, str(exc)) from exc
+
+    # Indeks veritabanindan yeniden kuruluyor. FAISS "flat" indekslerde
+    # tek tek satir silmek, satir numarasi -> icerik eslemesini de
+    # kaydirir; yeniden kurmak hem daha basit hem daha guvenli. Vektorler
+    # veritabaninda durdugu icin bu artik milisaniyeler suruyor
+    # (bkz. docs/ACILIS-SURESI.md).
+    index.rebuild(session)
+    index.save_snapshot()
+    return sonuc
+
+
+@router.post("/contents/{content_id}/distribute")
+def distribute(
+    content_id: str,
+    session: Session = Depends(get_session),
+    user: User = Depends(current_user),
+):
+    """Gonderinin gelirini zincire dagitir ve odemeleri kaydeder.
+
+    Yetki: yalnizca icerigin sahibi. Dagitim odeme kaydi uretiyor.
+    """
+    content = _require_content(session, content_id)
+    if content.owner_id != user.id:
+        raise HTTPException(403, "Geliri yalnızca içeriğin sahibi dağıtabilir.")
     distribution, payouts = payout_service.distribute_content(
         session, content_id, content.revenue
     )
@@ -466,7 +527,17 @@ def list_campaigns(session: Session = Depends(get_session)):
 
 
 @router.post("/campaigns", response_model=CampaignOut)
-def create_campaign(body: CampaignIn, session: Session = Depends(get_session)):
+def create_campaign(
+    body: CampaignIn,
+    session: Session = Depends(get_session),
+    user: User = Depends(current_user),
+):
+    """Kampanya olusturur.
+
+    Yetki: oturum yeterli. Prototipte ayri bir *marka* rolu yok;
+    kampanyayi bir kullanici oluşturuyor. Urunlesmede marka hesabi ve
+    butce dogrulamasi gerekir.
+    """
     campaign = Campaign(
         brand_name=body.brand_name,
         title=body.title,
@@ -493,8 +564,17 @@ def create_campaign(body: CampaignIn, session: Session = Depends(get_session)):
 
 
 @router.post("/campaigns/{campaign_id}/distribute")
-def distribute_campaign(campaign_id: str, session: Session = Depends(get_session)):
-    """Odul havuzunu katilan gonderilere ve zincirlerine dagitir."""
+def distribute_campaign(
+    campaign_id: str,
+    session: Session = Depends(get_session),
+    moderator: User = Depends(current_moderator),
+):
+    """Odul havuzunu katilan gonderilere ve zincirlerine dagitir.
+
+    Yetki: **moderator**. Bu uc gercek para hareketi kaydediyor ve
+    tekrar cagrildiginda tekrar odeme uretiyor; herkese acik
+    birakilamaz.
+    """
     try:
         result = payout_service.distribute_campaign(session, campaign_id)
     except ValueError as exc:
@@ -548,8 +628,19 @@ def resolve_dispute(
     dispute_id: str,
     session: Session = Depends(get_session),
     index: IndexService = Depends(index_dep),
+    user: User = Depends(current_user),
 ):
-    """Itirazi otomatik degerlendirir: daha hassas dedektorle yeniden olcer."""
+    """Itirazi otomatik degerlendirir: daha hassas dedektorle yeniden olcer.
+
+    Yetki: yalnizca itirazi acan kisi. Yeniden olcum zincirin tum
+    paylarini degistirebiliyor; herkese acik birakilamaz.
+    """
+    itiraz = session.get(Dispute, dispute_id)
+    if itiraz is None:
+        raise HTTPException(404, f"İtiraz bulunamadı: {dispute_id}")
+    if itiraz.raiser_id != user.id:
+        raise HTTPException(403, "İtirazı yalnızca açan kişi çözüme gönderebilir.")
+
     try:
         outcome = dispute_service.resolve(session, index, dispute_id)
     except ValueError as exc:
@@ -564,14 +655,25 @@ def resolve_dispute(
 
 
 @router.get("/disputes/queue")
-def dispute_queue(session: Session = Depends(get_session)):
-    """Insan moderatore dusen itirazlar."""
+def dispute_queue(
+    session: Session = Depends(get_session),
+    user: User = Depends(current_user),
+):
+    """Insan moderatore dusen itirazlar.
+
+    Yetki: oturum yeterli. Kuyrugun *gorulebilir* olmasi bilincli bir
+    seffaflik tercihi - sistemin karar veremedigi yerler gizlenmiyor.
+    Karara baglamak ise moderator yetkisi istiyor.
+    """
     return dispute_service.review_queue(session)
 
 
 @router.post("/disputes/{dispute_id}/moderate")
 def moderate_dispute(
-    dispute_id: str, body: ModerationIn, session: Session = Depends(get_session)
+    dispute_id: str,
+    body: ModerationIn,
+    session: Session = Depends(get_session),
+    moderator: User = Depends(current_moderator),
 ):
     try:
         dispute = dispute_service.moderator_decision(

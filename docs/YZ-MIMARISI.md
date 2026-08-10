@@ -222,12 +222,21 @@ Tasarım kararları buradan çıktı:
 | İndirme | İlk çağrıda HuggingFace'ten (~600 MB), sonrası önbellekten |
 | Önbellek | Docker'da ayrı birim (`nemek-model-cache`); CI'da `actions/cache` |
 | Yükleme | `lru_cache(maxsize=1)` — süreç başına bir kez |
-| Model değişirse | Saklanan vektörler **geçersiz olur.** `clip_vector` sütunu ve FAISS anlık görüntüsü yeniden üretilmeli |
+| Model sürümü | `contents.embedding_model` sütununda: `<model>/<ön eğitim>` |
+| Model değişirse | Açılışta **kendiliğinden** yakalanıyor: uyuşmayan vektörler yeniden hesaplanıp geri yazılıyor, anlık görüntü de atılıyor |
 
-> **Bilinen açık:** vektörlerin hangi modelle üretildiği veritabanında **yazmıyor**.
-> Bugün tek model var ve sabit, ama model değiştirilirse eski vektörler sessizce yanlış
-> sonuç üretir. Doğru çözüm `contents` tablosuna bir model sürümü sütunu eklemek ve
-> açılışta uyuşmayanları yeniden hesaplamak. Kayıt altına alındı, henüz yapılmadı.
+**Model sürümü neden sütunda.** Bu sütun yokken model değiştirildiğinde eski vektörler
+*geçerli* sayılıyordu: indeks onları yeniden hesaplamıyor, ama yeni sorgular başka bir
+gömme uzayında aranıyordu. Sonuç sessizce bozulurdu — hiçbir hata vermeden yanlış komşular
+bulunurdu. Şimdi açılışta iki kontrol var:
+
+- **Veritabanı kademesi:** `embedding_model` bugünküyle uyuşmayan her satır "eksik"
+  sayılıyor ve yeniden hesaplanıyor
+- **Anlık görüntü kademesi:** kimlik kümesi aynı olsa bile model farklıysa anlık görüntü
+  atılıyor
+
+Bu, canlı Docker verisinde de doğrulandı: göç sütunu ekledi, üç içeriğin vektörü bir kez
+yeniden hesaplanıp geri yazıldı, sonraki açılış anlık görüntüden 20 ms sürdü.
 
 ---
 
@@ -240,7 +249,6 @@ Tasarım kararları buradan çıktı:
 | Filigran döndürme ve kırpmaya dayanmıyor | O senaryolarda kesin kanıt yok | 3–5. aşamalar tam bu durum için var, %92–100 başarılı |
 | Sentetik olarak yeniden çizilmiş içerik | Ölçülemez | Piksel düzeyinde ortak bölge kalmıyor — dürüstçe "ölçülemedi" denir |
 | CPU'da 4–7× yavaş | Demo yavaşlar | Tek yükleme yine saniyenin altında |
-| Model sürümü kayıtlı değil | Model değişirse sessiz hata | §10'da açıkça yazıldı |
 
 Ölçülemeyen durumda sistem tahmin üretmiyor: kapsama `None` kalıyor, ihtiyatlı tavan
 (%35) uygulanıyor ve ekranda **"ölçülemedi"** yazıyor.

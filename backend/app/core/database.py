@@ -45,6 +45,12 @@ def _eksik_sutunlari_ekle() -> None:
         "contents": {
             "tile_hashes": "JSON",
             "clip_vector": "BLOB",
+            "embedding_model": "VARCHAR(64)",
+        },
+        "users": {
+            # Var olan kullanicilar "uye" olarak devam eder; moderator
+            # yetkisi acikca verilir (bkz. VERI-MODEL-ETIK.md).
+            "role": "VARCHAR(16) DEFAULT 'uye'",
         },
     }
 

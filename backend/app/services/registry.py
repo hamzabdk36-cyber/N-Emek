@@ -51,6 +51,17 @@ from app.provenance.watermark import content_id_to_hex
 log = logging.getLogger("nemek.index")
 
 
+def model_kimligi() -> str:
+    """Vektorleri ureten modelin kimligi: `<model>/<on egitim>`.
+
+    Veritabaninda saklanip acilista karsilastiriliyor. Bu olmadan model
+    degistirildiginde eski vektorler *sessizce* yanlis sonuc uretiyordu:
+    indeks onlari gecerli sayip yeniden hesaplamiyor, ama yeni sorgular
+    baska bir gomme uzayinda aranıyordu.
+    """
+    return f"{embedding.MODEL_NAME}/{embedding.PRETRAINED}"
+
+
 def vektor_bayta(vector: np.ndarray) -> bytes:
     """CLIP vektorunu veritabaninda saklanan ham float32 baytlara cevirir."""
     return np.asarray(vector, dtype=np.float32).reshape(-1).tobytes()
@@ -127,12 +138,22 @@ class IndexService:
             log.warning("indeks anlık görüntüsü okunamadı, yeniden kurulacak: %s", exc)
             return False
 
-        # Uyum olcutu kimlik kumesi: icerik eklenmis/silinmisse anlik
-        # goruntu bayattir. Icerik *degismez* oldugu icin (yeni surum
-        # yeni kimlik) bu kontrol yeterli.
+        # Uyum olcutu iki sey:
+        #
+        # 1. Kimlik kumesi - icerik eklenmis/silinmisse anlik goruntu
+        #    bayattir. Icerik *degismez* oldugu icin (yeni surum yeni
+        #    kimlik) bu kontrol yeterli.
+        # 2. Gomme modeli - model degistiyse anlik goruntudeki vektorler
+        #    baska bir uzayda. Bu kontrol olmadan bayat indeks sessizce
+        #    kullanilir ve sorgular yanlis komsulari bulur.
         beklenen = {c.id for c in contents}
         if set(index.content_ids()) != beklenen:
-            log.info("indeks anlık görüntüsü bayat, yeniden kurulacak")
+            log.info("indeks anlık görüntüsü bayat (içerik kümesi değişmiş)")
+            return False
+
+        simdiki_model = model_kimligi()
+        if any(c.embedding_model != simdiki_model for c in contents):
+            log.info("indeks anlık görüntüsü bayat (gömme modeli değişmiş)")
             return False
 
         with self._lock:
@@ -163,15 +184,15 @@ class IndexService:
 
             # 1. Hazir olanlar: yalnizca FAISS'e ekleme.
             #
-            # Hazir olma olcutu yalnizca vektor. Blok hash listesinin bos
-            # olmasi "hesaplanmadi" demek degil - bos da gecerli bir
-            # deger. Ikisi zaten hep birlikte yaziliyor (ingest ve
-            # asagidaki geri yazma), dolayisiyla tek olcut yetiyor ve
-            # "bos liste" ile "hic hesaplanmadi" karismiyor.
+            # Hazir olma olcutu iki sey: vektor var mi, ve **hangi
+            # modelden** geldigi bugunkuyle ayni mi. Blok hash listesinin
+            # bos olmasi "hesaplanmadi" demek degil - bos da gecerli bir
+            # deger; ikisi zaten hep birlikte yaziliyor.
+            simdiki_model = model_kimligi()
             eksikler: list[Content] = []
             for content in contents:
                 vector = bayttan_vektor(content.clip_vector)
-                if vector is None:
+                if vector is None or content.embedding_model != simdiki_model:
                     eksikler.append(content)
                     continue
                 self._index.add(content.id, parmak_izi_satirdan(content), vector)
@@ -181,7 +202,13 @@ class IndexService:
                 return 0
 
             # 2. Eksikler: gorseli oku, hesapla, veritabanina geri yaz.
-            log.info("%s içerik için parmak izi/vektör hesaplanıyor", len(eksikler))
+            #    Model degistiyse burasi tum korpusu bir kez yeniden
+            #    hesaplar - istenen davranis tam olarak bu.
+            log.info(
+                "%s içerik için parmak izi/vektör hesaplanıyor (model=%s)",
+                len(eksikler),
+                simdiki_model,
+            )
             images: list[Image.Image] = []
             usable: list[Content] = []
             for content in eksikler:
@@ -201,6 +228,7 @@ class IndexService:
                 self._register(content)
                 content.tile_hashes = tile_hex(finger)
                 content.clip_vector = vektor_bayta(vector)
+                content.embedding_model = simdiki_model
             session.commit()
             return len(usable)
 

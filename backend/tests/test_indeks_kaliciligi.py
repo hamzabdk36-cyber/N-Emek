@@ -29,6 +29,7 @@ from app.provenance import fingerprint as fp
 from app.services.registry import (
     IndexService,
     bayttan_vektor,
+    model_kimligi,
     parmak_izi_satirdan,
     tile_hex,
     vektor_bayta,
@@ -108,6 +109,7 @@ def icerik_yaz(session, foto, sayi: int = 3, *, vektorlu: bool = True) -> list[C
             whash=f"{finger.whash:016x}",
             tile_hashes=tile_hex(finger) if vektorlu else [],
             clip_vector=vektor_bayta(vector) if vektorlu else None,
+            embedding_model=model_kimligi() if vektorlu else None,
         )
         session.add(content)
         yazilan.append(content)
@@ -224,6 +226,7 @@ class TestAcilisKademeleri:
             clip_vector=vektor_bayta(
                 np.zeros(embedding.EMBEDDING_DIM, dtype=np.float32)
             ),
+            embedding_model=model_kimligi(),
         )
         session.add(yeni_icerik)
         session.commit()
@@ -248,6 +251,59 @@ class TestAcilisKademeleri:
         sayi, kademe = IndexService().load_or_rebuild(session)
 
         assert kademe == "veritabanı"
+        assert sayi == 2
+
+    def test_model_degisirse_vektorler_yeniden_hesaplaniyor(
+        self, session, foto, monkeypatch
+    ):
+        """Sessiz hata koruması: eski vektörler geçerli sayılmamalı.
+
+        Bu sütun yokken model değiştirildiğinde eski vektörler geçerli
+        sayılıyor, yeni sorgular başka bir gömme uzayında aranıyordu ve
+        sonuç sessizce bozuluyordu.
+        """
+        icerikler = icerik_yaz(session, foto, sayi=2)
+        assert IndexService().rebuild(session) == 0, "başlangıçta hazır olmalı"
+
+        # Model değişti.
+        monkeypatch.setattr(embedding, "PRETRAINED", "baska_bir_on_egitim")
+        cagri = {"sayi": 0}
+
+        def _embed(images, **kwargs):
+            cagri["sayi"] += 1
+            return np.ones((len(images), embedding.EMBEDDING_DIM), dtype=np.float32)
+
+        monkeypatch.setattr(embedding, "embed", _embed)
+
+        eksik = IndexService().rebuild(session)
+
+        assert eksik == 2, "model değişince tüm içerik yeniden hesaplanmalı"
+        assert cagri["sayi"] == 1
+        for content in icerikler:
+            session.refresh(content)
+            assert content.embedding_model == model_kimligi()
+
+    def test_model_degisirse_anlik_goruntu_de_atiliyor(
+        self, session, foto, monkeypatch
+    ):
+        icerik_yaz(session, foto, sayi=2)
+        kuran = IndexService()
+        kuran.rebuild(session)
+        kuran.save_snapshot()
+
+        # Kimlik kümesi aynı ama model başka: anlık görüntü kullanılmamalı.
+        monkeypatch.setattr(embedding, "PRETRAINED", "baska_bir_on_egitim")
+        monkeypatch.setattr(
+            embedding,
+            "embed",
+            lambda images, **k: np.ones(
+                (len(images), embedding.EMBEDDING_DIM), dtype=np.float32
+            ),
+        )
+
+        sayi, kademe = IndexService().load_or_rebuild(session)
+
+        assert kademe != "anlık görüntü"
         assert sayi == 2
 
     def test_bos_veritabaninda_cokmiyor(self, session, model_yasak):

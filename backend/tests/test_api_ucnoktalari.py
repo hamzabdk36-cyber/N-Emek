@@ -69,7 +69,12 @@ def ortam(tmp_path_factory):
 
     ayse = User(handle="api_ayse", display_name="Ayşe Yılmaz", accent="#E8A838")
     burak = User(handle="api_burak", display_name="Burak Demir", accent="#5B8DEF")
-    session.add_all([ayse, burak])
+    # Moderator yetkisi tek bir uc icin gerekiyor: insana yukselen
+    # itirazi karara baglamak. Ayrica kampanya havuzunun dagitimi.
+    moderator = User(
+        handle="api_moderator", display_name="Moderatör", role="moderator"
+    )
+    session.add_all([ayse, burak, moderator])
     session.flush()
 
     kampanya = Campaign(
@@ -137,6 +142,7 @@ def ortam(tmp_path_factory):
     veri = {
         "ayse_id": ayse.id,
         "burak_id": burak.id,
+        "moderator_id": moderator.id,
         "kampanya_id": kampanya.id,
         "icerik_id": icerik.id,
         "kilitli_id": kilitli.id,
@@ -433,6 +439,162 @@ def test_yuklenen_icerigin_sahibi_jetondan_geliyor(client, veri, basliklar):
     assert r.json()["content"]["owner"]["id"] == veri["ayse_id"]
 
 
+def test_moderator_yetkisi_olmayan_moderasyon_yapamaz(client, veri, basliklar):
+    """Rol gerçekten uygulanıyor mu."""
+    r = client.post(
+        "/api/disputes/herhangi/moderate",
+        json={"accept": True, "note": "deneme"},
+        headers=basliklar(veri["ayse_id"]),
+    )
+    assert r.status_code == 403
+    assert "moderatör" in r.json()["detail"].lower()
+
+
+def test_kampanya_dagitimi_moderator_ister(client, veri, basliklar):
+    """Havuz dağıtımı gerçek para hareketi kaydediyor."""
+    r = client.post(
+        f"/api/campaigns/{veri['kampanya_id']}/distribute",
+        headers=basliklar(veri["ayse_id"]),
+    )
+    assert r.status_code == 403
+
+
+def test_itiraz_kuyrugu_oturum_ister(client):
+    """Kuyruk görülebilir ama oturumsuz değil."""
+    assert client.get("/api/disputes/queue").status_code == 401
+
+
+def test_baskasinin_itirazi_cozume_gonderilemez(client, veri, basliklar):
+    """Yeniden ölçüm zincirin tüm paylarını değiştirebiliyor."""
+    acan = client.post(
+        "/api/disputes",
+        json={"edge_id": veri["bag_id"], "reason": "Payım düşük hesaplandı."},
+        headers=basliklar(veri["ayse_id"]),
+    )
+    assert acan.status_code == 200, acan.text
+
+    r = client.post(
+        f"/api/disputes/{acan.json()['id']}/resolve",
+        headers=basliklar(veri["burak_id"]),
+    )
+    assert r.status_code == 403
+
+
+@pytest.mark.parametrize(
+    "yol,metod",
+    [
+        ("/api/contents/apitesticerik01/distribute", "post"),
+        ("/api/campaigns", "post"),
+        ("/api/campaigns/x/distribute", "post"),
+        ("/api/disputes/x/resolve", "post"),
+        ("/api/disputes/x/moderate", "post"),
+        ("/api/contents/apitesticerik01", "delete"),
+    ],
+)
+def test_durum_degistiren_uclar_jetonsuz_401(client, yol, metod):
+    """Hiçbir mutasyon ucu oturumsuz çalışmamalı."""
+    r = getattr(client, metod)(yol)
+    assert r.status_code == 401, f"{metod.upper()} {yol} -> {r.status_code}"
+
+
+# ---------------------------------------------------------------------------
+# Silme — "unutulma hakkı"
+# ---------------------------------------------------------------------------
+def test_baskasinin_icerigi_silinemez(client, veri, basliklar):
+    r = client.delete(
+        f"/api/contents/{veri['icerik_id']}", headers=basliklar(veri["burak_id"])
+    )
+    assert r.status_code == 403
+    assert client.get(f"/api/contents/{veri['icerik_id']}").status_code == 200
+
+
+def test_olmayan_icerik_silinemez_404(client, veri, basliklar):
+    r = client.delete(
+        "/api/contents/yokboyleicerik", headers=basliklar(veri["ayse_id"])
+    )
+    assert r.status_code == 404
+
+
+def test_icerik_silinince_izleri_de_gidiyor(client, veri, basliklar, tmp_path):
+    """Dosya, bağlar ve satır birlikte gitmeli."""
+    from app.core.database import SessionLocal
+
+    session = SessionLocal()
+    yol = tmp_path / "silinecek.jpg"
+    bgr = cv2.imread(str(veri["foto"]))
+    yol.write_bytes(_jpeg(bgr))
+    finger = fp.compute(Image.open(yol).convert("RGB"), raw_bytes=yol.read_bytes())
+    silinecek = Content(
+        id="apisilinecek001",
+        owner_id=veri["ayse_id"],
+        title="Silinecek içerik",
+        file_path=str(yol),
+        width=bgr.shape[1],
+        height=bgr.shape[0],
+        content_hash=finger.content_hash + "sil",
+        phash=f"{finger.phash:016x}",
+        dhash=f"{finger.dhash:016x}",
+        whash=f"{finger.whash:016x}",
+    )
+    session.add(silinecek)
+    session.flush()
+    bag = AttributionEdge(
+        child_id=silinecek.id,
+        parent_id=veri["icerik_id"],
+        stage=LinkStage.CLIP,
+        status=LinkStatus.CONFIRMED,
+        confidence=0.8,
+        visual_coverage=0.5,
+    )
+    session.add(bag)
+    session.commit()
+    bag_id = bag.id
+    session.close()
+
+    assert yol.exists()
+
+    r = client.delete(
+        "/api/contents/apisilinecek001", headers=basliklar(veri["ayse_id"])
+    )
+
+    assert r.status_code == 200, r.text
+    govde = r.json()
+    alanlar(govde, "content_id", "silinen_bag", "silinen_itiraz", "gorsel_silindi")
+    assert govde["silinen_bag"] == 1
+    assert govde["gorsel_silindi"] is True
+
+    assert not yol.exists(), "görsel diskten silinmedi"
+    session = SessionLocal()
+    assert session.get(Content, "apisilinecek001") is None
+    assert session.get(AttributionEdge, bag_id) is None
+    session.close()
+    assert client.get("/api/contents/apisilinecek001").status_code == 404
+
+
+def test_odemesi_olan_icerik_silinemez_409(client, veri, basliklar):
+    """Gerçekleşmiş ödemenin kaydı silinemez.
+
+    Bu testin en sonda olması bilinçli: dağıtım ödeme kaydı üretiyor ve
+    o kayıtlar sonraki testleri etkiler.
+    """
+    kimlik = basliklar(veri["ayse_id"])
+    client.post(
+        f"/api/contents/{veri['icerik_id']}/revenue",
+        json={"amount": 500.0},
+        headers=kimlik,
+    )
+    dagitim = client.post(
+        f"/api/contents/{veri['icerik_id']}/distribute", headers=kimlik
+    )
+    assert dagitim.status_code == 200, dagitim.text
+
+    r = client.delete(f"/api/contents/{veri['icerik_id']}", headers=kimlik)
+
+    assert r.status_code == 409
+    assert "ödeme" in r.json()["detail"].lower()
+    assert client.get(f"/api/contents/{veri['icerik_id']}").status_code == 200
+
+
 # ---------------------------------------------------------------------------
 # Gelir ve dagitim
 # ---------------------------------------------------------------------------
@@ -463,12 +625,13 @@ def test_gelir_govdesi_dogrulanir(client, veri, basliklar):
 
 
 def test_dagitim_tutarlari_ve_kural_gunlugu_doner(client, veri, basliklar):
+    kimlik = basliklar(veri["ayse_id"])
     client.post(
         f"/api/contents/{veri['icerik_id']}/revenue",
         json={"amount": 1000.0},
-        headers=basliklar(veri["ayse_id"]),
+        headers=kimlik,
     )
-    r = client.post(f"/api/contents/{veri['icerik_id']}/distribute")
+    r = client.post(f"/api/contents/{veri['icerik_id']}/distribute", headers=kimlik)
     assert r.status_code == 200
     govde = r.json()
     alanlar(
@@ -481,8 +644,11 @@ def test_dagitim_tutarlari_ve_kural_gunlugu_doner(client, veri, basliklar):
     assert abs(odenen - 1000.0) < 0.05, "odemeler brut gelire esit olmali"
 
 
-def test_olmayan_icerigin_dagitimi_404(client):
-    assert client.post("/api/contents/yokboyle/distribute").status_code == 404
+def test_olmayan_icerigin_dagitimi_404(client, veri, basliklar):
+    r = client.post(
+        "/api/contents/yokboyle/distribute", headers=basliklar(veri["ayse_id"])
+    )
+    assert r.status_code == 404
 
 
 # ---------------------------------------------------------------------------
@@ -500,10 +666,11 @@ def test_kampanya_listesi_bicimi(client):
     )
 
 
-def test_kampanya_olusturulur_ve_listede_gorunur(client):
+def test_kampanya_olusturulur_ve_listede_gorunur(client, veri, basliklar):
     onceki = len(client.get("/api/campaigns").json())
     r = client.post(
         "/api/campaigns",
+        headers=basliklar(veri["ayse_id"]),
         json={
             "brand_name": "Test Marka",
             "title": "Yeni Kampanya",
@@ -519,16 +686,28 @@ def test_kampanya_olusturulur_ve_listede_gorunur(client):
     assert len(client.get("/api/campaigns").json()) == onceki + 1
 
 
-def test_eksik_alanli_kampanya_reddedilir(client):
-    assert client.post("/api/campaigns", json={"brand_name": "Yalniz marka"}).status_code == 422
+def test_eksik_alanli_kampanya_reddedilir(client, veri, basliklar):
+    r = client.post(
+        "/api/campaigns",
+        json={"brand_name": "Yalniz marka"},
+        headers=basliklar(veri["ayse_id"]),
+    )
+    assert r.status_code == 422
 
 
-def test_olmayan_kampanyanin_dagitimi_404(client):
-    assert client.post("/api/campaigns/yokboyle/distribute").status_code == 404
+def test_olmayan_kampanyanin_dagitimi_404(client, veri, basliklar):
+    r = client.post(
+        "/api/campaigns/yokboyle/distribute",
+        headers=basliklar(veri["moderator_id"]),
+    )
+    assert r.status_code == 404
 
 
-def test_kampanya_dagitimi_havuzu_raporlar(client, veri):
-    r = client.post(f"/api/campaigns/{veri['kampanya_id']}/distribute")
+def test_kampanya_dagitimi_havuzu_raporlar(client, veri, basliklar):
+    r = client.post(
+        f"/api/campaigns/{veri['kampanya_id']}/distribute",
+        headers=basliklar(veri["moderator_id"]),
+    )
     assert r.status_code == 200
     alanlar(
         r.json(), "campaign_id", "reward_pool", "total_paid", "platform_total", "per_content"
@@ -538,8 +717,8 @@ def test_kampanya_dagitimi_havuzu_raporlar(client, veri):
 # ---------------------------------------------------------------------------
 # Itiraz ve moderasyon
 # ---------------------------------------------------------------------------
-def test_itiraz_kuyrugu_liste_doner(client):
-    r = client.get("/api/disputes/queue")
+def test_itiraz_kuyrugu_liste_doner(client, veri, basliklar):
+    r = client.get("/api/disputes/queue", headers=basliklar(veri["ayse_id"]))
     assert r.status_code == 200
     assert isinstance(r.json(), list)
 
@@ -554,13 +733,18 @@ def test_olmayan_baga_itiraz_404(client, veri, basliklar):
     assert r.status_code == 404
 
 
-def test_olmayan_itirazin_cozumu_404(client):
-    assert client.post("/api/disputes/yokboyle/resolve").status_code == 404
-
-
-def test_olmayan_itirazin_moderasyonu_404(client):
+def test_olmayan_itirazin_cozumu_404(client, veri, basliklar):
     r = client.post(
-        "/api/disputes/yokboyle/moderate", json={"accept": True, "note": "deneme"}
+        "/api/disputes/yokboyle/resolve", headers=basliklar(veri["ayse_id"])
+    )
+    assert r.status_code == 404
+
+
+def test_olmayan_itirazin_moderasyonu_404(client, veri, basliklar):
+    r = client.post(
+        "/api/disputes/yokboyle/moderate",
+        json={"accept": True, "note": "deneme"},
+        headers=basliklar(veri["moderator_id"]),
     )
     assert r.status_code == 404
 

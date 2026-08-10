@@ -91,7 +91,14 @@ class User(Base):
     display_name: Mapped[str] = mapped_column(String(80))
     # Arayuzde avatar yerine kullanilan renk (demo verisi icin yeterli).
     accent: Mapped[str] = mapped_column(String(9), default="#5B8DEF")
+    # "uye" | "moderator". Moderator yalnizca insan incelemesine dusen
+    # itirazlari karara baglayabilir; baska bir ayricaligi yok.
+    role: Mapped[str] = mapped_column(String(16), default="uye")
     created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=_now)
+
+    @property
+    def is_moderator(self) -> bool:
+        return self.role == "moderator"
 
     contents: Mapped[list["Content"]] = relationship(back_populates="owner")
 
@@ -156,6 +163,11 @@ class Content(Base):
     # durunca acilis, model hic yuklenmeden yalnizca FAISS'e ekleme
     # maliyetine iniyor (bkz. services/registry.py, docs/ACILIS-SURESI.md).
     clip_vector: Mapped[bytes | None] = mapped_column(LargeBinary, nullable=True)
+    # Vektoru ureten model. Bu sutun olmadan model degistirildiginde eski
+    # vektorler sessizce yanlis sonuc uretiyordu: indeks onlari gecerli
+    # sayip yeniden hesaplamiyor, ama yeni sorgular baska bir uzayda
+    # gomuluyordu. Acilista uyusmayanlar yeniden hesaplaniyor.
+    embedding_model: Mapped[str | None] = mapped_column(String(64), nullable=True)
 
     owner: Mapped[User] = relationship(back_populates="contents")
     campaign: Mapped["Campaign | None"] = relationship(back_populates="contents")

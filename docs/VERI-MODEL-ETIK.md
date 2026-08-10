@@ -245,17 +245,82 @@ ihtiyatlı tavan uygulanıyor ve kaynak yeniden ölçüm isteyebiliyor.
 
 ---
 
-## 10. Bilinen açıklar
+## 10. Silme hakkı — nasıl çalışıyor
+
+`DELETE /api/contents/{id}` · yetki: **yalnızca içeriğin sahibi** (başkasına 403).
+
+Silmek tek satırlık bir işlem değil; aynı içerikten türemiş izler beş yerde duruyor ve
+biri kalırsa silme yarım kalır. Uç hepsini birlikte götürüyor:
+
+| Ne | Nerede |
+|---|---|
+| Yayınlanan görsel | Diskte |
+| Eşleşme maskeleri | Diskte (PNG) |
+| Parmak izleri + CLIP vektörü | Veritabanı satırında |
+| Bağlar ve o bağlara açılmış itirazlar | Veritabanında |
+| Arama indeksi girdileri | Bellekte (FAISS) + diskteki anlık görüntü |
+
+İndeks, silmeden sonra veritabanından yeniden kuruluyor. FAISS "flat" indekslerde tek tek
+satır silmek, satır numarası → içerik eşlemesini de kaydırır; yeniden kurmak hem daha
+basit hem daha güvenli. Vektörler veritabanında durduğu için bu artık milisaniyeler
+sürüyor.
+
+### Kalan sınır: ödemesi olan içerik silinmiyor
+
+Ödeme yapılmış bir içerik silinmek istenirse uç **409** döner:
+
+> *"Bu içeriğe 4 ödeme bağlı. Gerçekleşmiş ödemelerin kaydı silinemez; mali kayıtların
+> bütünlüğü korunmalıdır."*
+
+`Payout`, gerçekleşmiş bir ödemenin dondurulmuş kaydı. Gelir dağıtan bir sistemde bunu
+silmek denetlenebilirliği yok eder. **Bu, silme hakkının tam karşılanmadığı bir sınır ve
+saklanmıyor:** doğru çözüm ödeme kayıtlarının kişisel veriden arındırılıp (anonimleştirme)
+içeriğin yine de silinebilmesi. Ürünleşme aşamasının işi.
+
+---
+
+## 11. Yetki haritası
+
+Durum değiştiren **hiçbir uç** oturumsuz çalışmıyor.
+
+| Uç | Yetki |
+|---|---|
+| `POST /contents` · `/remix` | Oturum (sahip jetondan) |
+| `POST /contents/{id}/revenue` | İçeriğin sahibi |
+| `DELETE /contents/{id}` | İçeriğin sahibi |
+| `POST /contents/{id}/distribute` | İçeriğin sahibi |
+| `POST /disputes` | Payın sahibi |
+| `POST /disputes/{id}/resolve` | İtirazı açan |
+| `GET /disputes/queue` | Oturum |
+| `POST /disputes/{id}/moderate` | **Moderatör** |
+| `POST /campaigns` | Oturum |
+| `POST /campaigns/{id}/distribute` | **Moderatör** |
+
+Açık kalan uçların tamamı **okuma**: akış, içerik, Emek Kartı, maske, kampanya listesi,
+sağlık ve `/verify`. Bunlar bilinçli olarak herkese açık — sistemin şeffaflık iddiası
+bunu gerektiriyor. `/verify` boyut sınırıyla korunuyor (32 MB, 413).
+
+**Moderatör rolü** (`User.role = "moderator"`) yalnızca iki şeye yetiyor: insana yükselen
+itirazı karara bağlamak ve kampanya havuzunu dağıtmak. İkisi de geri alınamaz sonuç
+doğuruyor. Demo verisinde **atanmış moderatör yok** — bu doğru davranış; rol açıkça
+verilmeli.
+
+**İnceleme kuyruğunun oturumla görülebilir olması bilinçli:** sistemin karar veremediği
+yerler gizlenmiyor. Karara bağlamak ayrı bir yetki.
+
+---
+
+## 12. Bilinen açıklar
 
 Dürüstlük için ayrı bölüm. Bunlar bilinmiyor değil, **henüz yapılmadı**.
 
 | Açık | Sonucu | Doğru çözüm |
 |---|---|---|
-| **Silme ucu yok** | 21 ucun hiçbiri içerik veya kullanıcı silmiyor. "Unutulma hakkı" karşılanamıyor | `DELETE /contents/{id}`: dosya, parmak izi, vektör, FAISS girdisi ve bağların birlikte silinmesi |
-| **Model sürümü kayıtlı değil** | Model değişirse eski vektörler sessizce yanlış sonuç üretir | `contents`'e model sürümü sütunu, açılışta uyuşmayanları yeniden hesapla |
-| **Moderasyon uçlarında yetki yok** | `/disputes/{id}/moderate` ve `/campaigns` jetonsuz çağrılabiliyor | Yönetici rolü ve uç düzeyinde kontrol |
-| **Aydınlatma metni yok** | Prototipte kullanıcıya veri işleme bildirimi gösterilmiyor | Ana platformun aydınlatma metnine eklenmesi |
+| **Ödemesi olan içerik silinemez** | Silme hakkı bu durumda tam karşılanmıyor (§10) | Ödeme kayıtlarının anonimleştirilmesi |
+| **Kullanıcı silme yok** | Yalnızca içerik silinebiliyor | `DELETE /users/{id}` + içeriklerinin toplu işlenmesi |
+| **Aydınlatma metni yok** | Kullanıcıya veri işleme bildirimi gösterilmiyor | Ana platformun aydınlatma metnine eklenmesi |
 | **Kişi içeren görsel** | Gömme kişisel veri türevi sayılabilir (§3) | Ana platform politikasıyla yönetilmeli |
+| **Marka rolü yok** | Kampanyayı herhangi bir kullanıcı oluşturabiliyor | Marka hesabı ve bütçe doğrulaması |
 
 Bunların hiçbiri prototipin gösterdiği iddiayı zayıflatmıyor; hepsi ürünleşme aşamasının
 işi ve şimdiden yazıldı ki sonradan "gözden kaçtı" denmesin.
@@ -271,4 +336,6 @@ işi ve şimdiden yazıldı ki sonradan "gözden kaçtı" denmesin.
 - Ölçülen yanlış atıf **%0,86**
 - Her karar itiraza açık, çözülemeyen itiraz **insana** gidiyor
 - Sistemin bilmediği yerler ekranda **"ölçülemedi"** diye yazıyor
+- İçerik **silinebiliyor**; silme, diskteki dosyayı ve indeksi de götürüyor
+- Durum değiştiren **hiçbir uç** oturumsuz çalışmıyor
 - Açıklar bu belgede, gizlenmiyor
