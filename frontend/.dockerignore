@@ -1,0 +1,20 @@
+# Arayuz derleme baglami.
+#
+# Kok dizindeki .dockerignore buraya uygulanmiyor: bu imajin baglami
+# `./frontend` ve Docker her zaman *baglamin kendi* .dockerignore
+# dosyasini okuyor. Bu dosya olmadan `COPY . .` yerel node_modules'u
+# (Windows'ta derlenmis ikililer dahil) ve eski dist'i imaja tasiyor;
+# derleme yine geciyor ama her seferinde ~200 MB gereksiz baglam
+# gonderiliyor.
+#
+# Ikisi de imajda yeniden uretiliyor: node_modules `npm ci` ile,
+# dist `npm run build` ile.
+node_modules/
+dist/
+
+# Yerel gelistirme artiklari.
+tsconfig.tsbuildinfo
+.vite/
+*.local
+.env
+.env.local

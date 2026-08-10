@@ -225,9 +225,13 @@ def compute_shares(
     if sources_total > max_sources and sources_total > 0:
         scale = max_sources / sources_total
         weights = {k: v * scale for k, v in weights.items()}
+        # Apostrofla ek almaktan kaciniliyor (bkz. CLAUDE.md): "%80,0'e"
+        # hem imla kurali disinda hem de ondalik virgulunun hemen
+        # ardindan geldigi icin okunmasi zor.
         log.append(
             f"Kaynakların toplamı {_pct(sources_total)} idi; üreticiye bırakılan "
-            f"{_pct(rules.creator_floor)} taban için oranlı olarak {_pct(max_sources)}'e çekildi."
+            f"{_pct(rules.creator_floor)} taban için oranlı olarak "
+            f"{_pct(max_sources)} düzeyine çekildi."
         )
         sources_total = max_sources
 
