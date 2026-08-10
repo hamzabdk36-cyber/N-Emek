@@ -28,7 +28,7 @@ from app.services import ingest as ingest_service
 from app.services import payout as payout_service
 from app.services.registry import IndexService
 
-RAW = Path(__file__).resolve().parents[2] / "data" / "raw"
+from tests.conftest import gorsel_korpusu
 
 
 def jpeg(image: np.ndarray, quality: int = 92) -> bytes:
@@ -61,9 +61,7 @@ def screenshot(source: np.ndarray) -> np.ndarray:
 @pytest.fixture(scope="module")
 def senaryo():
     """Altin senaryoyu bir kez kurar; testler sonucu paylasir."""
-    photos = sorted(RAW.glob("*.jpg"))
-    if not photos:
-        pytest.skip("gorsel korpusu yok: python scripts/fetch_eval_images.py")
+    photos = gorsel_korpusu()
 
     create_schema()
     session = SessionLocal()

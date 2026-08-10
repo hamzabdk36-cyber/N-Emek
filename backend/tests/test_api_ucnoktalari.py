@@ -34,7 +34,7 @@ from app.models.entities import Campaign, Content, User
 from app.provenance import fingerprint as fp
 from PIL import Image
 
-RAW = Path(__file__).resolve().parents[2] / "data" / "raw"
+from tests.conftest import gorsel_korpusu
 
 
 def _jpeg(image: np.ndarray, quality: int = 92) -> bytes:
@@ -54,9 +54,7 @@ def ortam(tmp_path_factory):
     """
     from app.main import app
 
-    photos = sorted(RAW.glob("*.jpg"))
-    if not photos:
-        pytest.skip("gorsel korpusu yok: python scripts/fetch_eval_images.py")
+    photos = gorsel_korpusu()
 
     create_schema()
     session = SessionLocal()

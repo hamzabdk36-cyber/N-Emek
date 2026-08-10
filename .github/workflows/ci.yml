@@ -4,13 +4,17 @@
 # derleme). Ayri tutuluyorlar ki biri kirildiginda digerinin sonucu yine
 # gorulsun - "her sey kirmizi" tek bir hatayi gizliyor.
 #
-# Agir testler CI'da kosmuyor
-# ---------------------------
-# `slow` isaretli iki test koken kurtarma hattinin tamamini calistiriyor
-# ve CLIP modelini indiriyor (~600 MB). Bunlar yerelde kosulur; CI 69
-# hizli testi dogruluyor. Torch yine de kuruluyor: `embedding.py` modul
-# duzeyinde `import torch` yapiyor, yani uygulamayi ice aktarmak icin
-# gerekli - indirilen sey model agirliklari degil, kutuphanenin kendisi.
+# Yesil rozet gercekten bir sey soylemeli
+# ---------------------------------------
+# Ilk surumde backend isi korpussuz kosuyordu ve yesil yaniyordu:
+# `test_api_ucnoktalari` ile `test_e2e_altin_senaryo` modul
+# fikstürlerinden atlaniyor, geriye yalnizca 22 saf pay testi kaliyordu.
+# 47 test sessizce atlanmis, is yine basarili gorunmustu. Iki karsi
+# onlem var: korpus CI'da indiriliyor (asagida) ve `tests/conftest.py`
+# korpus yokken CI'da atlamak yerine duruyor.
+#
+# `slow` isaretli iki test yine kosmuyor; onlar koken kurtarma hattini
+# tam korpusla olcuyor ve yerelde kosuluyor.
 
 name: CI
 
@@ -33,14 +37,25 @@ jobs:
       # Kosucuda GPU yok; yine de acikca yaziliyor ki bir gun GPU'lu
       # kosucuya gecilirse test ortami sessizce degismesin.
       NEMEK_FORCE_CPU: "1"
+      # CLIP agirliklari buraya iniyor; adim adim onbellege aliniyor.
+      HF_HOME: ${{ github.workspace }}/.hf-cache
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
           cache: pip
           cache-dependency-path: backend/requirements.txt
+
+      # CLIP ViT-B/32 agirliklari ~600 MB. Altin senaryo testi koken
+      # kurtarma hattinin tamamini calistirdigi icin modele ihtiyac var;
+      # onbellek olmadan her kosu bastan indirir.
+      - name: CLIP model önbelleği
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.hf-cache
+          key: clip-vit-b-32-laion2b-v1
 
       # `opencv-contrib-python` (headless olmayan surum) libGL ve libglib
       # istiyor. Bagimliligi degistirmek yerine kosucuya bu iki
@@ -70,9 +85,17 @@ jobs:
       - name: C2PA geliştirme sertifikaları
         run: python scripts/gen_dev_certs.py
 
+      # Testler korpustan yalnizca photos[0] ve photos[3]'u kullaniyor,
+      # yani sekiz gorsel yetiyor. Tam korpus (320) degerlendirme
+      # betikleri icin ve yerelde kaliyor.
+      - name: Test korpusu (8 görsel)
+        run: python scripts/fetch_eval_images.py 8
+
       - name: Testler (69 hızlı test)
         working-directory: backend
-        run: python -m pytest -m "not slow"
+        # -rs: atlanan varsa sebebi gunluge yazilsin. Atlama artik
+        # CI'da hata, ama baska bir sebeple atlama cikarsa gorulsun.
+        run: python -m pytest -m "not slow" -rs
 
   frontend:
     name: Arayüz — tip denetimi, testler, derleme
@@ -81,9 +104,9 @@ jobs:
       run:
         working-directory: frontend
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "24"
           cache: npm

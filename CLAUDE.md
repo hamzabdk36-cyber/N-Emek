@@ -119,12 +119,27 @@ besleniyor.
 
 | İş | Ne koşar |
 |---|---|
-| backend | `pytest -m "not slow"` (69 test); torch **önce** ve CPU indeksinden kurulur, C2PA geliştirme sertifikaları üretilir |
+| backend | torch **önce** ve CPU indeksinden → `requirements.txt` → C2PA sertifikaları → 8 görsellik test korpusu → `pytest -m "not slow" -rs` (69 test) |
 | arayüz | `npm ci` → `tsc --noEmit` → `vitest run` → `npm run build` |
 
-`slow` işaretli iki test CI'da koşmuyor: köken kurtarma hattının tamamını çalıştırıp CLIP
-modelini indiriyorlar (~600 MB). Torch yine de kuruluyor — `embedding.py` modül düzeyinde
-`import torch` yapıyor, yani uygulamayı içe aktarmak için gerekli.
+**Yeşil rozet gerçekten bir şey söylemeli.** İlk CI koşusu korpussuz çalıştı ve yeşil
+yandı: `test_api_ucnoktalari` ile `test_e2e_altin_senaryo` modül fikstürlerinden atlandı,
+geriye yalnızca 22 saf pay testi kaldı. 47 test sessizce atlanmıştı ama iş başarılı
+görünüyordu — yani rozet, API sözleşmesini ve altın senaryoyu hiç doğrulamadığı halde
+doğruluyormuş gibi duruyordu. İki karşı önlem kondu:
+
+1. Korpus CI'da indiriliyor. Testler yalnızca `photos[0]` ve `photos[3]`'ü kullanıyor,
+   dolayısıyla 8 görsel yetiyor; tam korpus (320) değerlendirme betikleri için ve yerelde
+   kalıyor. **`fetch_eval_images.py 8` yerelde çalıştırılmamalı** — hedefi aşan dosyaları
+   siler, yani mevcut 320'lik korpusu 8'e düşürür.
+2. `tests/conftest.py` içindeki `gorsel_korpusu()`, korpus eksikken yerelde atlıyor ama
+   `CI` ortam değişkeni varsa **duruyor**. Yerelde atlama doğru davranış (korpus depoda
+   değil, yeni klonlayan biri önce onu indirmek zorunda kalmasın); CI'da eksiklik kurulum
+   hatasıdır.
+
+CLIP ağırlıkları (~600 MB) `actions/cache` ile önbelleğe alınıyor — altın senaryo testi
+köken kurtarma hattının tamamını çalıştırdığı için modele ihtiyaç var. `slow` işaretli iki
+test yine koşmuyor; onlar hattı tam korpusla ölçüyor.
 
 ## Mimari
 
