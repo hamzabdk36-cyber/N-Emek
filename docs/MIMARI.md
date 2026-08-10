@@ -14,33 +14,33 @@ platformun kendisi de var, çünkü katmanın nereye takılacağını göstermek
 flowchart TB
     subgraph istemci["Referans istemci — React 19 + Vite + Tailwind"]
         akis["Akış"]
-        detay["İçerik Detay<br/>(Emek Kartı)"]
-        studyo["Remix Stüdyo<br/>kırp · yazı · çizim · filtre"]
+        detay["İçerik Detay — Emek Kartı"]
+        studyo["Remix Stüdyo: kırp, yazı, çizim, filtre"]
         dogrula["Doğrula"]
         kampanya["Kampanya Paneli"]
         moderasyon["Moderasyon Kuyruğu"]
     end
 
-    subgraph api["FastAPI — 20 uç"]
+    subgraph api["FastAPI — 21 uç"]
         rest["routes.py + schemas.py"]
     end
 
     subgraph servis["Servis katmanı"]
-        ingest["ingest<br/>yükleme ve remix"]
-        payoutsvc["payout<br/>dağıtım"]
-        disputesvc["dispute<br/>itiraz ve moderasyon"]
-        registry["registry<br/>indeks yaşam döngüsü"]
+        ingest["ingest — yükleme ve remix"]
+        payoutsvc["payout — dağıtım"]
+        disputesvc["dispute — itiraz ve moderasyon"]
+        registry["registry — indeks yaşam döngüsü"]
     end
 
     subgraph motor["N-Emek motoru"]
-        prov["provenance/<br/>köken kurtarma hattı"]
-        attr["attribution/<br/>zincir ve pay hesabı"]
+        prov["provenance/ — köken kurtarma hattı"]
+        attr["attribution/ — zincir ve pay hesabı"]
     end
 
     subgraph depo["Depolama"]
-        db[("SQLite<br/>Content · Edge · Campaign<br/>Payout · Dispute")]
-        faiss[("FAISS<br/>pHash · blok · CLIP")]
-        disk[("Dosya sistemi<br/>yayınlanmış görseller · maskeler")]
+        db[("SQLite: Content, Edge, Campaign, Payout, Dispute")]
+        faiss[("FAISS: pHash, blok, CLIP")]
+        disk[("Dosya sistemi: yayınlanmış görseller, maskeler")]
     end
 
     istemci -->|"/api"| rest
@@ -69,22 +69,22 @@ Projenin ayırt edici parçası. Mantığı iki aşamalı: **ucuz aday üretimi*
 
 ```mermaid
 flowchart TB
-    giris["Yüklenen görsel<br/>(baytlar + piksel dizisi)"]
+    giris["Yüklenen görsel — baytlar ve piksel dizisi"]
 
     subgraph aday["Aday üretimi — milisaniyeler"]
-        s0["0 · C2PA manifest<br/>güven 0,99"]
-        s1["1 · SHA-256 tam eşleşme<br/>güven 0,99"]
-        s2["2 · Görünmez filigran<br/>CRC-16 doğrulamalı · güven 0,90"]
-        s3["3 · pHash + blok hash<br/>Hamming ≤ 12 · güven 0,45–0,80"]
-        s4["4 · CLIP ViT-B/32<br/>çok bölgeli · güven 0,30–0,75"]
+        s0["0 · C2PA manifest — güven 0,99"]
+        s1["1 · SHA-256 tam eşleşme — güven 0,99"]
+        s2["2 · Görünmez filigran, CRC-16 doğrulamalı — güven 0,90"]
+        s3["3 · pHash + blok hash, Hamming ≤ 12 — güven 0,45–0,80"]
+        s4["4 · CLIP ViT-B/32, çok bölgeli — güven 0,30–0,75"]
     end
 
-    havuz{{"Aday havuzu<br/>en umut vaat eden 8 tanesi"}}
+    havuz{{"Aday havuzu — en umut vaat eden 8 tanesi"}}
 
-    s5["5 · Homografi + ZNCC<br/><b>kullanılan alanı ÖLÇER</b><br/>güven 0,60–0,95"]
+    s5["5 · Homografi + ZNCC — KULLANILAN ALANI ÖLÇER, güven 0,60–0,95"]
 
-    fuzyon["Karar füzyonu<br/>gürültülü-VEYA: 1 − Π(1 − güvenᵢ)"]
-    cikti["Kanıtlı zincir önerisi<br/>bağ + güven + kapsama + maske"]
+    fuzyon["Karar füzyonu, gürültülü-VEYA: 1 − Π(1 − güvenᵢ)"]
+    cikti["Kanıtlı zincir önerisi: bağ, güven, kapsama, maske"]
 
     giris --> s0 & s1 & s2 & s3 & s4
     s0 & s1 & s2 & s3 & s4 --> havuz
@@ -102,9 +102,9 @@ artırmalı; toplamsal bir model bunu ifade edemezdi.
 
 ```mermaid
 flowchart LR
-    A["Yalnızca benzerlikten<br/>gelen güven"] --> B{"tavan 0,80"}
-    B --> C["'aynı sahne' ile 'aynı içerik'<br/>ayrımını benzerlik yapamaz"]
-    D["Geometrik doğrulama<br/>başarısız"] --> E["× 0,40 ceza"]
+    A["Yalnızca benzerlikten gelen güven"] --> B{"tavan 0,80"}
+    B --> C["'aynı sahne' ile 'aynı içerik' ayrımını benzerlik yapamaz"]
+    D["Geometrik doğrulama başarısız"] --> E["× 0,40 ceza"]
     E --> F["genelde eşiğin altına düşer"]
 ```
 
@@ -119,8 +119,8 @@ kaçırıyordu. Sorgu görseli sabit bir bölge kümesine ayrılıp her bölge a
 
 ```mermaid
 flowchart LR
-    q["Sorgu görseli"] --> t["tam"] & m["merkez"] & c["4 çeyrek"] & y["4 yarım"] & k["düz çerçevesi<br/>kırpılmış hâli"]
-    t & m & c & y & k --> emb["tek GPU yığını<br/>11 bölge"]
+    q["Sorgu görseli"] --> t["tam"] & m["merkez"] & c["4 çeyrek"] & y["4 yarım"] & k["düz çerçevesi kırpılmış hâli"]
+    t & m & c & y & k --> emb["tek GPU yığını — 11 bölge"]
     emb --> ara["pHash + CLIP araması"]
 ```
 
@@ -136,14 +136,14 @@ hatayı düzeltiyor.
 
 ```mermaid
 flowchart TB
-    edges[("AttributionEdge kayıtları<br/>kapsama + güven + kanıt")]
-    alt["Alt grafiği topla<br/>derinlik ≤ 5"]
-    ind["<b>Geçişli indirgeme</b><br/>P→C bağı, P⇢…⇢C yolu varsa düşülür"]
-    ozel["<b>Özel kapsama bölüntüsü</b><br/>özel(A) = toplam(A) − Σ toplam(A'nın kaynakları)"]
+    edges[("AttributionEdge kayıtları: kapsama, güven, kanıt")]
+    alt["Alt grafiği topla — derinlik ≤ 5"]
+    ind["GEÇİŞLİ İNDİRGEME — P→C bağı, P⇢…⇢C yolu varsa düşülür"]
+    ozel["ÖZEL KAPSAMA BÖLÜNTÜSÜ — özel(A) = toplam(A) − Σ toplam(A'nın kaynakları)"]
     formul["Ağırlık = kapsama^a × güven^b × sönümleme^(derinlik−1)"]
-    kural["Kampanya kuralları<br/>üretici tabanı/tavanı · kaynak tabanı · ödeme eşiği"]
-    dagitim["Dağıtım<br/>paylar + tutarlar + kural günlüğü"]
-    kart["Emek Kartı<br/>her rakamın altında gerekçesi"]
+    kural["Kampanya kuralları: üretici tabanı ve tavanı, kaynak tabanı, ödeme eşiği"]
+    dagitim["Dağıtım: paylar, tutarlar, kural günlüğü"]
+    kart["Emek Kartı — her rakamın altında gerekçesi"]
 
     edges --> alt --> ind --> ozel --> formul --> kural --> dagitim --> kart
 ```
@@ -152,9 +152,9 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-    A["Ayşe"] -->|"%87 ölçüldü"| B["Burak"]
-    B -->|"%99 ölçüldü"| C["Ceyda"]
-    A -.->|"%84 — geometri bunu da bulur"| C
+    A["Ayşe"] -->|"%87,5 ölçüldü"| B["Burak"]
+    B -->|"%97,5 ölçüldü"| C["Ceyda"]
+    A -.->|"%87,6 — geometri bunu da bulur"| C
 
     classDef dropped stroke-dasharray: 5 5
 ```
@@ -167,7 +167,7 @@ Veritabanında kanıt olarak kalır, hesaba girmez.
 
 ### Özel kapsama neden gerekli
 
-Ölçülen kapsamalar iç içedir: Burak'ın %97'si Ayşe'nin %84'ünü de kapsar. Her düğüme
+Ölçülen kapsamalar iç içedir: Burak'ın yapraktaki %97,5'i Ayşe'nin %85,2'sini de kapsar. Her düğüme
 yalnızca kendi kattığı pikseller yazılır. Böylece kapsamalar görselin tam bir bölüntüsü
 olur ve **doğal olarak 1,0'a toplanır** — pay normalizasyona değil ölçüme dayanır.
 
@@ -189,12 +189,12 @@ sequenceDiagram
 
     K->>A: görsel yükler
     A->>R: 1· GELEN dosya üzerinde köken kurtarma
-    Note over R: kullanıcının getirdiği şey ne ise onun<br/>üzerinde çalışırız: manifesti silinmiş,<br/>ekran görüntüsü alınmış, kırpılmış hâli
+    Note over R: kullanıcının getirdiği şey ne ise onun üzerinde çalışırız — manifesti silinmiş, ekran görüntüsü alınmış, kırpılmış hâli
     R-->>A: bağlar + kanıtlar + maskeler
     A->>W: 2· filigran göm, manifest imzala
     W-->>A: yayınlanacak dosya (baytlar değişti)
     A->>I: 3· YAYINLANAN dosya üzerinden indeksle
-    Note over I: başkaları bu hâli indirip remixleyecek;<br/>indekste duran parmak izi de bu olmalı
+    Note over I: başkaları bu hâli indirip remixleyecek — indekste duran parmak izi de bu olmalı
     A-->>K: içerik + zincir önerisi
 ```
 
@@ -213,14 +213,14 @@ flowchart LR
         b1["kırpma + yazı + çizim"]
     end
     subgraph ceyda["3 · Ceyda"]
-        c1["ekran görüntüsü<br/><b>C2PA silinir</b>"]
+        c1["ekran görüntüsü — C2PA SİLİNİR"]
     end
 
-    a1 -->|"C2PA ingredient<br/>güven 0,99 · kapsama %87"| b1
-    b1 -->|"kurtarıldı: filigran + CLIP + homografi<br/>güven 0,99 · kapsama %99"| c1
+    a1 -->|"C2PA ingredient — güven 0,97 · kapsama %87,5"| b1
+    b1 -->|"kurtarıldı: filigran, CLIP, homografi — güven 0,99 · kapsama %97,5"| c1
 
-    c1 --> pay["Emek Kartı<br/>Ayşe %68,0 · Burak %12,0<br/>Ceyda %20,0 · N'Sosyal %10,0"]
-    pay --> itiraz["Ayşe itiraz eder<br/>→ SIFT ile yeniden ölçüm<br/>→ paylar güncellenir"]
+    c1 --> pay["Emek Kartı: Ayşe %68,1 · Burak %11,9 · Ceyda %20,0 · N'Sosyal %10,0"]
+    pay --> itiraz["Ayşe itiraz eder → SIFT ile yeniden ölçüm → paylar güncellenir"]
 ```
 
 Üçüncü adım senaryonun kritik anıdır: içerik sisteme "kaynağı yokmuş" gibi girer, hat
