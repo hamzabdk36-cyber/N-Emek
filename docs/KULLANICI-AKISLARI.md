@@ -112,19 +112,19 @@ Burak'ın satırında yok.
 
 ```mermaid
 flowchart TD
-    A["Ayşe: özgün içerik yükler"] --> A1["filigran + C2PA imza + indeks"]
+    A["Ayşe: özgün içerik yükler"] --> A1["filigran, C2PA imza, indeks"]
     A1 --> B["Burak: Remix Stüdyosu'nda düzenler"]
-    B --> B1["kaynak beyan edilir<br/>ama alan ölçülür: %87,4"]
-    B1 --> C["Ceyda: ekran görüntüsü paylaşır<br/><b>kimlik silinmiş</b>"]
-    C --> C1["köken kurtarma hattı<br/>filigran → pHash → CLIP → geometri"]
-    C1 --> D["Emek Kartı<br/>her pay gerekçesiyle"]
-    D --> E{"Ayşe payı<br/>adil buluyor mu?"}
+    B --> B1["kaynak beyan edilir; pay ölçüme dayanır: %87,4"]
+    B1 --> C["Ceyda: ekran görüntüsü paylaşır — kimlik silinmiş"]
+    C --> C1["köken kurtarma hattı: filigran, pHash, CLIP, geometri"]
+    C1 --> D["Emek Kartı — her pay gerekçesiyle"]
+    D --> E{"Ayşe payı adil buluyor mu?"}
     E -->|evet| F["gelir dağıtılır"]
     E -->|hayır| G["itiraz: SIFT ile yeniden ölçüm"]
     G --> H{"sonuç değişti mi?"}
-    H -->|"evet"| I["zincirin tüm payları güncellenir"]
-    H -->|"hayır"| J["itiraz reddedilir<br/>gerekçe gösterilir"]
-    H -->|"kararsız"| K["insan moderatöre yükseltilir"]
+    H -->|evet| I["zincirin tüm payları güncellenir"]
+    H -->|hayır| J["itiraz reddedilir, gerekçe gösterilir"]
+    H -->|kararsız| K["insan moderatöre yükseltilir"]
     I --> F
     J --> F
     K --> L["İnceleme kuyruğu"]
@@ -160,14 +160,14 @@ sequenceDiagram
 
 ```mermaid
 flowchart LR
-    subgraph olcum["Ölçüm (yükleme anında)"]
-        E1["kapsama<br/>homografi + ZNCC"]
-        E2["güven<br/>gürültülü-VEYA füzyon"]
+    subgraph olcum["Ölçüm — yükleme anında"]
+        E1["kapsama: homografi + ZNCC"]
+        E2["güven: gürültülü-VEYA füzyon"]
     end
     subgraph zincir["Zincir yürütme"]
         Z1["alt grafik toplanır"]
-        Z2["geçişli indirgeme<br/><i>dolaylı yolu olan<br/>doğrudan bağ düşer</i>"]
-        Z3["özel kapsama<br/><i>her düğüme yalnızca<br/>kendi kattığı</i>"]
+        Z2["geçişli indirgeme: dolaylı yolu olan doğrudan bağ düşer"]
+        Z3["özel kapsama: her düğüme yalnızca kendi kattığı"]
     end
     subgraph pay["Pay hesabı"]
         P1["ağırlık = kapsama × güven × sönümleme"]
@@ -176,7 +176,7 @@ flowchart LR
     end
     E1 --> Z1
     E2 --> Z1
-    Z1 --> Z2 --> Z3 --> P1 --> P2 --> P3 --> K["Emek Kartı<br/>her sayı gerekçeli"]
+    Z1 --> Z2 --> Z3 --> P1 --> P2 --> P3 --> K["Emek Kartı — her sayı gerekçeli"]
 ```
 
 ### 3.4 İtiraz — durum makinesi
@@ -201,14 +201,14 @@ stateDiagram-v2
 
 ```mermaid
 flowchart TD
-    M["Marka: ₺50.000 ödül havuzu<br/>kaynak tabanı %15 · komisyon %10"] --> K["Kampanyaya katılan gönderiler"]
-    K --> A1["Gönderi A<br/>ağırlık"]
-    K --> A2["Gönderi B<br/>ağırlık"]
-    K --> A3["Gönderi C<br/>ağırlık"]
-    A1 --> Z["her gönderinin payı<br/><b>kendi atıf zincirine</b> bölünür"]
+    M["Marka: ₺50.000 ödül havuzu, kaynak tabanı %15, komisyon %10"] --> K["Kampanyaya katılan gönderiler"]
+    K --> A1["Gönderi A — ağırlık"]
+    K --> A2["Gönderi B — ağırlık"]
+    K --> A3["Gönderi C — ağırlık"]
+    A1 --> Z["her gönderinin payı kendi atıf zincirine bölünür"]
     A2 --> Z
     A3 --> Z
-    Z --> O["ödemeler kaydedilir<br/>her üretici + her kaynak"]
+    Z --> O["ödemeler kaydedilir: her üretici ve her kaynak"]
 ```
 
 ---
