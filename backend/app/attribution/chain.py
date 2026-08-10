@@ -26,6 +26,9 @@ kez odullendirir.
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+from functools import cached_property
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -110,7 +113,41 @@ def _redundant_edges(graph: dict[str, list[AttributionEdge]]) -> set[str]:
     return redundant
 
 
-def reduced_subgraph(session: Session, leaf_id: str) -> dict[str, list[AttributionEdge]]:
+@dataclass
+class Subgraph:
+    """Bir yaprağa bağlanan alt grafik ve geçişli indirgeme sonucu.
+
+    Neden ayri bir tip
+    ------------------
+    Emek Karti iki kez ayni isi yapiyordu: `build_chain` pay hesabi icin
+    alt grafigi toplayip indirgemeyi kosuyor, `reduced_subgraph` de
+    zincir gorunumu icin bastan ayni ikisini kosuyordu. Ayni istekte iki
+    kez BFS + iki kez indirgeme demekti. Artik bir kez hesaplanip
+    paylasiliyor (bkz. `explain.build_labour_card`).
+    """
+
+    leaf_id: str
+    edges: dict[str, list[AttributionEdge]]
+    redundant: set[str]
+
+    @cached_property
+    def reduced(self) -> dict[str, list[AttributionEdge]]:
+        """Gecisli indirgeme uygulanmis kenar kumesi."""
+        return {
+            child_id: [e for e in edges if e.id not in self.redundant]
+            for child_id, edges in self.edges.items()
+        }
+
+
+def collect(session: Session, leaf_id: str) -> Subgraph:
+    """Alt grafigi toplar ve gereksiz baglari isaretler - tek seferde."""
+    graph = _collect_subgraph(session, leaf_id, get_settings().max_chain_depth)
+    return Subgraph(leaf_id=leaf_id, edges=graph, redundant=_redundant_edges(graph))
+
+
+def reduced_subgraph(
+    session: Session, leaf_id: str, subgraph: Subgraph | None = None
+) -> dict[str, list[AttributionEdge]]:
     """Yapraga baglanan alt grafik, gecisli indirgeme uygulanmis hali.
 
     `build_chain` zaten bunu kendi icinde yapiyor; disari acmamizin
@@ -118,24 +155,28 @@ def reduced_subgraph(session: Session, leaf_id: str) -> dict[str, list[Attributi
     ekranda Ayse -> Ceyda dogrudan bagi da cizilir ve izleyici
     kapsamalari toplayip %100'u astigini gorur - oysa o bag pay
     hesabina hic girmemistir.
+
+    `subgraph` verilirse yeniden hesaplanmaz.
     """
-    settings = get_settings()
-    graph = _collect_subgraph(session, leaf_id, settings.max_chain_depth)
-    redundant = _redundant_edges(graph)
-    return {
-        child_id: [e for e in edges if e.id not in redundant]
-        for child_id, edges in graph.items()
-    }
+    return (subgraph or collect(session, leaf_id)).reduced
 
 
-def build_chain(session: Session, content_id: str) -> list[ChainNode]:
-    """Yapraktan yukari tum atalari toplar."""
+def build_chain(
+    session: Session, content_id: str, subgraph: Subgraph | None = None
+) -> list[ChainNode]:
+    """Yapraktan yukari tum atalari toplar.
+
+    `subgraph` verilirse alt grafik ve gecisli indirgeme yeniden
+    hesaplanmaz.
+    """
     settings = get_settings()
     # content_id -> en guclu yolun verileri
     best: dict[str, dict] = {}
 
-    graph = _collect_subgraph(session, content_id, settings.max_chain_depth)
-    redundant = _redundant_edges(graph)
+    if subgraph is None:
+        subgraph = collect(session, content_id)
+    graph = subgraph.edges
+    redundant = subgraph.redundant
 
     def walk(
         current_id: str,
@@ -223,12 +264,17 @@ def build_chain(session: Session, content_id: str) -> list[ChainNode]:
         consumed = sum(totals[p] for p in direct_parents.get(node_id, []))
         exclusive[node_id] = max(0.0, total - consumed)
 
+    # Icerik ve sahipleri tek sorguda: dugum basina iki `session.get`
+    # zincir uzadikca N+1'e donuyordu.
+    icerikler = fetch_contents(session, best.keys())
+    sahipler = fetch_owners(session, icerikler.values())
+
     nodes: list[ChainNode] = []
     for parent_id, data in best.items():
-        content = session.get(Content, parent_id)
+        content = icerikler.get(parent_id)
         if content is None:
             continue
-        owner = session.get(User, content.owner_id)
+        owner = sahipler.get(content.owner_id)
         nodes.append(
             ChainNode(
                 content_id=parent_id,
@@ -249,6 +295,31 @@ def build_chain(session: Session, content_id: str) -> list[ChainNode]:
     nodes = [n for n in nodes if n.coverage >= settings.min_coverage_for_share]
     nodes.sort(key=lambda n: (n.depth, -n.coverage))
     return nodes
+
+
+def fetch_contents(session: Session, ids) -> dict[str, Content]:
+    """Icerikleri tek sorguda ceker: `{id: Content}`.
+
+    Zincir gorunumu ve pay hesabi eskiden dugum basina bir
+    `session.get(Content)` yapiyordu. Kimlik haritasi sayesinde ayni
+    istekte tekrar okuma ucuzdu ama *ilk* okumalar ayri ayri sorgu
+    demekti - klasik N+1.
+    """
+    kimlikler = [i for i in dict.fromkeys(ids) if i]
+    if not kimlikler:
+        return {}
+    stmt = select(Content).where(Content.id.in_(kimlikler))
+    return {c.id: c for c in session.scalars(stmt)}
+
+
+def fetch_owners(session: Session, contents) -> dict[str, User]:
+    """Icerik sahiplerini tek sorguda ceker: `{user_id: User}`."""
+    kimlikler = [c.owner_id for c in contents if c is not None and c.owner_id]
+    kimlikler = list(dict.fromkeys(kimlikler))
+    if not kimlikler:
+        return {}
+    stmt = select(User).where(User.id.in_(kimlikler))
+    return {u.id: u for u in session.scalars(stmt)}
 
 
 def descendants(session: Session, content_id: str) -> list[AttributionEdge]:

@@ -568,6 +568,64 @@ def test_olmayan_itirazin_moderasyonu_404(client):
 # ---------------------------------------------------------------------------
 # Yukleme ve dogrulama - hattin tamami calisir, bu ikisi yavas
 # ---------------------------------------------------------------------------
+def test_sinirdan_buyuk_yukleme_413(client, veri, basliklar, monkeypatch):
+    """Boyut siniri uygulanmali - ve gorsel cozulmeden once.
+
+    Once tek sinir Docker'daki nginx'ti; yerel calistirmada hicbir sinir
+    yoktu ve `await file.read()` dosyanin tamamini bellege aliyordu.
+    """
+    from app.core.config import get_settings
+
+    monkeypatch.setattr(get_settings(), "max_upload_mb", 1)
+    buyuk = b"\xff" * (1024 * 1024 + 5000)
+
+    r = client.post(
+        "/api/contents",
+        files={"file": ("buyuk.jpg", buyuk, "image/jpeg")},
+        data={"title": "Çok büyük"},
+        headers=basliklar(veri["ayse_id"]),
+    )
+
+    assert r.status_code == 413
+    assert "MB" in r.json()["detail"]
+
+
+def test_sinirin_altindaki_dosya_govdesiyle_geciyor(
+    client, veri, basliklar, monkeypatch
+):
+    """Parcali okuma icerigi kirpmamali.
+
+    Sinirin altinda kalan bozuk bir dosya 413 degil 400 almali: yani
+    govde eksiksiz okunmus ve gorsel cozumleyicisine ulasmis demektir.
+    """
+    from app.core.config import get_settings
+
+    monkeypatch.setattr(get_settings(), "max_upload_mb", 1)
+
+    r = client.post(
+        "/api/contents",
+        files={"file": ("kucuk.txt", b"gorsel degil" * 1000, "text/plain")},
+        data={"title": "Küçük ama bozuk"},
+        headers=basliklar(veri["ayse_id"]),
+    )
+
+    assert r.status_code == 400
+
+
+def test_dogrulama_ucunde_de_boyut_siniri_var(client, monkeypatch):
+    """`/verify` oturum istemiyor; sinirsiz kalirsa acik kapi olurdu."""
+    from app.core.config import get_settings
+
+    monkeypatch.setattr(get_settings(), "max_upload_mb", 1)
+
+    r = client.post(
+        "/api/verify",
+        files={"file": ("buyuk.jpg", b"\xff" * (1024 * 1024 + 5000), "image/jpeg")},
+    )
+
+    assert r.status_code == 413
+
+
 def test_bozuk_dosya_400_doner(client, veri, basliklar):
     """Gorsel olmayan bir dosya sunucu hatasina yol acmamali."""
     r = client.post(

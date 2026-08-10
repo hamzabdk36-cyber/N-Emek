@@ -40,7 +40,7 @@ Sertifikalar ve korpus depoda değil; her ikisi de yukarıdaki komutlarla yenide
 ## Doğrulama
 
 ```bash
-cd backend && ../.venv/Scripts/python.exe -m pytest tests/   # 92 test: pay motoru + uçtan uca + API + yetki + indeks
+cd backend && ../.venv/Scripts/python.exe -m pytest tests/   # 102 test: pay motoru + uçtan uca + API + yetki + indeks + maliyet
 cd frontend && npm test                                      # 87 test: yerleşim + bileşenler + ekranlar + oturum
 .venv/Scripts/python.exe scripts/seed_demo.py --reset        # altın senaryoyu kur ve anlat
 
@@ -141,7 +141,7 @@ React 19'da da hata sınırı yazmanın tek yolu sınıf bileşeni;
 
 | İş | Ne koşar |
 |---|---|
-| backend | torch **önce** ve CPU indeksinden → `requirements.txt` → C2PA sertifikaları → 8 görsellik test korpusu → `pytest -m "not slow" -rs` (89 test) |
+| backend | torch **önce** ve CPU indeksinden → `requirements.txt` → C2PA sertifikaları → 8 görsellik test korpusu → `pytest -m "not slow" -rs` (99 test) |
 | arayüz | `npm ci` → `tsc --noEmit` → `vitest run` → `npm run build` |
 
 **Yeşil rozet gerçekten bir şey söylemeli.** İlk CI koşusu korpussuz çalıştı ve yeşil
@@ -216,6 +216,37 @@ Bunlar sonradan "sadeleştirme" diye kaldırılmamalı; ikisi de ölçümdeki ge
 **Özel (exclusive) kapsama** (`chain.build_chain`): ölçülen kapsamalar iç içedir — Burak'ın %97'si Ayşe'nin %84'ünü de kapsar. Her düğüme yalnızca kendi kattığı pikseller yazılır: `özel(A) = toplam(A) − Σ toplam(A'nın zincirdeki doğrudan kaynakları)`. Böylece kapsamalar görselin tam bir bölüntüsü olur ve doğal olarak 1.0'a toplanır; pay normalizasyona değil ölçüme dayanır.
 
 Bu düzeltmeden önce kaynakların toplamı %182 çıkıyor ve tabana çarpıyordu.
+
+### Emek Kartı'nın maliyeti
+
+İki düzeltme; ikisi de çıktıyı değiştirmiyor, yalnızca aynı kartı daha ucuza üretiyor.
+Bu yüzden gerilemeleri gözle görülmez — `test_emek_karti_maliyeti.py` sayıları değil
+**kaç kez hesaplandığını ve kaç sorgu atıldığını** sınıyor.
+
+**Alt grafik bir kez toplanıyor.** `build_chain` pay hesabı için alt grafiği toplayıp
+geçişli indirgemeyi koşuyor, `_chain_graph` de zincir görünümü için baştan aynı ikisini
+koşuyordu — aynı istekte iki BFS, iki indirgeme. `chain.collect()` bir `Subgraph` üretiyor
+ve `build_labour_card` onu iki tarafa da veriyor.
+
+**İçerik ve sahipler toplu çekiliyor.** `build_chain` ve `_chain_graph` düğüm başına
+`session.get(Content)` + `session.get(User)` yapıyordu. `chain.fetch_contents` /
+`fetch_owners` tek `IN` sorgusuna indiriyor.
+
+Değişmezlerin boş olmadığı mutasyonla doğrulandı: iki düzeltme geri alındığında üç test
+kırmızıya döndü. `_collect_subgraph` hâlâ BFS'te düğüm başına bir kenar sorgusu atıyor —
+bu kapsam dışında bırakıldı, testler de yalnızca `contents`/`users` tablolarını sayarak
+düzeltilen şeyi izole ediyor.
+
+### Yükleme boyutu sınırı
+
+`await file.read()` dosyanın tamamını belleğe alıyordu ve sınırın uygulandığı tek yer
+Docker'daki nginx'ti — yani yerel çalıştırmada hiçbir sınır yoktu ve tek bir istek
+sunucunun belleğini tüketebiliyordu. `routes._read_upload` dosyayı 1 MB'lık parçalar
+hâlinde okuyup `max_upload_mb` aşılınca **413** döndürüyor; belleğe alınan miktar hiçbir
+zaman sınırdan fazla olmuyor.
+
+`frontend/nginx.conf` içindeki `client_max_body_size` ile ayarlardaki `max_upload_mb` aynı
+değerde (32 MB) tutulmalı — ayrılırlarsa aynı istek ortama göre farklı yerde reddedilir.
 
 ### İndeks kalıcılığı ve açılış süresi
 

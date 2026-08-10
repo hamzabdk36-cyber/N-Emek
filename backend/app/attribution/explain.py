@@ -110,7 +110,10 @@ def build_labour_card(session: Session, content_id: str, revenue: float | None =
     owner = session.get(User, content.owner_id)
     campaign = session.get(Campaign, content.campaign_id) if content.campaign_id else None
 
-    nodes = chain_builder.build_chain(session, content_id)
+    # Alt grafik + gecisli indirgeme bir kez hesaplanip paylasiliyor:
+    # once `build_chain` ve `_chain_graph` ayni isi ayri ayri yapiyordu.
+    subgraph = chain_builder.collect(session, content_id)
+    nodes = chain_builder.build_chain(session, content_id, subgraph)
     rules = rules_for(content, campaign)
     gross = content.revenue if revenue is None else revenue
 
@@ -128,7 +131,7 @@ def build_labour_card(session: Session, content_id: str, revenue: float | None =
     return {
         "content": _content_summary(session, content),
         "provenance": _provenance_summary(session, content),
-        "chain": _chain_graph(session, content_id, nodes),
+        "chain": _chain_graph(session, content_id, nodes, subgraph),
         "distribution": _distribution_payload(session, content_id, distribution),
         "rules": {
             "label": distribution.rules_label,
@@ -205,7 +208,12 @@ def _provenance_summary(session: Session, content: Content) -> dict:
     }
 
 
-def _chain_graph(session: Session, leaf_id: str, nodes) -> dict:
+def _chain_graph(
+    session: Session,
+    leaf_id: str,
+    nodes,
+    subgraph: chain_builder.Subgraph | None = None,
+) -> dict:
     """Zincir gorunumu (DAG) icin dugum ve kenar listesi.
 
     Iki kural, ikisi de ekranda gorulen bir hatadan cikti:
@@ -223,7 +231,7 @@ def _chain_graph(session: Session, leaf_id: str, nodes) -> dict:
        dugumler `contributes: false` ile isaretlenir - zincirde var,
        payi yok.
     """
-    reduced = chain_builder.reduced_subgraph(session, leaf_id)
+    reduced = chain_builder.reduced_subgraph(session, leaf_id, subgraph)
 
     # Yapraktan yukari BFS: her icerigin yapraga uzakligi = satir derinligi.
     uzaklik: dict[str, int] = {leaf_id: 0}
@@ -258,10 +266,15 @@ def _chain_graph(session: Session, leaf_id: str, nodes) -> dict:
         # Yalnizca yapragin atalari; digerleri bu zincire ait degil.
         gerekli |= gorulen & set(uzaklik)
 
+    # Icerik ve sahipleri tek sorguda: dugum basina iki `session.get`
+    # zincir buyudukce N+1'e donuyordu.
+    icerikler = chain_builder.fetch_contents(session, gerekli)
+    sahipler = chain_builder.fetch_owners(session, icerikler.values())
+
     graph_nodes = []
     for content_id in sorted(gerekli, key=lambda cid: uzaklik[cid]):
-        content = session.get(Content, content_id)
-        owner = session.get(User, content.owner_id) if content else None
+        content = icerikler.get(content_id)
+        owner = sahipler.get(content.owner_id) if content else None
         graph_nodes.append(
             {
                 "id": content_id,

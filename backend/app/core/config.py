@@ -80,6 +80,14 @@ class Settings(BaseSettings):
     # Bir kaynagin katki hesabina girmesi icin gereken en dusuk alan orani.
     min_coverage_for_share: float = 0.03
 
+    # --- Yukleme ----------------------------------------------------------
+    # En buyuk kabul edilen yukleme. Uc, dosyayi parca parca okuyup bu
+    # siniri asinca 413 doner - `await file.read()` dosyanin tamamini
+    # bellege aliyordu ve yerel calistirmada hicbir sinir yoktu.
+    # Docker'daki nginx de ayni degeri kullaniyor (`client_max_body_size`);
+    # ikisi ayrilirsa ayni istek ortama gore farkli yerde reddedilir.
+    max_upload_mb: int = 32
+
     # --- Oturum -----------------------------------------------------------
     # Jeton imzalama anahtari. Bos birakilirsa surec basina rastgele
     # uretilir (bkz. core/security.py): depoya, yanlislikla uretimde

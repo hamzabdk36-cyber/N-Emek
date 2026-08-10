@@ -27,6 +27,7 @@ from app.api.schemas import (
     UserOut,
 )
 from app.attribution.explain import STAGE_LABELS, build_labour_card, confidence_band
+from app.core.config import get_settings
 from app.core.database import get_session
 from app.core.security import TokenError, decode_token, encode_token
 from app.models.entities import (
@@ -127,6 +128,32 @@ def _require_user(session: Session, user_id: str) -> User:
     if user is None:
         raise HTTPException(404, f"Kullanıcı bulunamadı: {user_id}")
     return user
+
+
+async def _read_upload(file: UploadFile) -> bytes:
+    """Yuklemeyi sinirli okur.
+
+    `await file.read()` dosyanin tamamini bellege aliyordu ve boyut
+    sinirinin tek uygulandigi yer Docker'daki nginx'ti - yani yerel
+    calistirmada hicbir sinir yoktu ve tek bir istek sunucunun belleğini
+    tuketebiliyordu. Parca parca okuyup sinir asilinca durduruyoruz;
+    bellege alinan miktar hicbir zaman sinirdan fazla olmuyor.
+    """
+    limit_mb = get_settings().max_upload_mb
+    limit = limit_mb * 1024 * 1024
+    parcalar: list[bytes] = []
+    toplam = 0
+    while True:
+        parca = await file.read(1024 * 1024)
+        if not parca:
+            break
+        toplam += len(parca)
+        if toplam > limit:
+            raise HTTPException(
+                413, f"Dosya çok büyük: en fazla {limit_mb} MB kabul ediliyor."
+            )
+        parcalar.append(parca)
+    return b"".join(parcalar)
 
 
 def _require_content(session: Session, content_id: str) -> Content:
@@ -249,7 +276,7 @@ async def create_content(
     Sahip artik form alanindan degil jetondan geliyor: onceden herkes
     herkes adina icerik yukleyebiliyordu.
     """
-    raw = await file.read()
+    raw = await _read_upload(file)
     try:
         result = ingest_service.ingest(
             session,
@@ -292,7 +319,7 @@ async def create_remix(
     parent = _require_content(session, parent_id)
     if not parent.remix_allowed:
         raise HTTPException(403, "Bu içerik remixlenemez: üretici remix iznini kapatmış.")
-    raw = await file.read()
+    raw = await _read_upload(file)
 
     result = ingest_service.ingest(
         session,
@@ -322,7 +349,7 @@ async def verify(
     "Bu icerik kimden geliyor?" sorusunun tek adimlik cevabi. Platforma
     kaydetmez, yalnizca hatti calistirip kanitlari doner.
     """
-    raw = await file.read()
+    raw = await _read_upload(file)
     image = cv2.imdecode(np.frombuffer(raw, np.uint8), cv2.IMREAD_COLOR)
     if image is None:
         raise HTTPException(400, "Görsel çözülemedi.")
