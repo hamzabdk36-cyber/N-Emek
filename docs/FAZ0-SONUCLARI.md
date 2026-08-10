@@ -71,9 +71,9 @@ Projeye özel `org.nemek.remix_policy` assertion'ı ile üreticinin remix izinle
 
 ### Ölçümün yönlendirdiği tasarım kararı: çok bölgeli sorgu
 
-İlk kurulum (yalnızca tam görsel üzerinden pHash + CLIP) **%88.5** verdi ve üç senaryoda çöktü: meme %25, kolaj %42, kırpma+yazı %8. Ortak neden, kaynağın türev tuvalinin yalnızca bir bölümünü kaplaması — global tanımlayıcılar tüm tuvali görüyor.
+İlk kurulum (yalnızca tam görsel üzerinden pHash + CLIP) **%88,5** verdi ve üç senaryoda çöktü: meme %25, kolaj %42, kırpma+yazı %8. Ortak neden, kaynağın türev tuvalinin yalnızca bir bölümünü kaplaması — global tanımlayıcılar tüm tuvali görüyor.
 
-Çözüm, sorgu görselini sabit bir bölge kümesine (tam, merkez, dört çeyrek, dört yarım, düz çerçevesi kırpılmış hâli) ayırıp her bölgeyi ayrı aramak. İndeks tarafı değişmedi, maliyet yalnızca sorgu anında ve tek bir GPU yığınına sığıyor. Ortalama **%88.5 → %99.2**.
+Çözüm, sorgu görselini sabit bir bölge kümesine (tam, merkez, dört çeyrek, dört yarım, düz çerçevesi kırpılmış hâli) ayırıp her bölgeyi ayrı aramak. İndeks tarafı değişmedi, maliyet yalnızca sorgu anında ve tek bir GPU yığınına sığıyor. Ortalama **%88,5 → %99,2**.
 
 `backend/app/provenance/regions.py`
 

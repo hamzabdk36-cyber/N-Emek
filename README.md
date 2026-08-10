@@ -27,6 +27,7 @@ Yapay zekâ mimarisi: [`docs/YZ-MIMARISI.md`](docs/YZ-MIMARISI.md)
 Veri, model, etik ve performans: [`docs/VERI-MODEL-ETIK.md`](docs/VERI-MODEL-ETIK.md)
 Mimari ve diyagramlar: [`docs/MIMARI.md`](docs/MIMARI.md)
 Ekran görüntüleri: [`docs/gorseller/`](docs/gorseller/)
+Demo çekim senaryosu: [`docs/DEMO-SENARYOSU.md`](docs/DEMO-SENARYOSU.md) · Sunum içeriği: [`docs/SUNUM.md`](docs/SUNUM.md)
 
 ---
 
