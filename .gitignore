@@ -45,3 +45,9 @@ desktop.ini
 
 # Frontend build ciktisi
 frontend/dist/
+
+# TEKNOFEST sartname PDF'i ve calisma plani bilerek depoda tutulmuyor.
+# 10 Agustos'ta `git add -A docs` ile yanlislikla eklendi; bir daha
+# olmasin diye buraya yazildi.
+docs/*SARTNAMESI*.pdf
+N-Emek-Plani.md
