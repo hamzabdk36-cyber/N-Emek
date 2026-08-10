@@ -82,6 +82,15 @@ export default function ContentDetail() {
     (e) => e.from === selectedParty?.content_id && e.to === content.id,
   );
 
+  // Renk tutarliligi: pay seridi ve satirlar sirayla bir paletten renk
+  // aliyordu, dolayisiyla Burak pay seridinde mor gorunurken avatarinda
+  // ve zincir grafiginde maviydi. Ayni kisi her yerde ayni renk olsun
+  // diye renk artik kullanicinin kendi vurgusundan geliyor.
+  const accentOf = new Map(chain.nodes.map((n) => [n.id, n.accent]));
+  const partyColor = (party: Party, index: number) =>
+    (party.content_id && accentOf.get(party.content_id)) ||
+    roleColor(party.role, index);
+
   return (
     <div className="space-y-5">
       {/* Baslik ------------------------------------------------------------ */}
@@ -124,11 +133,13 @@ export default function ContentDetail() {
             label="Yüklenen dosyada kimlik"
             value={provenance.incoming_manifest_present ? "vardı" : "yoktu"}
             tone={provenance.incoming_manifest_present ? "verify" : "neutral"}
+            sayisal={false}
           />
           <Stat
             label="Yayınlanan sürüm"
             value={provenance.manifest_present ? "imzalandı" : "imzasız"}
             hint={provenance.manifest_urn?.slice(0, 22)}
+            sayisal={false}
           />
           <Stat label="Filigran kimliği" value={provenance.watermark_tag ?? "—"} />
           <Stat label="Bulunan bağ" value={provenance.link_count} />
@@ -200,15 +211,11 @@ export default function ContentDetail() {
 
         {/* Sag: Emek Karti -------------------------------------------------- */}
         <div className="space-y-5">
-          <Panel
-            title="Emek Kartı"
-            subtitle={rules.label}
-            right={
-              <span className="num text-[13px] font-semibold text-[var(--color-gold)]">
-                {money(distribution.gross_revenue)}
-              </span>
-            }
-          >
+          {/* Brut gelir panel basliginin saginda da yaziyordu, hemen
+              altindaki kutuda da. Ayni sayiyi iki kez gostermek panelin
+              en ust satirini bos yere mesgul ediyordu; baslik artik
+              kampanya kuralini tasiyor. */}
+          <Panel title="Emek Kartı" subtitle={rules.label}>
             <div className="mb-4 grid grid-cols-3 gap-4">
               <Stat label="Brüt gelir" value={money(distribution.gross_revenue)} />
               <Stat
@@ -226,7 +233,7 @@ export default function ContentDetail() {
               segments={distribution.parties.map((p, i) => ({
                 label: p.user_name,
                 value: p.role === "platform" ? 0 : p.share,
-                color: roleColor(p.role, i),
+                color: partyColor(p, i),
               }))}
             />
 
@@ -235,7 +242,7 @@ export default function ContentDetail() {
                 <PartyRow
                   key={`${party.role}-${party.content_id ?? i}`}
                   party={party}
-                  color={roleColor(party.role, i)}
+                  color={partyColor(party, i)}
                   selected={party.content_id === selectedParty?.content_id}
                   onSelect={() =>
                     party.content_id && setSelectedSource(party.content_id)

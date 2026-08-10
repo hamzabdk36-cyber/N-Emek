@@ -25,11 +25,16 @@ export function Panel({
 }) {
   return (
     <section className={`panel overflow-hidden ${className}`}>
+      {/* Baslik buyuk harf + harf araligiyla degil, normal cumle duzeninde.
+          Her ekranda uc-alti panel var; hepsinin basligi "KÖKEN", "GÖRSEL",
+          "EMEK KARTI" diye bagirinca sayfa hazir bir yonetim paneli sablonu
+          gibi duruyordu ve hepsi ayni agirlikta oldugu icin hicbiri one
+          cikmiyordu. Sakin baslik, panelin *icindeki* sayilari one cikariyor. */}
       {(title || right) && (
         <header className="flex items-start justify-between gap-4 border-b border-[var(--color-line-soft)] px-5 py-3.5">
           <div className="min-w-0">
             {title && (
-              <h2 className="text-[13px] font-semibold tracking-wide text-[var(--color-ink)] uppercase">
+              <h2 className="text-[14px] leading-tight font-semibold tracking-tight text-[var(--color-ink)]">
                 {title}
               </h2>
             )}
@@ -108,16 +113,24 @@ function Dot() {
 }
 
 /* -------------------------------------------------------------------------- */
+/**
+ * `sayisal`: deger bir sayi/kimlik degil de kelimeyse (orn. "yoktu",
+ * "imzalandı") monospace ve 20px fazla geliyor - ekranda bir olcum
+ * degeri gibi duruyor ama olcum degil. Kelime degerler daha kucuk ve
+ * govde yazi tipiyle yaziliyor.
+ */
 export function Stat({
   label,
   value,
   hint,
   tone = "neutral",
+  sayisal = true,
 }: {
   label: string;
   value: ReactNode;
   hint?: string;
   tone?: Tone;
+  sayisal?: boolean;
 }) {
   const color =
     tone === "gold"
@@ -130,7 +143,13 @@ export function Stat({
       <div className="text-[11px] font-medium tracking-wide text-[var(--color-ink-3)] uppercase">
         {label}
       </div>
-      <div className={`num mt-1 text-xl leading-tight font-semibold ${color}`}>
+      <div
+        className={
+          sayisal
+            ? `num mt-1 text-xl leading-tight font-semibold ${color}`
+            : `mt-1 text-[15px] leading-tight font-medium ${color}`
+        }
+      >
         {value}
       </div>
       {hint && (

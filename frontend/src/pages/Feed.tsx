@@ -10,7 +10,6 @@ import { Link } from "react-router-dom";
 import { api, money, type Content } from "../api";
 import {
   Avatar,
-  Badge,
   Button,
   CardSkeleton,
   ErrorNote,
@@ -39,10 +38,10 @@ export default function Feed() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-xl font-semibold tracking-tight">Akış</h1>
-          <p className="mt-1 text-[13px] text-[var(--color-ink-2)]">
-            Her gönderinin kökeni yüklendiği anda çözülür; kaynak zincirini ve
-            pay dağılımını gönderiye girerek görebilirsiniz.
-          </p>
+          {/* Ekranin kendini anlatan uzun alt basligi kaldirildi: her sayfanin
+              basinda bir aciklama paragrafi olmasi arayuze sablon havasi
+              veriyordu. Kokenin nasil cozuldugu zaten iceriklerin kendi
+              Emek Karti'nda, olculmus sayilarla yaziyor. */}
         </div>
         <Button
           variant={showUpload ? "default" : "primary"}
@@ -87,24 +86,50 @@ export default function Feed() {
   );
 }
 
+/**
+ * Akis karti.
+ *
+ * Onceki surumde her kartta tam genislikte bir "Emek Karti" butonu
+ * vardi; gorsel, baslik ve buton ucu de ayni yere gidiyordu. Uc
+ * tiklama hedefi tek hedef icin, uc kartta uc ayni buton: ekran
+ * "sablondan uretilmis" gorunuyordu. Kart artik tek bir sey soyluyor -
+ * kimin, ne kazandi, kokeni ne - ve eylemler sessiz baglantilar.
+ *
+ * Rozet yigini da (kaynak/turev/remix kapali yan yana uc rozet) tek
+ * satir duz metne dondu: rozet, istisnayi isaretlemek icindir; her
+ * kartta ucu birden varsa hicbiri dikkat cekmiyor.
+ */
 function ContentCard({ content, sira = 0 }: { content: Content; sira?: number }) {
+  const koken =
+    content.source_count > 0
+      ? `${content.source_count} kaynaktan türedi`
+      : "özgün içerik";
+
   return (
     <article
-      className="fade-in panel group overflow-hidden transition-colors hover:border-[#3a4250]"
+      className="fade-in panel group flex flex-col overflow-hidden transition-colors hover:border-[#3a4250]"
       style={{ animationDelay: `${Math.min(sira, 8) * 45}ms` }}
     >
-      <Link to={`/icerik/${content.id}`} className="block">
+      {/* Gorsel de basligin gittigi yere gidiyor; ekran okuyucuya iki kez
+          duyurulmasin diye baglanti gizli, odak sirasinda da yok. */}
+      <Link
+        to={`/icerik/${content.id}`}
+        className="block"
+        tabIndex={-1}
+        aria-hidden
+      >
         <div className="aspect-4/3 overflow-hidden bg-[var(--color-bg)]">
           <img
             src={api.imageUrl(content.id)}
-            alt={content.title}
+            alt=""
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
           />
         </div>
       </Link>
-      <div className="space-y-2.5 p-4">
-        <div className="flex items-start justify-between gap-2">
+
+      <div className="flex flex-1 flex-col gap-2 p-4">
+        <div className="flex items-start justify-between gap-3">
           <Link
             to={`/icerik/${content.id}`}
             className="min-w-0 text-[14px] leading-snug font-semibold hover:text-[var(--color-gold)]"
@@ -112,7 +137,7 @@ function ContentCard({ content, sira = 0 }: { content: Content; sira?: number })
             {content.title}
           </Link>
           {content.revenue > 0 && (
-            <span className="num shrink-0 text-[12.5px] font-semibold text-[var(--color-gold)]">
+            <span className="num shrink-0 text-[13px] font-semibold text-[var(--color-gold)]">
               {money(content.revenue)}
             </span>
           )}
@@ -122,33 +147,37 @@ function ContentCard({ content, sira = 0 }: { content: Content; sira?: number })
           <Avatar
             name={content.owner.display_name}
             accent={content.owner.accent}
-            size={22}
+            size={20}
           />
           <span className="truncate text-[12.5px] text-[var(--color-ink-2)]">
             {content.owner.display_name}
           </span>
         </div>
 
-        <div className="flex flex-wrap gap-1.5">
-          {content.source_count > 0 ? (
-            <Badge tone="link">{content.source_count} kaynak</Badge>
-          ) : (
-            <Badge tone="verify">özgün</Badge>
-          )}
-          {content.derivative_count > 0 && (
-            <Badge tone="neutral">{content.derivative_count} türev</Badge>
-          )}
-          {!content.remix_allowed && <Badge tone="alert">remix kapalı</Badge>}
-        </div>
+        <p className="text-[12px] text-[var(--color-ink-3)]">
+          {koken}
+          {content.derivative_count > 0 &&
+            ` · ${content.derivative_count} türev üretildi`}
+        </p>
 
-        <div className="flex gap-2 pt-0.5">
-          <Link to={`/icerik/${content.id}`} className="flex-1">
-            <Button className="w-full">Emek Kartı</Button>
+        <div className="mt-auto flex items-center justify-between gap-3 pt-1.5">
+          <Link
+            to={`/icerik/${content.id}`}
+            className="text-[12.5px] font-medium text-[var(--color-ink-2)] hover:text-[var(--color-gold)]"
+          >
+            Emek Kartı →
           </Link>
-          {content.remix_allowed && (
-            <Link to={`/remix/${content.id}`}>
-              <Button variant="ghost">Remixle</Button>
+          {content.remix_allowed ? (
+            <Link
+              to={`/remix/${content.id}`}
+              className="text-[12.5px] text-[var(--color-ink-3)] hover:text-[var(--color-ink)]"
+            >
+              Remixle
             </Link>
+          ) : (
+            <span className="text-[12px] text-[var(--color-ink-3)]">
+              remix kapalı
+            </span>
           )}
         </div>
       </div>

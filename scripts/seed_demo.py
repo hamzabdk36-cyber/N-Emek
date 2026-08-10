@@ -163,9 +163,15 @@ def main() -> int:
     index.rebuild(session)
 
     # --- Aktorler ---------------------------------------------------------
-    ayse = User(handle="ayse", display_name="Ayşe Yılmaz", accent="#E8A838")
-    burak = User(handle="burak", display_name="Burak Demir", accent="#5B8DEF")
-    ceyda = User(handle="ceyda", display_name="Ceyda Aksoy", accent="#4CC38A")
+    # Kimlik renkleri, temanin anlam yukledigi renklerden ayri tutulur.
+    # Onceki degerler (#E8A838, #5B8DEF, #4CC38A) sirasiyla altin, zincir
+    # mavisi ve dogrulama yesiliydi: Emek Karti'nda Ayse'nin pay serisi
+    # para altiniyla, Ceyda'ninki "dogrulandi" yesiliyle ayni tonu
+    # paylasiyordu ve renk artik bir sey soylemiyordu. Mor/turkuaz/pembe
+    # hicbir durum rengiyle karismiyor.
+    ayse = User(handle="ayse", display_name="Ayşe Yılmaz", accent="#B47AE0")
+    burak = User(handle="burak", display_name="Burak Demir", accent="#5CC9C4")
+    ceyda = User(handle="ceyda", display_name="Ceyda Aksoy", accent="#E87BA8")
     session.add_all([ayse, burak, ceyda])
 
     campaign = Campaign(

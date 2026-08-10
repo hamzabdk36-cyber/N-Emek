@@ -57,7 +57,10 @@ def rules_for(content: Content, campaign: Campaign | None) -> Rules:
         commission=campaign.commission,
         source_floor=campaign.source_floor,
         creator_ceiling=campaign.creator_ceiling,
-        label=f"{campaign.brand_name} - {campaign.title} kampanya kurallari",
+        # Kampanya adi zaten "... Kampanyasi" ile bitiyor; sonuna bir de
+        # "kampanya kurallari" eklenince ekranda "Kampanyasi kampanya
+        # kurallari" yaziyordu.
+        label=f"{campaign.title} · {campaign.brand_name} kurallari",
     )
 
 

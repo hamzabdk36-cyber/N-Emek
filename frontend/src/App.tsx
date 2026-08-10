@@ -111,8 +111,11 @@ function Header() {
               className="hidden items-center gap-1.5 text-[11px] text-[var(--color-ink-3)] md:flex"
               title={`${health.indexed_contents} içerik indekslendi · ${health.device} · C2PA imzalama ${health.c2pa_signing ? "açık" : "kapalı"}`}
             >
+              {/* Cihaz adi (cuda/cpu) bilerek gorunur metinde degil: ekranin
+                  ust cubugunda duran bir gelistirici ayrintisi, urunu demo
+                  gibi gosteriyordu. Ayrinti ipucunda duruyor. */}
               <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-verify)]" />
-              {health.indexed_contents} içerik · {health.device}
+              {health.indexed_contents} içerik indeksli
             </span>
           )}
           {currentUser && (
