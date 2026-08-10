@@ -80,6 +80,17 @@ class Settings(BaseSettings):
     # Bir kaynagin katki hesabina girmesi icin gereken en dusuk alan orani.
     min_coverage_for_share: float = 0.03
 
+    # --- Oturum -----------------------------------------------------------
+    # Jeton imzalama anahtari. Bos birakilirsa surec basina rastgele
+    # uretilir (bkz. core/security.py): depoya, yanlislikla uretimde
+    # kullanilabilecek sahte bir varsayilan anahtar koymuyoruz.
+    # Uretimde `NEMEK_TOKEN_SECRET` ile verilir.
+    token_secret: str = ""
+    # Jeton omru. Demo oturumu icin bir calisma gunu yeterli; kisa
+    # tutulmasinin sebebi jetonun kalici bir kimlik belgesi gibi
+    # dolasmamasi.
+    token_ttl_seconds: int = 8 * 60 * 60
+
     # --- Platform ---------------------------------------------------------
     platform_commission: float = 0.10  # N'Sosyal kampanya yonetim payi
     platform_name: str = "N'Sosyal"

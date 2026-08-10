@@ -22,6 +22,7 @@ calisir, geri kalani dogrudan yazilmis kayitlar uzerinden gider.
 
 from __future__ import annotations
 
+import time
 from pathlib import Path
 
 import cv2
@@ -30,7 +31,14 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.core.database import SessionLocal, create_schema
-from app.models.entities import Campaign, Content, User
+from app.models.entities import (
+    AttributionEdge,
+    Campaign,
+    Content,
+    LinkStage,
+    LinkStatus,
+    User,
+)
 from app.provenance import fingerprint as fp
 from PIL import Image
 
@@ -110,6 +118,20 @@ def ortam(tmp_path_factory):
         remix_allowed=False,
     )
     session.add_all([icerik, kilitli])
+    session.flush()
+
+    # Yetki testleri icin gercek bir bag: kaynak Ayse'nin, turev
+    # Burak'in. Payin sahibi Ayse oldugu icin itiraz hakki da onun.
+    bag = AttributionEdge(
+        child_id=kilitli.id,
+        parent_id=icerik.id,
+        stage=LinkStage.CLIP,
+        status=LinkStatus.CONFIRMED,
+        confidence=0.9,
+        visual_coverage=0.6,
+        source_usage=0.5,
+    )
+    session.add(bag)
     session.commit()
 
     veri = {
@@ -118,6 +140,7 @@ def ortam(tmp_path_factory):
         "kampanya_id": kampanya.id,
         "icerik_id": icerik.id,
         "kilitli_id": kilitli.id,
+        "bag_id": bag.id,
         "foto": photos[0],
     }
     session.close()
@@ -134,6 +157,23 @@ def client(ortam):
 @pytest.fixture()
 def veri(ortam):
     return ortam[1]
+
+
+@pytest.fixture()
+def basliklar(client):
+    """Verilen kullanici adina oturum acip Authorization basligini doner.
+
+    Testler jetonu elle uretmiyor, gercek ucu cagiriyor: boylece
+    sozlesme testi imzalama ayrintisina degil ucun kendisine bagli
+    kaliyor.
+    """
+
+    def uret(user_id: str) -> dict[str, str]:
+        r = client.post("/api/oturum", json={"user_id": user_id})
+        assert r.status_code == 200, r.text
+        return {"Authorization": f"Bearer {r.json()['token']}"}
+
+    return uret
 
 
 def alanlar(govde: dict, *beklenen: str) -> None:
@@ -264,29 +304,170 @@ def test_olmayan_bagin_maskesi_404(client):
 
 
 # ---------------------------------------------------------------------------
+# Oturum ve yetki
+#
+# Bu boluümün varlik sebebi: once `owner_id` form alanindan geliyordu,
+# yani herkes herkes adina icerik yukleyebiliyor, baskasinin payina
+# itiraz edebiliyor ve baskasinin icerigi uzerinde gelir
+# degistirebiliyordu. Asagidaki testler o kapinin kapali kaldigini
+# sinar.
+# ---------------------------------------------------------------------------
+def test_oturum_jeton_ve_kullanici_doner(client, veri):
+    r = client.post("/api/oturum", json={"user_id": veri["ayse_id"]})
+    assert r.status_code == 200
+    govde = r.json()
+    alanlar(govde, "token", "expires_at", "user")
+    assert govde["user"]["id"] == veri["ayse_id"]
+    assert govde["token"].count(".") == 1, "jeton govde.imza biciminde olmali"
+    assert govde["expires_at"] > time.time()
+
+
+def test_olmayan_kullaniciyla_oturum_404(client):
+    assert client.post("/api/oturum", json={"user_id": "yokboyle"}).status_code == 404
+
+
+@pytest.mark.parametrize(
+    "baslik",
+    [
+        pytest.param(None, id="baslik-yok"),
+        pytest.param({"Authorization": "Bearer uydurma.jeton"}, id="imza-tutmuyor"),
+        pytest.param({"Authorization": "Basic abc"}, id="yanlis-sema"),
+        pytest.param({"Authorization": "Bearer"}, id="jeton-eksik"),
+    ],
+)
+def test_jetonsuz_yukleme_401(client, veri, baslik):
+    bgr = cv2.imread(str(veri["foto"]))
+    r = client.post(
+        "/api/contents",
+        files={"file": ("a.jpg", _jpeg(bgr), "image/jpeg")},
+        data={"title": "Jetonsuz"},
+        headers=baslik,
+    )
+    assert r.status_code == 401
+
+
+def test_jetonsuz_itiraz_401(client, veri):
+    r = client.post(
+        "/api/disputes", json={"edge_id": veri["bag_id"], "reason": "deneme"}
+    )
+    assert r.status_code == 401
+
+
+def test_jetonsuz_gelir_degisikligi_401(client, veri):
+    r = client.post(
+        f"/api/contents/{veri['icerik_id']}/revenue", json={"amount": 999.0}
+    )
+    assert r.status_code == 401
+
+
+def test_baskasinin_payina_itiraz_403(client, veri, basliklar):
+    """Bagin kaynagi Ayse'nin; pay ona odendigi icin itiraz hakki da onun."""
+    r = client.post(
+        "/api/disputes",
+        json={"edge_id": veri["bag_id"], "reason": "Payım düşük hesaplandı."},
+        headers=basliklar(veri["burak_id"]),
+    )
+    assert r.status_code == 403
+
+
+def test_payin_sahibi_itiraz_acabilir(client, veri, basliklar):
+    r = client.post(
+        "/api/disputes",
+        json={"edge_id": veri["bag_id"], "reason": "Payım düşük hesaplandı."},
+        headers=basliklar(veri["ayse_id"]),
+    )
+    assert r.status_code == 200, r.text
+    alanlar(r.json(), "id", "status")
+
+
+def test_baskasinin_icerigine_gelir_403(client, veri, basliklar):
+    r = client.post(
+        f"/api/contents/{veri['icerik_id']}/revenue",
+        json={"amount": 999.0},
+        headers=basliklar(veri["burak_id"]),
+    )
+    assert r.status_code == 403
+    # Gelir gercekten degismemis olmali.
+    assert client.get(f"/api/contents/{veri['icerik_id']}").json()["revenue"] != 999.0
+
+
+def test_suresi_dolmus_jeton_401(client, veri, basliklar, monkeypatch):
+    """Jetonun omru gercekten kontrol ediliyor mu."""
+    from app.core import security
+
+    kimlik = basliklar(veri["ayse_id"])
+
+    # Saat ileri aliniyor. `time` modulunun kendisi degil, yalnizca
+    # `security` icindeki referansi degistiriliyor: global `time.time`
+    # yamalanirsa test sirasinda calisan her sey etkilenirdi.
+    ileri = time.time() + 10 * 60 * 60
+
+    class _IleriSaat:
+        @staticmethod
+        def time() -> float:
+            return ileri
+
+    monkeypatch.setattr(security, "time", _IleriSaat)
+    r = client.post(
+        f"/api/contents/{veri['icerik_id']}/revenue",
+        json={"amount": 123.0},
+        headers=kimlik,
+    )
+    assert r.status_code == 401
+
+
+@pytest.mark.slow
+def test_yuklenen_icerigin_sahibi_jetondan_geliyor(client, veri, basliklar):
+    """Govdedeki owner_id yok sayilir; sahip yalnizca jetondan gelir.
+
+    `slow`: bu test koken kurtarma hattinin tamamini calistiriyor.
+    """
+    bgr = cv2.imread(str(veri["foto"]))
+    r = client.post(
+        "/api/contents",
+        files={"file": ("a.jpg", _jpeg(bgr), "image/jpeg")},
+        data={"title": "Jetonla yüklendi", "owner_id": veri["burak_id"]},
+        headers=basliklar(veri["ayse_id"]),
+    )
+    assert r.status_code == 200, r.text
+    assert r.json()["content"]["owner"]["id"] == veri["ayse_id"]
+
+
+# ---------------------------------------------------------------------------
 # Gelir ve dagitim
 # ---------------------------------------------------------------------------
-def test_gelir_ayarlanir_ve_geri_okunur(client, veri):
+def test_gelir_ayarlanir_ve_geri_okunur(client, veri, basliklar):
     r = client.post(
-        f"/api/contents/{veri['icerik_id']}/revenue", json={"amount": 2500.0}
+        f"/api/contents/{veri['icerik_id']}/revenue",
+        json={"amount": 2500.0},
+        headers=basliklar(veri["ayse_id"]),
     )
     assert r.status_code == 200
     assert r.json()["revenue"] == 2500.0
     assert client.get(f"/api/contents/{veri['icerik_id']}").json()["revenue"] == 2500.0
 
 
-def test_gelir_govdesi_dogrulanir(client, veri):
+def test_gelir_govdesi_dogrulanir(client, veri, basliklar):
     """Eksik veya yanlis tipte govde 422 olmali - sunucu hatasi degil."""
-    r = client.post(f"/api/contents/{veri['icerik_id']}/revenue", json={})
+    kimlik = basliklar(veri["ayse_id"])
+    r = client.post(
+        f"/api/contents/{veri['icerik_id']}/revenue", json={}, headers=kimlik
+    )
     assert r.status_code == 422
     r = client.post(
-        f"/api/contents/{veri['icerik_id']}/revenue", json={"amount": "elli lira"}
+        f"/api/contents/{veri['icerik_id']}/revenue",
+        json={"amount": "elli lira"},
+        headers=kimlik,
     )
     assert r.status_code == 422
 
 
-def test_dagitim_tutarlari_ve_kural_gunlugu_doner(client, veri):
-    client.post(f"/api/contents/{veri['icerik_id']}/revenue", json={"amount": 1000.0})
+def test_dagitim_tutarlari_ve_kural_gunlugu_doner(client, veri, basliklar):
+    client.post(
+        f"/api/contents/{veri['icerik_id']}/revenue",
+        json={"amount": 1000.0},
+        headers=basliklar(veri["ayse_id"]),
+    )
     r = client.post(f"/api/contents/{veri['icerik_id']}/distribute")
     assert r.status_code == 200
     govde = r.json()
@@ -363,18 +544,12 @@ def test_itiraz_kuyrugu_liste_doner(client):
     assert isinstance(r.json(), list)
 
 
-def test_olmayan_baga_itiraz_404(client, veri):
+def test_olmayan_baga_itiraz_404(client, veri, basliklar):
+    """Olmayan bag icin 404: yanit hangi baglarin var oldugunu sizdirmasin."""
     r = client.post(
         "/api/disputes",
-        json={"edge_id": "yokboylebag", "raiser_id": veri["ayse_id"], "reason": "deneme"},
-    )
-    assert r.status_code == 404
-
-
-def test_olmayan_kullanicinin_itirazi_404(client):
-    r = client.post(
-        "/api/disputes",
-        json={"edge_id": "herhangi", "raiser_id": "yokboylekullanici", "reason": "deneme"},
+        json={"edge_id": "yokboylebag", "reason": "deneme"},
+        headers=basliklar(veri["ayse_id"]),
     )
     assert r.status_code == 404
 
@@ -393,43 +568,36 @@ def test_olmayan_itirazin_moderasyonu_404(client):
 # ---------------------------------------------------------------------------
 # Yukleme ve dogrulama - hattin tamami calisir, bu ikisi yavas
 # ---------------------------------------------------------------------------
-def test_bozuk_dosya_400_doner(client, veri):
+def test_bozuk_dosya_400_doner(client, veri, basliklar):
     """Gorsel olmayan bir dosya sunucu hatasina yol acmamali."""
     r = client.post(
         "/api/contents",
         files={"file": ("not.txt", b"bu bir gorsel degil", "text/plain")},
-        data={"owner_id": veri["ayse_id"], "title": "Bozuk"},
+        data={"title": "Bozuk"},
+        headers=basliklar(veri["ayse_id"]),
     )
     assert r.status_code == 400
 
 
-def test_olmayan_kullaniciyla_yukleme_404(client, veri):
-    bgr = cv2.imread(str(veri["foto"]))
-    r = client.post(
-        "/api/contents",
-        files={"file": ("a.jpg", _jpeg(bgr), "image/jpeg")},
-        data={"owner_id": "yokboylekullanici", "title": "Deneme"},
-    )
-    assert r.status_code == 404
-
-
-def test_remixe_kapali_icerik_403_doner(client, veri):
+def test_remixe_kapali_icerik_403_doner(client, veri, basliklar):
     """Ureticinin remix tercihi API katmaninda da uygulanmali."""
     bgr = cv2.imread(str(veri["foto"]))
     r = client.post(
         f"/api/contents/{veri['kilitli_id']}/remix",
         files={"file": ("a.jpg", _jpeg(bgr), "image/jpeg")},
-        data={"owner_id": veri["ayse_id"], "title": "İzinsiz remix"},
+        data={"title": "İzinsiz remix"},
+        headers=basliklar(veri["ayse_id"]),
     )
     assert r.status_code == 403
 
 
-def test_olmayan_kaynaga_remix_404(client, veri):
+def test_olmayan_kaynaga_remix_404(client, veri, basliklar):
     bgr = cv2.imread(str(veri["foto"]))
     r = client.post(
         "/api/contents/yokboyle/remix",
         files={"file": ("a.jpg", _jpeg(bgr), "image/jpeg")},
-        data={"owner_id": veri["ayse_id"], "title": "Deneme"},
+        data={"title": "Deneme"},
+        headers=basliklar(veri["ayse_id"]),
     )
     assert r.status_code == 404
 

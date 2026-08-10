@@ -205,7 +205,7 @@ function UploadPanel({ onDone }: { onDone: () => void }) {
     try {
       const form = new FormData();
       form.append("file", file);
-      form.append("owner_id", currentUser.id);
+      // `owner_id` gonderilmiyor: sahip jetondan okunuyor.
       form.append("title", title || file.name);
       form.append("caption", caption);
       form.append("remix_allowed", String(remixAllowed));

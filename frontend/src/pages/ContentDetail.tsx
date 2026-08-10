@@ -475,7 +475,7 @@ function DisputeBox({ edgeId, onDone }: { edgeId: string; onDone: () => void }) 
     setBusy(true);
     setError(null);
     try {
-      const dispute = await api.openDispute(edgeId, currentUser!.id, reason);
+      const dispute = await api.openDispute(edgeId, reason);
       const outcome = await api.resolveDispute(dispute.id);
       setSummary(outcome.summary);
       onDone();

@@ -91,9 +91,24 @@ class RevenueIn(BaseModel):
     amount: float = Field(ge=0)
 
 
+class OturumIn(BaseModel):
+    user_id: str
+
+
+class OturumOut(BaseModel):
+    """Demo kimlik saglayicisinin yaniti (bkz. core/security.py)."""
+
+    token: str
+    # Unix saniye; arayuz suresi dolmadan once yeniden oturum aciyor.
+    expires_at: int
+    user: UserOut
+
+
 class DisputeIn(BaseModel):
+    # `raiser_id` kaldirildi: itirazi kimin actigi govdeden degil
+    # jetondan okunuyor. Onceden herkes bir baskasinin adina itiraz
+    # acabiliyordu.
     edge_id: str
-    raiser_id: str
     reason: str = Field(min_length=3)
 
 

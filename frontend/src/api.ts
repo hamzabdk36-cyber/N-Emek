@@ -7,8 +7,51 @@
 
 const BASE = "/api";
 
-async function req<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(BASE + path, init);
+/* -------------------------------------------------------------------------- */
+/* Oturum jetonu                                                               */
+/* -------------------------------------------------------------------------- */
+/**
+ * Jeton modul duzeyinde tutuluyor, React durumunda degil: `api.*`
+ * cagrilari bilesen agacinin disindan da yapilabiliyor ve her cagriya
+ * jetonu elle gecirmek her uc icin bir parametre daha demekti.
+ *
+ * `localStorage`'a yazilmiyor. Demo kimlik saglayicisi zaten parolasiz
+ * ve jeton kisa omurlu; kalici saklamak, sayfa yenilendiginde suresi
+ * dolmus bir jetonla acilmaya calismak disinda bir sey kazandirmiyor.
+ * Sayfa yenilenince oturum bastan aciliyor (bkz. session.tsx).
+ */
+let token: string | null = null;
+
+export function setToken(next: string | null) {
+  token = next;
+}
+
+/** Jeton suresi dolduysa oturumu yeniden acmak icin; session.tsx kuruyor. */
+let onUnauthorized: (() => Promise<boolean>) | null = null;
+
+export function setUnauthorizedHandler(handler: (() => Promise<boolean>) | null) {
+  onUnauthorized = handler;
+}
+
+function withAuth(init?: RequestInit): RequestInit {
+  if (!token) return init ?? {};
+  const headers = new Headers(init?.headers);
+  headers.set("Authorization", `Bearer ${token}`);
+  return { ...init, headers };
+}
+
+async function req<T>(path: string, init?: RequestInit, retry = true): Promise<T> {
+  const res = await fetch(BASE + path, withAuth(init));
+
+  // Jetonun suresi dolmus ya da sunucu yeniden baslamis olabilir
+  // (imzalama anahtari surec basina uretiliyor). Oturumu sessizce
+  // yenileyip bir kez daha deniyoruz - kullanici demonun ortasinda
+  // "oturum acin" duvarina toslamasin.
+  if (res.status === 401 && retry && onUnauthorized) {
+    const yenilendi = await onUnauthorized();
+    if (yenilendi) return req<T>(path, init, false);
+  }
+
   if (!res.ok) {
     let detail = res.statusText;
     try {
@@ -247,12 +290,32 @@ export interface Health {
   c2pa_signing: boolean;
 }
 
+/** `POST /api/oturum` yaniti - demo kimlik sağlayıcısı. */
+export interface Oturum {
+  token: string;
+  /** Unix saniye. */
+  expires_at: number;
+  user: User;
+}
+
 /* -------------------------------------------------------------------------- */
 /* Uclar                                                                       */
 /* -------------------------------------------------------------------------- */
 export const api = {
   health: () => req<Health>("/health"),
   users: () => req<User[]>("/users"),
+
+  /**
+   * Demo kimlik sağlayıcısı: kullanıcı kimliğini imzalı, kısa ömürlü
+   * bir jetona çevirir. Parola sorulmaz — kimlik doğrulama ana
+   * platformun işi; gerekçe `backend/app/core/security.py` içinde.
+   */
+  oturum: (userId: string) =>
+    req<Oturum>("/oturum", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id: userId }),
+    }),
   earnings: (userId: string) =>
     req<{ user_id: string; total: number; as_creator: number; as_source: number; payout_count: number }>(
       `/users/${userId}/earnings`,
@@ -291,11 +354,13 @@ export const api = {
   distributeCampaign: (id: string) =>
     req<CampaignDistribution>(`/campaigns/${id}/distribute`, { method: "POST" }),
 
-  openDispute: (edgeId: string, raiserId: string, reason: string) =>
+  // İtirazı kimin açtığı gövdeden değil jetondan okunuyor; uç,
+  // payın sahibi olmayan birine 403 döner.
+  openDispute: (edgeId: string, reason: string) =>
     req<{ id: string; status: string }>("/disputes", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ edge_id: edgeId, raiser_id: raiserId, reason }),
+      body: JSON.stringify({ edge_id: edgeId, reason }),
     }),
   resolveDispute: (id: string) =>
     req<{ id: string; status: string; changed: boolean; summary: string; resolution: Record<string, unknown> }>(

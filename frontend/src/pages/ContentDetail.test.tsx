@@ -157,7 +157,8 @@ describe("ContentDetail — Emek Kartı", () => {
       within(satir).getByRole("button", { name: "İtirazı gönder" }),
     );
 
-    expect(ac).toHaveBeenCalledWith("e-ab", "u-ayse", expect.any(String));
+    // İtirazı kimin açtığı gövdede gitmiyor; uç bunu jetondan okuyor.
+    expect(ac).toHaveBeenCalledWith("e-ab", expect.any(String));
     expect(coz).toHaveBeenCalledWith("d-1");
     expect(
       await within(satir).findByText(/yeniden ölçüldü/),

@@ -272,7 +272,7 @@ export default function RemixStudio() {
       if (!blob) throw new Error("Görsel dışa aktarılamadı.");
       const form = new FormData();
       form.append("file", blob, "remix.jpg");
-      form.append("owner_id", currentUser.id);
+      // `owner_id` gonderilmiyor: sahip jetondan okunuyor.
       form.append("title", title || "Remix");
       form.append("actions", actions.join(",") || "c2pa.edited");
       const res = await api.remix(id, form);

@@ -40,8 +40,8 @@ Sertifikalar ve korpus depoda değil; her ikisi de yukarıdaki komutlarla yenide
 ## Doğrulama
 
 ```bash
-cd backend && ../.venv/Scripts/python.exe -m pytest tests/   # 71 test: pay motoru + uçtan uca + API
-cd frontend && npm test                                      # 74 test: yerleşim + bileşenler + ekranlar
+cd backend && ../.venv/Scripts/python.exe -m pytest tests/   # 82 test: pay motoru + uçtan uca + API + yetki
+cd frontend && npm test                                      # 87 test: yerleşim + bileşenler + ekranlar + oturum
 .venv/Scripts/python.exe scripts/seed_demo.py --reset        # altın senaryoyu kur ve anlat
 
 # Uygulamayı çalıştır (iki terminal)
@@ -95,7 +95,12 @@ rozetle kesişmez*. Dört sentetik DAG üzerinde koşuyor: düz zincir, elmas, t
 atlama, iki atlama. Değişmezlerin boş olmadığı mutasyonla doğrulandı: koridora
 çıkarma mantığı kapatıldığında altı test kırmızıya döndü.
 
-Diğer üç dosya davranışı koruyor: `ChainGraph.test.tsx` katkısız ara halkanın
+`api.oturum.test.ts` ve `session.test.tsx` oturum katmanını koruyor: `fetch` sahtelenip
+gönderilen `Authorization` başlığına doğrudan bakılıyor, 401 sonrası tek seferlik sessiz
+yenileme ve sonsuz döngüye girmemesi sınanıyor. Bu katman sessizce bozulabilir — jeton
+eklenmezse ekranda yalnızca "bir şey çalışmıyor" görünür, sebebi görünmez.
+
+Diğer dosyalar davranışı koruyor: `ChainGraph.test.tsx` katkısız ara halkanın
 grafikten düşmediğini ve kesikli çizildiğini, `ui.test.tsx` `ShareBar`'ın dağılımın
 tamamını `aria-label`'a çevirdiğini (bu, görsel olmayan kullanıcının payları
 öğrenebildiği tek yer), `ContentDetail.test.tsx` pay satırı açıldığında
@@ -135,7 +140,7 @@ React 19'da da hata sınırı yazmanın tek yolu sınıf bileşeni;
 
 | İş | Ne koşar |
 |---|---|
-| backend | torch **önce** ve CPU indeksinden → `requirements.txt` → C2PA sertifikaları → 8 görsellik test korpusu → `pytest -m "not slow" -rs` (69 test) |
+| backend | torch **önce** ve CPU indeksinden → `requirements.txt` → C2PA sertifikaları → 8 görsellik test korpusu → `pytest -m "not slow" -rs` (79 test) |
 | arayüz | `npm ci` → `tsc --noEmit` → `vitest run` → `npm run build` |
 
 **Yeşil rozet gerçekten bir şey söylemeli.** İlk CI koşusu korpussuz çalıştı ve yeşil
@@ -210,6 +215,40 @@ Bunlar sonradan "sadeleştirme" diye kaldırılmamalı; ikisi de ölçümdeki ge
 **Özel (exclusive) kapsama** (`chain.build_chain`): ölçülen kapsamalar iç içedir — Burak'ın %97'si Ayşe'nin %84'ünü de kapsar. Her düğüme yalnızca kendi kattığı pikseller yazılır: `özel(A) = toplam(A) − Σ toplam(A'nın zincirdeki doğrudan kaynakları)`. Böylece kapsamalar görselin tam bir bölüntüsü olur ve doğal olarak 1.0'a toplanır; pay normalizasyona değil ölçüme dayanır.
 
 Bu düzeltmeden önce kaynakların toplamı %182 çıkıyor ve tabana çarpıyordu.
+
+### Oturum ve yetki
+
+`POST /api/oturum` bir **demo kimlik sağlayıcısı**: kullanıcı kimliğini alır, imzalı ve
+kısa ömürlü bir jeton döner. **Parola sorulmaz ve bu bilinçli** — N-Emek bağımsız bir
+sosyal ağ değil, N'Sosyal'in içine giren bir emek katmanı; kimlik doğrulama ana platformun
+işi. Gerçek dağıtımda bu ucun yerini N'Sosyal'in kimlik sağlayıcısı alır ve geri kalan
+uçlar aynen çalışır, çünkü onlar jetonun *nereden geldiğini* değil geçerli olup olmadığını
+soruyor. Gerekçenin tamamı `app/core/security.py` başında.
+
+Çözdüğü somut sorun: önce `owner_id` form alanından geliyordu, yani **herkes herkes adına
+içerik yükleyebiliyor, başkasının payına itiraz edebiliyor ve başkasının içeriği üzerinde
+gelir değiştirebiliyordu.** Yetki kurallarının tutunabileceği bir kimlik yoktu.
+
+Kullanıcı adına iş yapan dört uç artık `Authorization: Bearer` okuyor: `POST /contents`,
+`/contents/{id}/remix`, `/disputes`, `/contents/{id}/revenue`.
+
+| Kural | Sonuç |
+|---|---|
+| Jeton yok / bozuk / süresi dolmuş | **401** |
+| İtirazı yalnızca payın sahibi (bağın *kaynak* tarafındaki içeriğin sahibi) açabilir | başkasına **403** |
+| Geliri yalnızca içeriğin sahibi değiştirebilir | başkasına **403** |
+
+Jeton HMAC-SHA256 ile imzalanıyor; harici bağımlılık eklenmedi (PyJWT/itsdangerous yok),
+tamamı standart kütüphane — bağımlılık eklemek Docker imajını ve CI kurulumunu da
+değiştirirdi.
+
+İmzalama anahtarı ayarlarda yoksa **süreç başına rastgele** üretilir: depoya, yanlışlıkla
+üretimde kullanılabilecek sahte bir varsayılan anahtar konmadı. Bedeli, sunucu yeniden
+başlayınca eski jetonların geçersiz olması; arayüz bunu kaldırıyor — 401 alınca oturumu bir
+kez sessizce yeniliyor ve isteği tekrarlıyor (`frontend/src/api.ts`). Üretimde
+`NEMEK_TOKEN_SECRET` verilir.
+
+Arayüzde görünür değişiklik yok: üstteki kullanıcı seçici artık arka planda oturum açıyor.
 
 ### Köken kurtarma hattı
 

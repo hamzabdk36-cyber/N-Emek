@@ -38,13 +38,19 @@ const SAGLIK: Health = {
 };
 
 /**
- * Oturumun ihtiyac duydugu iki ucu sahteler ve kimin oturum actigini
- * secer. `SessionProvider` secimi `localStorage`'dan okuyor.
+ * Oturumun ihtiyac duydugu uclari sahteler ve kimin oturum actigini
+ * secer. `SessionProvider` secimi `localStorage`'dan okuyor, sonra
+ * `POST /api/oturum` ile jeton aliyor.
  */
 export function oturumKur(aktifKullaniciId = KULLANICILAR[0].id) {
   localStorage.setItem("nemek.actor", aktifKullaniciId);
   vi.spyOn(api, "users").mockResolvedValue(KULLANICILAR);
   vi.spyOn(api, "health").mockResolvedValue(SAGLIK);
+  vi.spyOn(api, "oturum").mockImplementation(async (userId: string) => ({
+    token: `sahte-jeton.${userId}`,
+    expires_at: Math.floor(Date.now() / 1000) + 3600,
+    user: KULLANICILAR.find((u) => u.id === userId) ?? KULLANICILAR[0],
+  }));
 }
 
 export function kur(

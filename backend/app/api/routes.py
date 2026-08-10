@@ -7,7 +7,7 @@ from pathlib import Path
 
 import cv2
 import numpy as np
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
@@ -20,12 +20,15 @@ from app.api.schemas import (
     IngestOut,
     LinkOut,
     ModerationIn,
+    OturumIn,
+    OturumOut,
     RecoveryOut,
     RevenueIn,
     UserOut,
 )
 from app.attribution.explain import STAGE_LABELS, build_labour_card, confidence_band
 from app.core.database import get_session
+from app.core.security import TokenError, decode_token, encode_token
 from app.models.entities import (
     AttributionEdge,
     Campaign,
@@ -134,6 +137,49 @@ def _require_content(session: Session, content_id: str) -> Content:
 
 
 # ---------------------------------------------------------------------------
+# Oturum ve yetki
+# ---------------------------------------------------------------------------
+def current_user(
+    authorization: str | None = Header(default=None),
+    session: Session = Depends(get_session),
+) -> User:
+    """`Authorization: Bearer <jeton>` basligindan kullaniciyi cozer.
+
+    Jeton yoksa, bozuksa ya da suresi dolmussa 401. Jeton gecerli ama
+    kullanici silinmisse de 401: istemci acisindan yapilacak sey ayni,
+    yeniden oturum acmak.
+    """
+    if not authorization or not authorization.lower().startswith("bearer "):
+        raise HTTPException(401, "Bu işlem için oturum gerekli.")
+
+    try:
+        payload = decode_token(authorization.split(" ", 1)[1].strip())
+    except TokenError as exc:
+        raise HTTPException(401, str(exc)) from exc
+
+    user = session.get(User, payload.user_id)
+    if user is None:
+        raise HTTPException(401, "Oturum açan kullanıcı artık kayıtlı değil.")
+    return user
+
+
+@router.post("/oturum", response_model=OturumOut)
+def oturum_ac(body: OturumIn, session: Session = Depends(get_session)):
+    """Demo kimlik saglayicisi: kullanici kimligi -> imzali jeton.
+
+    **Parola sorulmuyor ve bu bilincli.** N-Emek N'Sosyal'in icine giren
+    bir emek katmani; kimlik dogrulama ana platformun isi. Gercek
+    dagitimda bu ucun yerini N'Sosyal'in kimlik saglayicisi alir ve geri
+    kalan uclar aynen calisir, cunku onlar jetonun nereden geldigini
+    degil gecerli olup olmadigini soruyor. Ayrintili gerekce:
+    `app/core/security.py`.
+    """
+    user = _require_user(session, body.user_id)
+    token, expires_at = encode_token(user.id)
+    return OturumOut(token=token, expires_at=expires_at, user=_user_out(user))
+
+
+# ---------------------------------------------------------------------------
 # Saglik ve kullanicilar
 # ---------------------------------------------------------------------------
 @router.get("/health")
@@ -185,7 +231,6 @@ def get_content_image(content_id: str, session: Session = Depends(get_session)):
 @router.post("/contents", response_model=IngestOut)
 async def create_content(
     file: UploadFile = File(...),
-    owner_id: str = Form(...),
     title: str = Form(...),
     caption: str = Form(""),
     remix_allowed: bool = Form(True),
@@ -194,13 +239,16 @@ async def create_content(
     campaign_id: str | None = Form(None),
     session: Session = Depends(get_session),
     index: IndexService = Depends(index_dep),
+    owner: User = Depends(current_user),
 ):
     """Yeni icerik yukler. Koken kurtarma hatti otomatik calisir.
 
     Kullanici "bu benim ozgun icerigim" dese bile hat calisir - iddia
     dogrulanir. Zaten sistemin varlik sebebi bu.
+
+    Sahip artik form alanindan degil jetondan geliyor: onceden herkes
+    herkes adina icerik yukleyebiliyordu.
     """
-    owner = _require_user(session, owner_id)
     raw = await file.read()
     try:
         result = ingest_service.ingest(
@@ -228,13 +276,13 @@ async def create_content(
 async def create_remix(
     parent_id: str,
     file: UploadFile = File(...),
-    owner_id: str = Form(...),
     title: str = Form(...),
     caption: str = Form(""),
     actions: str = Form("c2pa.edited"),
     campaign_id: str | None = Form(None),
     session: Session = Depends(get_session),
     index: IndexService = Depends(index_dep),
+    owner: User = Depends(current_user),
 ):
     """Remix stüdyosundan gelen turevi yayinlar.
 
@@ -244,7 +292,6 @@ async def create_remix(
     parent = _require_content(session, parent_id)
     if not parent.remix_allowed:
         raise HTTPException(403, "Bu içerik remixlenemez: üretici remix iznini kapatmış.")
-    owner = _require_user(session, owner_id)
     raw = await file.read()
 
     result = ingest_service.ingest(
@@ -314,10 +361,22 @@ def edge_mask(edge_id: str, session: Session = Depends(get_session)):
 
 @router.post("/contents/{content_id}/revenue")
 def set_revenue(
-    content_id: str, body: RevenueIn, session: Session = Depends(get_session)
+    content_id: str,
+    body: RevenueIn,
+    session: Session = Depends(get_session),
+    user: User = Depends(current_user),
 ):
-    """Gonderinin urettigi geliri ayarlar (demo icin)."""
+    """Gonderinin urettigi geliri ayarlar (demo icin).
+
+    Yetki: yalnizca icerigin sahibi. Gelir tum zincirin paylarini
+    belirledigi icin baskasinin gonderisinde degistirilebilir olmasi,
+    zincirdeki herkesin odemesini oynatabilmek demekti.
+    """
     content = _require_content(session, content_id)
+    if content.owner_id != user.id:
+        raise HTTPException(
+            403, "Geliri yalnızca içeriğin sahibi değiştirebilir."
+        )
     content.revenue = body.amount
     session.commit()
     return {"content_id": content_id, "revenue": content.revenue}
@@ -426,8 +485,28 @@ def distribute_campaign(campaign_id: str, session: Session = Depends(get_session
 # Itirazlar
 # ---------------------------------------------------------------------------
 @router.post("/disputes")
-def create_dispute(body: DisputeIn, session: Session = Depends(get_session)):
-    raiser = _require_user(session, body.raiser_id)
+def create_dispute(
+    body: DisputeIn,
+    session: Session = Depends(get_session),
+    raiser: User = Depends(current_user),
+):
+    """Bir baga itiraz acar.
+
+    Yetki: itirazi yalnizca o payin sahibi acabilir - yani bagin
+    *kaynak* tarafindaki icerigin sahibi. Pay ona odendigi icin olcumun
+    dusuk ciktigini one surme hakki da onun.
+
+    Bag once yukleniyor: olmayan bir bag icin 403 degil 404 donmeli,
+    yoksa yanit hangi baglarin var oldugunu sizdirirdi.
+    """
+    edge = session.get(AttributionEdge, body.edge_id)
+    if edge is None:
+        raise HTTPException(404, f"Bağ bulunamadı: {body.edge_id}")
+
+    kaynak = session.get(Content, edge.parent_id)
+    if kaynak is None or kaynak.owner_id != raiser.id:
+        raise HTTPException(403, "Bu paya yalnızca payın sahibi itiraz edebilir.")
+
     try:
         dispute = dispute_service.open_dispute(
             session, edge_id=body.edge_id, raiser=raiser, reason=body.reason
