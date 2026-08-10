@@ -86,7 +86,8 @@ describe("ConfidenceBadge", () => {
     );
 
     expect(screen.getByText(metin)).toBeInTheDocument();
-    expect(screen.getByText("0.91")).toBeInTheDocument();
+    // Ondalik ayraci virgul; skorlar da yuzdeler gibi Turkce bicimde.
+    expect(screen.getByText("0,91")).toBeInTheDocument();
   });
 });
 

@@ -47,6 +47,13 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         const saved = localStorage.getItem(STORAGE_KEY);
         setUser(list.find((u) => u.id === saved) ?? list[0] ?? null);
       })
+      .catch(() => {
+        // Backend kapaliysa oturum bos kalir; sayfalar kendi hata
+        // notlarini gosterir. Yakalanmadan birakilirsa bu bir
+        // "unhandled rejection" olarak konsola dusuyordu - demoda
+        // konsolun temiz olmasi gereken tek an juri onunde.
+        if (!cancelled) setUsers([]);
+      })
       .finally(() => !cancelled && setLoading(false));
     return () => {
       cancelled = true;

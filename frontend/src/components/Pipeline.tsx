@@ -6,7 +6,7 @@
  * cumlesi burada tek bakista okunur.
  */
 import { useState } from "react";
-import type { EvidenceItem, EvidenceRow, StageLog } from "../api";
+import { sayi, type EvidenceItem, type EvidenceRow, type StageLog } from "../api";
 import { Badge } from "./ui";
 
 const STAGE_META: Record<string, { order: number; title: string; note: string }> = {
@@ -288,7 +288,7 @@ function formatValue(value: unknown): string {
   if (value === null || value === undefined) return "—";
   if (typeof value === "boolean") return value ? "evet" : "hayır";
   if (typeof value === "number") {
-    return Number.isInteger(value) ? String(value) : value.toFixed(4);
+    return Number.isInteger(value) ? String(value) : sayi(value, 4);
   }
   return String(value);
 }

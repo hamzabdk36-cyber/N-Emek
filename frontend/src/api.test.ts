@@ -8,7 +8,7 @@
  * yerin sessizce geri kaymasini engelliyor.
  */
 import { describe, expect, it } from "vitest";
-import { money, pct, pctRaw } from "./api";
+import { money, pct, pctRaw, sayi } from "./api";
 
 describe("pctRaw — hazır yüzde değeri", () => {
   it("ondalık ayracı virgül", () => {
@@ -39,6 +39,22 @@ describe("pct — oranı yüzdeye çevirir", () => {
 
   it("pctRaw ile aynı biçimi üretiyor", () => {
     expect(pct(0.326, 2)).toBe(pctRaw(32.6, 2));
+  });
+});
+
+describe("sayi — yüzde olmayan ölçüm değerleri", () => {
+  it("güven ve sönümleme virgüllü yazılıyor", () => {
+    expect(sayi(0.91)).toBe("0,91");
+    expect(sayi(1)).toBe("1,00");
+  });
+
+  it("basamak sayısı verilebiliyor", () => {
+    expect(sayi(0.6187, 3)).toBe("0,619");
+    expect(sayi(0.123456, 4)).toBe("0,1235");
+  });
+
+  it("negatif değerde işaret korunuyor", () => {
+    expect(sayi(-0.25)).toBe("-0,25");
   });
 });
 

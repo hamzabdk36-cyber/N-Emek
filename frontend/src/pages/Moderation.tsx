@@ -7,7 +7,7 @@
  */
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { api, pctRaw, type DisputeQueueItem } from "../api";
+import { api, pctRaw, sayi, type DisputeQueueItem } from "../api";
 import {
   Badge,
   Button,
@@ -123,11 +123,19 @@ function DisputeCard({
       <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <Measure
           label="Güven (önce)"
-          value={resolution.before?.confidence?.toFixed(2) ?? "—"}
+          value={
+            resolution.before?.confidence != null
+              ? sayi(resolution.before.confidence)
+              : "—"
+          }
         />
         <Measure
           label="Güven (sonra)"
-          value={resolution.after?.confidence?.toFixed(2) ?? "—"}
+          value={
+            resolution.after?.confidence != null
+              ? sayi(resolution.after.confidence)
+              : "—"
+          }
         />
         <Measure
           label="Alan (önce)"

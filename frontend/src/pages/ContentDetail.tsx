@@ -14,6 +14,7 @@ import {
   api,
   money,
   pctRaw,
+  sayi,
   type LabourCard,
   type Party,
 } from "../api";
@@ -398,19 +399,19 @@ function PartyRow({
           {isSource && (
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               <MiniStat label="kapsama" value={pctRaw((f.kapsama ?? 0) * 100)} />
-              <MiniStat label="güven" value={(f.guven ?? 0).toFixed(2)} />
-              <MiniStat label="sönümleme" value={(f.sonumleme ?? 1).toFixed(2)} />
+              <MiniStat label="güven" value={sayi(f.guven ?? 0)} />
+              <MiniStat label="sönümleme" value={sayi(f.sonumleme ?? 1)} />
               <MiniStat
                 label="ham ağırlık"
-                value={(f.ham_agirlik ?? 0).toFixed(3)}
+                value={sayi(f.ham_agirlik ?? 0, 3)}
               />
             </div>
           )}
           {isSource && (
             <p className="num text-[11.5px] leading-relaxed text-[var(--color-ink-3)]">
               pay = kapsama {pctRaw((f.kapsama ?? 0) * 100)} × güven{" "}
-              {(f.guven ?? 0).toFixed(2)} × sönümleme{" "}
-              {(f.sonumleme ?? 1).toFixed(2)} = {(f.ham_agirlik ?? 0).toFixed(3)}
+              {sayi(f.guven ?? 0)} × sönümleme{" "}
+              {sayi(f.sonumleme ?? 1)} = {sayi(f.ham_agirlik ?? 0, 3)}
             </p>
           )}
           {party.rules_applied.length > 0 && (

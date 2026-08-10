@@ -12,7 +12,7 @@
  */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { api, type Content } from "../api";
+import { api, pct, type Content } from "../api";
 import {
   Badge,
   Button,
@@ -278,8 +278,10 @@ export default function RemixStudio() {
       const res = await api.remix(id, form);
       const link = res.recovery.links[0];
       setResult(
+        // Apostrofla ek almaktan kaciniliyor (CLAUDE.md): "%84,0'i" hem
+        // imla kurali disinda hem virgulle birlikte okunmasi zor.
         link?.visual_coverage != null
-          ? `Yayınlandı. Ölçüm: içeriğin %${(link.visual_coverage * 100).toFixed(1)}'i kaynaktan geliyor.`
+          ? `Yayınlandı. Kaynaktan gelen bölümün oranı ${pct(link.visual_coverage)} olarak ölçüldü.`
           : "Yayınlandı.",
       );
       setTimeout(() => navigate(`/icerik/${res.content.id}`), 1400);

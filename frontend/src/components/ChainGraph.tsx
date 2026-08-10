@@ -23,7 +23,7 @@
  * Boylece hicbir cizgi bir rozetin ustune dusemez ve hicbir rozet bir
  * dugum kutusunun altinda kalmaz.
  */
-import type { ChainEdgeView, ChainNodeView } from "../api";
+import { sayi, type ChainEdgeView, type ChainNodeView } from "../api";
 import { NODE_H, NODE_W, chainLayout } from "./chainLayout";
 
 export function ChainGraph({
@@ -164,7 +164,7 @@ export function ChainGraph({
               {label}
             </text>
             <title>
-              {`${edge.stage_label} · güven ${edge.confidence.score.toFixed(2)} · kullanılan alan ${label}`}
+              {`${edge.stage_label} · güven ${sayi(edge.confidence.score)} · kullanılan alan ${label}`}
             </title>
           </g>
         ))}

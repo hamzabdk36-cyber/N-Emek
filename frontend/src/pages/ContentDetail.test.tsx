@@ -75,14 +75,15 @@ describe("ContentDetail — Emek Kartı", () => {
     for (const etiket of ["kapsama", "güven", "sönümleme", "ham ağırlık"]) {
       expect(within(satir).getByText(etiket)).toBeInTheDocument();
     }
-    // Formul satiri: carpanlar ve sonuc birlikte yaziyor. Kapsama
-    // yuzdesi Turkce bicimde - ondalik ayraci virgul.
+    // Formul satiri: carpanlar ve sonuc birlikte yaziyor. Hepsi Turkce
+    // bicimde - ondalik ayraci virgul, yuzde isareti sayidan once.
     expect(
       within(satir).getByText(
-        /pay = kapsama %84,0 × güven 0\.91 × sönümleme 0\.81 = 0\.619/,
+        "pay = kapsama %84,0 × güven 0,91 × sönümleme 0,81 = 0,619",
       ),
     ).toBeInTheDocument();
     expect(within(satir).getByText("%84,0")).toBeInTheDocument();
+    expect(within(satir).getByText("0,91")).toBeInTheDocument();
     expect(within(satir).getByText(/kaynak tabanı uygulandı/)).toBeInTheDocument();
   });
 

@@ -41,7 +41,7 @@ Sertifikalar ve korpus depoda değil; her ikisi de yukarıdaki komutlarla yenide
 
 ```bash
 cd backend && ../.venv/Scripts/python.exe -m pytest tests/   # 71 test: pay motoru + uçtan uca + API
-cd frontend && npm test                                      # 65 test: yerleşim + bileşenler + ekranlar
+cd frontend && npm test                                      # 74 test: yerleşim + bileşenler + ekranlar
 .venv/Scripts/python.exe scripts/seed_demo.py --reset        # altın senaryoyu kur ve anlat
 
 # Uygulamayı çalıştır (iki terminal)
@@ -108,10 +108,26 @@ kırıldığında "demo verisi değişmiş" mazereti olmasın. Sayfa testleri `s
 üzerinden yönlendirici + oturum bağlamıyla sarmalanıyor; uçlar `vi.spyOn(api, …)` ile
 sahteleniyor, yani `api.ts` sözleşmesi gerçek kalıyor.
 
-`api.test.ts` sayı biçimini sabitliyor. `pctRaw` bir süre ondalık ayracı olarak nokta
-üretti ("%84.0") ve bunu yalnızca `ShareBar` kendi içinde düzeltiyordu; kalan beş ekran
-kuralı çiğniyordu. Ayraç artık `api.ts` içinde tek yerde ve `ShareBar` da oradan
-besleniyor.
+`api.test.ts` sayı biçimini sabitliyor. Kullanıcıya görünen her ondalıklı sayı üç
+yardımcıdan birinden geçiyor ve ayraç yalnızca `api.ts` içinde tanımlı: `pct` (oran →
+yüzde), `pctRaw` (hazır yüzde), `sayi` (güven/sönümleme/ham ağırlık gibi yüzde olmayan
+ölçümler). Önceden `pctRaw` nokta üretiyordu ("%84.0") ve bunu yalnızca `ShareBar` kendi
+içinde düzeltiyordu; skorlar da altı ayrı yerde doğrudan `toFixed` ile yazılıyordu.
+Kodda kalan `toFixed` çağrıları ya bu üç yardımcının içinde ya da `toFixed(0)`, yani
+ondalık ayracı hiç çıkmıyor.
+
+### Hata sınırı
+
+`components/HataSiniri.tsx`, `App.tsx` içinde `Routes`'u sarıyor. Bir bileşen render
+sırasında hata fırlatırsa React tüm ağacı söküyor ve ekranda **bembeyaz bir sayfa**
+kalıyor — jüri demosunda geri dönüşü olmayan bir durum, çünkü gezinme çubuğu da gidiyor.
+Sınır bilerek uygulamanın en dışında değil `Sayfalar` içinde: başlık, gezinme ve kullanıcı
+seçici ayakta kalıyor, kullanıcı başka bir ekrana geçerek demoya devam edebiliyor. Rota
+değişince `key` ile sıfırlanıyor. Yığın izi ekrana dökülmüyor (kapalı bir `details`
+içinde) ama konsola bırakılıyor.
+
+React 19'da da hata sınırı yazmanın tek yolu sınıf bileşeni;
+`getDerivedStateFromError` / `componentDidCatch` kancalarla karşılığı olmayan iki API.
 
 ### Sürekli tümleştirme
 
@@ -173,6 +189,7 @@ frontend/src/
   components/ImageCompare.tsx  kaynak/türev + maskeli vurgu (canvas ile birleştirme)
   components/ChainGraph.tsx    SVG DAG çizimi (yalnızca çizim)
   components/chainLayout.ts    zincir yerleşimi — saf fonksiyon, testin asıl hedefi
+  components/HataSiniri.tsx    hata sınırı — beyaz ekran yerine çıkış yolu
   test/                        fikstürler (veri.ts) + sayfa sarmalayıcısı (kur.tsx)
   pages/                  Feed, ContentDetail (Emek Kartı), RemixStudio,
                           Verify, Campaigns, Moderation

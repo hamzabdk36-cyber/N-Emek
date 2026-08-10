@@ -7,7 +7,7 @@
  * her yerde okuyabiliyor.
  */
 import type { ReactNode } from "react";
-import { pctRaw, type ConfidenceBand } from "../api";
+import { pctRaw, sayi, type ConfidenceBand } from "../api";
 
 /* -------------------------------------------------------------------------- */
 export function Panel({
@@ -103,7 +103,7 @@ export function ConfidenceBadge({ band }: { band: ConfidenceBand }) {
     <Badge tone={BAND_TONE[band.level] ?? "neutral"} title={band.note}>
       <Dot />
       {BAND_LABEL[band.level] ?? band.level}
-      <span className="num opacity-70">{band.score.toFixed(2)}</span>
+      <span className="num opacity-70">{sayi(band.score)}</span>
     </Badge>
   );
 }

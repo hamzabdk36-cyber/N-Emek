@@ -1,4 +1,5 @@
 import { NavLink, Route, Routes, useLocation } from "react-router-dom";
+import { HataSiniri } from "./components/HataSiniri";
 import { Avatar } from "./components/ui";
 import { SessionProvider, useSession } from "./session";
 import Feed from "./pages/Feed";
@@ -45,19 +46,26 @@ export default function App() {
  * yenileniyor" degil "ayni uygulama icinde gezinliyorum" hissi
  * vermesini sagliyor. Hareket azaltma tercihi acikken tema bu
  * animasyonu zaten kapatiyor.
+ *
+ * Ayni `key` hata sinirini da kapsiyor: bir sayfa patladiktan sonra
+ * baska bir ekrana gecince sinir sifirlanip yeni sayfayi normal
+ * ciziyor. Sinir `Routes`'un disinda ama basligin icinde degil -
+ * patlayan bir sayfa gezinmeyi goturmesin.
  */
 function Sayfalar() {
   const location = useLocation();
   return (
     <div key={location.pathname} className="fade-in">
-      <Routes location={location}>
-        <Route path="/" element={<Feed />} />
-        <Route path="/icerik/:id" element={<ContentDetail />} />
-        <Route path="/remix/:id" element={<RemixStudio />} />
-        <Route path="/kaynak-bul" element={<Verify />} />
-        <Route path="/kampanyalar" element={<Campaigns />} />
-        <Route path="/inceleme" element={<Moderation />} />
-      </Routes>
+      <HataSiniri>
+        <Routes location={location}>
+          <Route path="/" element={<Feed />} />
+          <Route path="/icerik/:id" element={<ContentDetail />} />
+          <Route path="/remix/:id" element={<RemixStudio />} />
+          <Route path="/kaynak-bul" element={<Verify />} />
+          <Route path="/kampanyalar" element={<Campaigns />} />
+          <Route path="/inceleme" element={<Moderation />} />
+        </Routes>
+      </HataSiniri>
     </div>
   );
 }

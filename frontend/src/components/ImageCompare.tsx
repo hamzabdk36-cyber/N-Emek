@@ -8,6 +8,7 @@
  * bu ekran demonun en kritik goruntusu - calismama riski alinmaz.
  */
 import { useEffect, useRef, useState } from "react";
+import { pct } from "../api";
 
 export function ImageCompare({
   sourceUrl,
@@ -151,7 +152,7 @@ export function ImageCompare({
             <span className="num text-[12px] text-[var(--color-ink-2)]">
               ölçülen kullanılan alan:{" "}
               <span className="font-semibold text-[var(--color-verify)]">
-                %{(coverage * 100).toFixed(1)}
+                {pct(coverage)}
               </span>
             </span>
           )}

@@ -339,3 +339,12 @@ export const pct = (value: number, digits = 1) =>
 /** Hazir yuzde degeri -> yuzde metni. Ornek: 84 -> "%84,0" */
 export const pctRaw = (value: number, digits = 1) =>
   `%${virgul(value.toFixed(digits))}`;
+
+/**
+ * Ondalikli sayi -> Turkce metin. Ornek: 0.91 -> "0,91"
+ *
+ * Guven, sonumleme ve ham agirlik gibi olcum degerleri icin. Bunlar
+ * yuzde degil, dolayisiyla `pctRaw` uygun degil; ama ayni imla kurali
+ * gecerli - ekranda "0.91" yaziyorsa kural ciğnenmis oluyor.
+ */
+export const sayi = (value: number, digits = 2) => virgul(value.toFixed(digits));
