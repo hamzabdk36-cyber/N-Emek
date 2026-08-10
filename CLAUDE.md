@@ -156,21 +156,31 @@ Sistem asla "sahibi budur" demez; kanıtlı **zincir önerisi** sunar. Kullanıc
   Kod içi **yorumlar** ASCII kalır (mevcut dosyalarla tutarlılık için). `print()` kullanan betikler `sys.stdout.reconfigure(encoding="utf-8")` çağırır; Windows konsolu varsayılan cp1254 ile Türkçe çıktıyı bozuyor.
 - Yeni bir türev senaryosu gerekiyorsa `backend/eval/attacks.py` içine ekle — hem PoC hem kapsamlı değerlendirme oradan okuyor.
 
-## Sıradaki iş: arayüz tasarım revizyonu
+## Arayüz revizyonu — yapıldı (10 Ağu 2026)
 
-Yazılım tarafı bitti (71 test, Docker doğrulandı, erişilebilirlik ve mobil tamam).
-Kalan tek yazılım işi arayüzün **görsel** revizyonu. Takımın geri bildirimi:
+Takımın iki geri bildirimi de karşılandı; `a8fe341` ve `3b774a3`.
 
-1. **Atıf zinciri grafiğinde rakamlar çizgilerin üstüne biniyor.** `ChainGraph.tsx`
-   içindeki kenar etiketi (`%87` gibi) ile bağlantı eğrisi çakışıyor. Kodda rect,
-   path'ten sonra çiziliyor — yani teoride örtmesi gerekiyor; gerçek render'a bakıp
-   teşhis edilmeli, varsayımla düzeltilmemeli.
-2. **Tasarım "yapay zekâ ürünü" olduğunu belli ediyor.** Somut örnek verilmedi;
-   revizyona başlamadan önce hangi ekranların rahatsız ettiği sorulmalı.
+**1. Zincir grafiğinde rakamların çizgi altında kalması.** Sebep kenarların
+*içinde* değil arasındaydı: grafik ham kenar tablosunu çiziyordu, yani pay
+hesabının geçişli indirgemeyle düştüğü Ayşe→Ceyda bağı da çiziliyordu. Üç düğüm de
+tek sütunda olduğu için o kenar da aynı x'te dikey bir çizgiydi ve en son
+çizildiğinden diğer rozetlerin tam ortasından geçiyordu. Grafik artık
+`chain.reduced_subgraph`'ten besleniyor ve çizim üç katmana ayrıldı (bağlar →
+düğümler → rozetler), böylece hiçbir çizgi bir rozetin üstüne düşemiyor. Rozet
+metne göre genişliyor ve pay eşiğinin altında kalan ara halkalar artık grafikten
+düşmüyor (`contributes: false`).
 
-**Yedek alındı:** `arayuz-v1` etiketi ve masaüstünde
-`N-Emek-arayuz-yedek-20260810.zip`. Geri dönmek için:
-`git checkout arayuz-v1 -- frontend/src`
+**2. "AI belli ediyor".** Şablon kalıpları ayıklandı: kartlarda tekrar eden CTA
+butonu, rozet yığını, sayfaların kendini anlatan alt başlıkları, mükerrer brüt
+gelir, BÜYÜK HARF panel başlıkları, üst çubuktaki `cuda`, ve kullanıcı vurgu
+renklerinin tema anlam renkleriyle (altın=para, yeşil=doğrulanmış, mavi=zincir)
+çakışması.
+
+**Yedek:** `arayuz-v1` etiketi ve masaüstünde `N-Emek-arayuz-yedek-20260810.zip`.
+Geri dönmek için: `git checkout arayuz-v1 -- frontend/src`
+
+**Açık kalan:** Akışta `image.jpeg` başlıklı bir artık test yüklemesi duruyor
+(başlığı dosya adı, geliri sıfır, remix kapalı). Jüri demosundan önce silinmeli.
 
 ## Bilinen tuzaklar
 
