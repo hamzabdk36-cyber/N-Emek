@@ -321,6 +321,21 @@ const TRY = new Intl.NumberFormat("tr-TR", {
 });
 
 export const money = (value: number) => TRY.format(value);
+
+/**
+ * Ondalik ayraci virgul.
+ *
+ * `Intl` yerine dize degisimi: basamak sayisi cagri basina degisiyor ve
+ * her cagride yeni bir bicimlendirici kurmak gereksiz. Onemli olan
+ * ayracin *tek yerde* tanimli olmasi - onceki surumde `ShareBar` bunu
+ * kendi icinde yapiyordu, geri kalan bes ekran ise noktali yaziyordu.
+ */
+const virgul = (text: string) => text.replace(".", ",");
+
+/** Oran (0–1) -> yuzde metni. Ornek: 0.84 -> "%84,0" */
 export const pct = (value: number, digits = 1) =>
-  `%${(value * 100).toFixed(digits)}`;
-export const pctRaw = (value: number, digits = 1) => `%${value.toFixed(digits)}`;
+  `%${virgul((value * 100).toFixed(digits))}`;
+
+/** Hazir yuzde degeri -> yuzde metni. Ornek: 84 -> "%84,0" */
+export const pctRaw = (value: number, digits = 1) =>
+  `%${virgul(value.toFixed(digits))}`;

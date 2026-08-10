@@ -1,0 +1,187 @@
+/**
+ * Emek Karti ekrani - demonun kapak karesi.
+ *
+ * Iki sey sinaniyor:
+ *  1) Bir pay satiri acildiginda payin *gerekcesi* goruluyor mu -
+ *     kapsama, guven, sonumleme ve bunlari carpip sonuca goturen
+ *     formul satiri. Jurinin "neden bu kadar" sorusunun cevabi bu dort
+ *     sayi; biri kaybolursa ekran yine duzgun gorunur ama iddia
+ *     bosalir.
+ *  2) Itiraz kutusu yalnizca o payin sahibinde cikiyor mu. Su an
+ *     yetkilendirme sunucuda yok (Etap A4), dolayisiyla bu kurali
+ *     tutan tek yer arayuz.
+ */
+import { screen, waitFor, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import ContentDetail from "./ContentDetail";
+import { api } from "../api";
+import { emekKarti } from "../test/veri";
+import { kur, oturumKur } from "../test/kur";
+
+function ekranaGetir(aktif = "u-ayse") {
+  oturumKur(aktif);
+  vi.spyOn(api, "labourCard").mockResolvedValue(emekKarti());
+  return kur(<ContentDetail />, { yol: "/icerik/C", desen: "/icerik/:id" });
+}
+
+/**
+ * Kart gelene kadar bekler.
+ *
+ * Baslik metnine gore aranmiyor: ayni baslik zincir grafigindeki
+ * yaprak dugumde de yaziyor, dolayisiyla metin tek basina benzersiz
+ * degil. Sayfa basligi rolunden aranan tek h1.
+ */
+function kartYuklendi() {
+  return screen.findByRole("heading", { level: 1, name: "Şehir kolajı" });
+}
+
+/** Bir tarafin pay satirini acar ve satirin kendisini dondurur. */
+async function payiAc(isim: RegExp) {
+  const dugme = await screen.findByRole("button", { name: isim });
+  await userEvent.click(dugme);
+  await waitFor(() => expect(dugme).toHaveAttribute("aria-expanded", "true"));
+  return dugme.closest("li")!;
+}
+
+beforeEach(() => localStorage.clear());
+
+describe("ContentDetail — Emek Kartı", () => {
+  it("köken anlatısını ve dağıtılan tutarı gösteriyor", async () => {
+    ekranaGetir();
+
+    expect(await kartYuklendi()).toBeInTheDocument();
+    expect(
+      screen.getByText(/köken kanıtlardan yeniden kuruldu/i),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Köken yeniden kuruldu")).toBeInTheDocument();
+    expect(screen.getByText("Dağıtılan")).toBeInTheDocument();
+  });
+
+  it("pay dağılımını erişilebilir metne çeviriyor", async () => {
+    ekranaGetir();
+    await kartYuklendi();
+
+    // Platform payi seritte 0 genislikte, ama etikette yine sayiliyor.
+    expect(
+      screen.getByRole("img", { name: /^Pay dağılımı:/ }),
+    ).toHaveAccessibleName(/Ceyda Arslan .* Burak Demir .* Ayşe Yıldız/);
+  });
+
+  it("pay satırı açılınca kapsama, güven, sönümleme ve formül görünüyor", async () => {
+    ekranaGetir();
+    const satir = await payiAc(/Ayşe Yıldız/);
+
+    for (const etiket of ["kapsama", "güven", "sönümleme", "ham ağırlık"]) {
+      expect(within(satir).getByText(etiket)).toBeInTheDocument();
+    }
+    // Formul satiri: carpanlar ve sonuc birlikte yaziyor. Kapsama
+    // yuzdesi Turkce bicimde - ondalik ayraci virgul.
+    expect(
+      within(satir).getByText(
+        /pay = kapsama %84,0 × güven 0\.91 × sönümleme 0\.81 = 0\.619/,
+      ),
+    ).toBeInTheDocument();
+    expect(within(satir).getByText("%84,0")).toBeInTheDocument();
+    expect(within(satir).getByText(/kaynak tabanı uygulandı/)).toBeInTheDocument();
+  });
+
+  it("kapalı pay satırında gerekçe yazmıyor", async () => {
+    ekranaGetir();
+    await kartYuklendi();
+
+    expect(screen.queryByText(/pay = kapsama/)).not.toBeInTheDocument();
+  });
+
+  it("itiraz kutusu yalnızca payın sahibine çıkıyor", async () => {
+    ekranaGetir("u-ayse");
+
+    const kendi = await payiAc(/Ayşe Yıldız/);
+    expect(
+      within(kendi).getByRole("button", { name: "Bu paya itiraz et" }),
+    ).toBeInTheDocument();
+
+    const baskasi = await payiAc(/Burak Demir/);
+    expect(
+      within(baskasi).queryByRole("button", { name: "Bu paya itiraz et" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("oturum değişince itiraz hakkı da değişiyor", async () => {
+    ekranaGetir("u-burak");
+
+    const burak = await payiAc(/Burak Demir/);
+    expect(
+      within(burak).getByRole("button", { name: "Bu paya itiraz et" }),
+    ).toBeInTheDocument();
+
+    const ayse = await payiAc(/Ayşe Yıldız/);
+    expect(
+      within(ayse).queryByRole("button", { name: "Bu paya itiraz et" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("üretici ve platform satırlarında itiraz yok", async () => {
+    ekranaGetir("u-ceyda");
+
+    const uretici = await payiAc(/Ceyda Arslan/);
+    expect(
+      within(uretici).queryByRole("button", { name: "Bu paya itiraz et" }),
+    ).not.toBeInTheDocument();
+
+    const platform = await payiAc(/Platform/);
+    expect(
+      within(platform).queryByRole("button", { name: "Bu paya itiraz et" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("itiraz gönderilince bağ yeniden ölçülüyor ve kart tazeleniyor", async () => {
+    ekranaGetir("u-ayse");
+    const ac = vi
+      .spyOn(api, "openDispute")
+      .mockResolvedValue({ id: "d-1", status: "open" });
+    const coz = vi.spyOn(api, "resolveDispute").mockResolvedValue({
+      id: "d-1",
+      status: "resolved",
+      changed: true,
+      summary: "Bağ SIFT ile yeniden ölçüldü; kapsama %84,0 → %91,0 güncellendi.",
+      resolution: {},
+    });
+
+    const satir = await payiAc(/Ayşe Yıldız/);
+    await userEvent.click(
+      within(satir).getByRole("button", { name: "Bu paya itiraz et" }),
+    );
+    await userEvent.click(
+      within(satir).getByRole("button", { name: "İtirazı gönder" }),
+    );
+
+    expect(ac).toHaveBeenCalledWith("e-ab", "u-ayse", expect.any(String));
+    expect(coz).toHaveBeenCalledWith("d-1");
+    expect(
+      await within(satir).findByText(/yeniden ölçüldü/),
+    ).toBeInTheDocument();
+    // Paylar degismis olabilir; kart yeniden cekiliyor.
+    expect(api.labourCard).toHaveBeenCalledTimes(2);
+  });
+
+  it("zincir grafiği çiziliyor", async () => {
+    ekranaGetir();
+    await kartYuklendi();
+
+    expect(
+      screen.getByRole("img", { name: "İçerik atıf zinciri" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("YAYINLANAN")).toBeInTheDocument();
+  });
+
+  it("uç hata verirse mesaj gösteriliyor", async () => {
+    oturumKur();
+    vi.spyOn(api, "labourCard").mockRejectedValue(new Error("İçerik bulunamadı"));
+    kur(<ContentDetail />, { yol: "/icerik/yok", desen: "/icerik/:id" });
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "İçerik bulunamadı",
+    );
+  });
+});

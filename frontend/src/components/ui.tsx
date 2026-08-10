@@ -7,7 +7,7 @@
  * her yerde okuyabiliyor.
  */
 import type { ReactNode } from "react";
-import type { ConfidenceBand } from "../api";
+import { pctRaw, type ConfidenceBand } from "../api";
 
 /* -------------------------------------------------------------------------- */
 export function Panel({
@@ -175,8 +175,7 @@ export function ShareBar({
   segments: { label: string; value: number; color: string }[];
 }) {
   const total = segments.reduce((sum, s) => sum + s.value, 0) || 1;
-  const pay = (value: number) =>
-    `%${((value / total) * 100).toFixed(1)}`.replace(".", ",");
+  const pay = (value: number) => pctRaw((value / total) * 100);
   const ozet = segments.map((s) => `${s.label} ${pay(s.value)}`).join(" · ");
 
   return (

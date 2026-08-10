@@ -1,0 +1,105 @@
+# N-Emek surekli tumlestirme
+#
+# Iki bagimsiz is: backend (pytest) ve arayuz (tip denetimi + testler +
+# derleme). Ayri tutuluyorlar ki biri kirildiginda digerinin sonucu yine
+# gorulsun - "her sey kirmizi" tek bir hatayi gizliyor.
+#
+# Agir testler CI'da kosmuyor
+# ---------------------------
+# `slow` isaretli iki test koken kurtarma hattinin tamamini calistiriyor
+# ve CLIP modelini indiriyor (~600 MB). Bunlar yerelde kosulur; CI 69
+# hizli testi dogruluyor. Torch yine de kuruluyor: `embedding.py` modul
+# duzeyinde `import torch` yapiyor, yani uygulamayi ice aktarmak icin
+# gerekli - indirilen sey model agirliklari degil, kutuphanenin kendisi.
+
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+# Ayni dala arka arkaya gonderim yapilinca onceki kosu iptal olsun.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend — pytest
+    runs-on: ubuntu-latest
+    env:
+      # Kosucuda GPU yok; yine de acikca yaziliyor ki bir gun GPU'lu
+      # kosucuya gecilirse test ortami sessizce degismesin.
+      NEMEK_FORCE_CPU: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      # `opencv-contrib-python` (headless olmayan surum) libGL ve libglib
+      # istiyor. Bagimliligi degistirmek yerine kosucuya bu iki
+      # kutuphaneyi koyuyoruz ki yerel kurulumla ayni paket kalsin -
+      # backend/Dockerfile de ayni sey yapiyor.
+      - name: OpenCV'nin paylaşılan kütüphaneleri
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libgl1 libglib2.0-0
+
+      # SIRA ONEMLI: torch once ve CPU indeksinden.
+      #
+      # Ters sirada calismiyor: `requirements.txt` icindeki
+      # `open_clip_torch`, torch'u bagimlilik olarak cekiyor ve pip bunu
+      # varsayilan PyPI'den, yani CUDA'li halinden aliyor. Arkasindan
+      # gelen CPU komutu "zaten kurulu" deyip geciyor ve kurulum ~750 MB
+      # nvidia_* paketiyle sisiyor.
+      - name: Bağımlılıklar (torch önce, CPU indeksinden)
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+          pip install -r backend/requirements.txt
+
+      # Sertifikalar depoda degil; her ortamda yeniden uretiliyor.
+      # Uretilmezse c2pa imzalama sessizce devre disi kalir ve testler
+      # gercek imzalama yolunu hic gecmez.
+      - name: C2PA geliştirme sertifikaları
+        run: python scripts/gen_dev_certs.py
+
+      - name: Testler (69 hızlı test)
+        working-directory: backend
+        run: python -m pytest -m "not slow"
+
+  frontend:
+    name: Arayüz — tip denetimi, testler, derleme
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Bağımlılıklar
+        run: npm ci
+
+      # `npm run build` zaten `tsc -b` calistiriyor, ama ayri adim olarak
+      # da duruyor: kirilan sey tip mi yoksa paketleme mi, kosu
+      # gunlugunde tek bakista gorulsun.
+      - name: Tip denetimi
+        run: npx tsc --noEmit
+
+      - name: Testler (65 test)
+        run: npx vitest run
+
+      - name: Derleme
+        run: npm run build

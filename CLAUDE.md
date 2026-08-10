@@ -41,6 +41,7 @@ Sertifikalar ve korpus depoda değil; her ikisi de yukarıdaki komutlarla yenide
 
 ```bash
 cd backend && ../.venv/Scripts/python.exe -m pytest tests/   # 71 test: pay motoru + uçtan uca + API
+cd frontend && npm test                                      # 65 test: yerleşim + bileşenler + ekranlar
 .venv/Scripts/python.exe scripts/seed_demo.py --reset        # altın senaryoyu kur ve anlat
 
 # Uygulamayı çalıştır (iki terminal)
@@ -81,6 +82,50 @@ pay formülünün değişmez kurallarını, `test_e2e_altin_senaryo.py` servis k
 bir alan adı değişse diğer 35 test yeşil kalıyor ama arayüz sessizce kırılıyordu — bu
 mutasyonla doğrulandı. Ağır iki test `slow` işaretli: `-m "not slow"` ile atlanabilir.
 
+### Arayüz testleri (Vitest + Testing Library, jsdom)
+
+10 Ağustos'taki rozet–çizgi çakışması ekranda duran, kod okunarak bulunamayan ve
+ancak takım şikâyet edince görülen bir hataydı. Arayüzde hiç test yoktu; bu boşluk
+kapatıldı.
+
+Ağırlık merkezi `components/chainLayout.ts`: zincir yerleşimi bileşenden ayrılmış
+**saf bir fonksiyon** ve DOM'a hiç dokunmuyor. Böylece asıl iddia tek satırda
+sınanabiliyor — *hiçbir kapsama rozeti hiçbir düğüm kutusuyla ve hiçbir başka
+rozetle kesişmez*. Dört sentetik DAG üzerinde koşuyor: düz zincir, elmas, tek
+atlama, iki atlama. Değişmezlerin boş olmadığı mutasyonla doğrulandı: koridora
+çıkarma mantığı kapatıldığında altı test kırmızıya döndü.
+
+Diğer üç dosya davranışı koruyor: `ChainGraph.test.tsx` katkısız ara halkanın
+grafikten düşmediğini ve kesikli çizildiğini, `ui.test.tsx` `ShareBar`'ın dağılımın
+tamamını `aria-label`'a çevirdiğini (bu, görsel olmayan kullanıcının payları
+öğrenebildiği tek yer), `ContentDetail.test.tsx` pay satırı açıldığında
+kapsama/güven/sönümleme ve formül satırının göründüğünü ve itiraz kutusunun yalnızca
+payın sahibinde çıktığını, `Feed.test.tsx` kartın tek bir Emek Kartı hedefi
+gösterdiğini sınıyor.
+
+Fikstürler `src/test/veri.ts` içinde ve demo verisinden bağımsız: bir yerleşim kuralı
+kırıldığında "demo verisi değişmiş" mazereti olmasın. Sayfa testleri `src/test/kur.tsx`
+üzerinden yönlendirici + oturum bağlamıyla sarmalanıyor; uçlar `vi.spyOn(api, …)` ile
+sahteleniyor, yani `api.ts` sözleşmesi gerçek kalıyor.
+
+`api.test.ts` sayı biçimini sabitliyor. `pctRaw` bir süre ondalık ayracı olarak nokta
+üretti ("%84.0") ve bunu yalnızca `ShareBar` kendi içinde düzeltiyordu; kalan beş ekran
+kuralı çiğniyordu. Ayraç artık `api.ts` içinde tek yerde ve `ShareBar` da oradan
+besleniyor.
+
+### Sürekli tümleştirme
+
+`.github/workflows/ci.yml` — her gönderim ve her PR'da iki bağımsız iş:
+
+| İş | Ne koşar |
+|---|---|
+| backend | `pytest -m "not slow"` (69 test); torch **önce** ve CPU indeksinden kurulur, C2PA geliştirme sertifikaları üretilir |
+| arayüz | `npm ci` → `tsc --noEmit` → `vitest run` → `npm run build` |
+
+`slow` işaretli iki test CI'da koşmuyor: köken kurtarma hattının tamamını çalıştırıp CLIP
+modelini indiriyorlar (~600 MB). Torch yine de kuruluyor — `embedding.py` modül düzeyinde
+`import torch` yapıyor, yani uygulamayı içe aktarmak için gerekli.
+
 ## Mimari
 
 ```
@@ -111,7 +156,9 @@ frontend/src/
   components/ui.tsx       Panel, Badge, ConfidenceBadge, ShareBar, Stat, Button
   components/Pipeline.tsx StageTimeline (5 aşama) + EvidenceList (kanıt satırları)
   components/ImageCompare.tsx  kaynak/türev + maskeli vurgu (canvas ile birleştirme)
-  components/ChainGraph.tsx    SVG DAG, katmanlı yerleşim
+  components/ChainGraph.tsx    SVG DAG çizimi (yalnızca çizim)
+  components/chainLayout.ts    zincir yerleşimi — saf fonksiyon, testin asıl hedefi
+  test/                        fikstürler (veri.ts) + sayfa sarmalayıcısı (kur.tsx)
   pages/                  Feed, ContentDetail (Emek Kartı), RemixStudio,
                           Verify, Campaigns, Moderation
 ```

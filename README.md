@@ -1,5 +1,7 @@
 # N-Emek
 
+[![CI](https://github.com/hamzabdk36-cyber/N-Emek/actions/workflows/ci.yml/badge.svg)](https://github.com/hamzabdk36-cyber/N-Emek/actions/workflows/ci.yml)
+
 **Açıklanabilir içerik atıf ve adil gelir paylaşım sistemi.**
 TEKNOFEST 2026 NSosyal İnovasyon Yarışması — İçerik Ekonomisi kategorisi.
 
