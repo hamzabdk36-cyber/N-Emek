@@ -23,6 +23,7 @@ emeği görünmez oluyor ve gelir adil paylaşılamıyor. N-Emek, içerik zincir
 Sistemin nasıl çalıştığı ve ekran ekran kullanımı: [`docs/REHBER.md`](docs/REHBER.md)
 Kullanıcı gözünden yolculuk ve akış diyagramları: [`docs/KULLANICI-AKISLARI.md`](docs/KULLANICI-AKISLARI.md)
 İş ve gelir modeli: [`docs/IS-MODELI.md`](docs/IS-MODELI.md)
+Yapay zekâ mimarisi: [`docs/YZ-MIMARISI.md`](docs/YZ-MIMARISI.md)
 Mimari ve diyagramlar: [`docs/MIMARI.md`](docs/MIMARI.md)
 Ekran görüntüleri: [`docs/gorseller/`](docs/gorseller/)
 
@@ -121,19 +122,28 @@ kaydetmeden hattan geçirir.
 ## Doğrulama
 
 ```bash
-cd backend && ../.venv/Scripts/python.exe -m pytest tests/
+cd backend && ../.venv/Scripts/python.exe -m pytest tests/   # 102 test
+cd frontend && npm test                                      # 87 test
 ```
 
-71 test, üç katman:
+Backend — 102 test, beş katman:
 
 - **22** — pay motorunun değişmez kuralları (paylar 1,0'a toplanır, derin kaynak daha az
   alır, taban/tavan ihlal edilmez)
 - **13** — uçtan uca altın senaryo (servis katmanı)
-- **36** — API uç noktalarının sözleşmesi: her ucun döndürdüğü alanlar, durum kodları ve
-  hatalı girdiye verdiği tepki
+- **50** — API uç noktalarının sözleşmesi: döndürülen alanlar, durum kodları, hatalı
+  girdiye tepki, ve oturum/yetki kuralları (jetonsuz **401**, başkasının payına **403**)
+- **10** — indeks kalıcılığı: açılışta CLIP'in yeniden çalışmadığı doğrudan sınanıyor
+- **7** — Emek Kartı'nın maliyeti: alt grafik bir kez hesaplanıyor, sorgu sayısı zincir
+  uzunluğuyla artmıyor
 
-Üçüncüsü olmadan `schemas.py`'de bir alan adı değişse ilk 35 test yeşil kalıyor ama arayüz
-sessizce kırılıyordu. Testler kendi geçici veritabanını kullanır, demo verisini bozmaz.
+Üçüncüsü olmadan `schemas.py`'de bir alan adı değişse diğerleri yeşil kalıyor ama arayüz
+sessizce kırılıyordu — bu mutasyonla doğrulandı. Testler kendi geçici veritabanını
+kullanır, demo verisini bozmaz.
+
+Arayüz — 87 test (Vitest + Testing Library). Ağırlık merkezi zincir yerleşiminin saf
+fonksiyonu: *hiçbir kapsama rozeti hiçbir düğüm kutusuyla kesişmez*. Ayrıntı:
+[`CLAUDE.md`](CLAUDE.md#arayüz-testleri-vitest--testing-library-jsdom).
 
 ### Ölçüm betikleri
 
@@ -151,6 +161,7 @@ betiğin çıktısıdır.
 ../.venv/Scripts/python.exe -m eval.run_benchmark              # ~2 saat, tam korpus
 ../.venv/Scripts/python.exe -m eval.run_benchmark --corpus 20  # hızlı deneme
 ../.venv/Scripts/python.exe -m eval.run_latency                # adım adım gecikme
+../.venv/Scripts/python.exe -m eval.run_startup                # açılış süresi, indeks kalıcılığı
 ```
 
 `run_benchmark.py`, korpusun bir kısmını indekse hiç almaz (negatif kontrol): bu
