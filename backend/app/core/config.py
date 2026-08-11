@@ -87,6 +87,19 @@ class Settings(BaseSettings):
     # Docker'daki nginx de ayni degeri kullaniyor (`client_max_body_size`);
     # ikisi ayrilirsa ayni istek ortama gore farkli yerde reddedilir.
     max_upload_mb: int = 32
+    # Cozulen goruntunun en fazla piksel sayisi.
+    #
+    # Bayt siniri tek basina yetmiyor: sikistirma oranlari cok yuksek
+    # olabildigi icin 32 MB'i asmayan bir dosya bellekte cok daha buyuk
+    # bir diziye acilabilir. 20000x20000'lik bir JPEG ~1 MB dosyadir ama
+    # BGR olarak ~1,2 GB yer kaplar - kapsayiciyi belleksiz birakmaya
+    # yeter. Sinir *cozmeden once*, yalnizca dosya basligindan okunan
+    # boyutla uygulaniyor.
+    #
+    # 50 MP, tuketici fotograf makinelerinin ustunde (bir iPhone karesi
+    # ~12 MP, tam kare profesyonel makineler ~45-60 MP); gercek bir
+    # kullanicinin carpmayacagi ama bombayi durduran bir esik.
+    max_pixels: int = 50_000_000
 
     # --- Oturum -----------------------------------------------------------
     # Jeton imzalama anahtari. Bos birakilirsa surec basina rastgele

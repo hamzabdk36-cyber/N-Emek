@@ -272,6 +272,6 @@ Sağlaması:
 cd backend && ../.venv/Scripts/python.exe -m pytest tests/
 ```
 
-125 test: <!-- sayim: backend --> 22 pay motorunun değişmez kuralları, 13 uçtan uca altın
-senaryo, 65 API sözleşmesi, 12 indeks kalıcılığı, 7 Emek Kartı maliyeti, 6 dağıtım
+128 test: <!-- sayim: backend --> 22 pay motorunun değişmez kuralları, 13 uçtan uca altın
+senaryo, 68 API sözleşmesi, 12 indeks kalıcılığı, 7 Emek Kartı maliyeti, 6 dağıtım
 idempotentliği.

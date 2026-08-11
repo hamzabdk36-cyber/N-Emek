@@ -55,7 +55,7 @@ cd frontend && npm test                                      # yerleşim + bile�
 cd frontend && npm run dev                                                   # :5173
 ```
 
-Backend 125 test, arayüz 114 test. <!-- sayim: backend, arayuz --> Bu sayılar elle
+Backend 128 test, arayüz 114 test. <!-- sayim: backend, arayuz --> Bu sayılar elle
 tutulmuyor: `python scripts/dokuman_denetimi.py` dokümanlardaki her sayısal iddiayı
 ölçümle karşılaştırır ve CI'da koşar.
 
@@ -151,7 +151,7 @@ React 19'da da hata sınırı yazmanın tek yolu sınıf bileşeni;
 
 | İş | Ne koşar |
 |---|---|
-| backend | torch **önce** ve CPU indeksinden → `requirements.txt` → C2PA sertifikaları → 8 görsellik test korpusu → `pytest -m "not slow" -rs` (122 test) <!-- sayim: backend-hizli --> → doküman denetimi |
+| backend | torch **önce** ve CPU indeksinden → `requirements.txt` → C2PA sertifikaları → 8 görsellik test korpusu → `pytest -m "not slow" -rs` (125 test) <!-- sayim: backend-hizli --> → doküman denetimi |
 | arayüz | `npm ci` → `tsc --noEmit` → `vitest run` → `npm run build` → doküman denetimi |
 
 **Yeşil rozet gerçekten bir şey söylemeli.** İlk CI koşusu korpussuz çalıştı ve yeşil

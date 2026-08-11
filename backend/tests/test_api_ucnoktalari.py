@@ -22,6 +22,7 @@ calisir, geri kalani dogrudan yazilmis kayitlar uzerinden gider.
 
 from __future__ import annotations
 
+import io
 import time
 from pathlib import Path
 
@@ -815,6 +816,74 @@ def test_dogrulama_ucunde_de_boyut_siniri_var(client, monkeypatch):
     r = client.post(
         "/api/verify",
         files={"file": ("buyuk.jpg", b"\xff" * (1024 * 1024 + 5000), "image/jpeg")},
+    )
+
+    assert r.status_code == 413
+
+
+def _duz_jpeg(genislik: int, yukseklik: int) -> bytes:
+    """Duz renkli, dolayisiyla cok iyi sikisan bir JPEG.
+
+    Yukaridaki `_jpeg` gurultulu bir diziyi kodluyor; burada tam tersi
+    isteniyor - buyuk boyut, kucuk dosya.
+    """
+    tampon = io.BytesIO()
+    Image.new("RGB", (genislik, yukseklik), (120, 64, 32)).save(
+        tampon, format="JPEG", quality=60
+    )
+    return tampon.getvalue()
+
+
+def test_piksel_bombasi_413(client, monkeypatch):
+    """Bayt siniri tek basina korumuyor.
+
+    Duz renkli bir gorsel inanilmaz iyi sikisir: 20000x20000'lik bir JPEG
+    ~1 MB dosyadir ama BGR dizisi olarak ~1,2 GB yer kaplar. Boyut siniri
+    boyle bir dosyayi geciriyor, `cv2.imdecode` ise tam o cagride
+    kapsayiciyi belleksiz birakabiliyor.
+
+    Testte gercekten 20000x20000 uretmiyoruz - sinir dusuruluyor. Olcum
+    ayni: dosya bayt sinirinin *altinda* kaliyor ama piksel sayisi
+    yuzunden reddediliyor.
+    """
+    from app.core.config import get_settings
+
+    monkeypatch.setattr(get_settings(), "max_pixels", 10_000)  # 100x100
+    govde = _duz_jpeg(400, 400)  # 160.000 piksel, birkac kB
+    assert len(govde) < 1024 * 1024, "dosya bayt sinirina takilmamali"
+
+    r = client.post("/api/verify", files={"file": ("bomba.jpg", govde, "image/jpeg")})
+
+    assert r.status_code == 413
+    assert "megapiksel" in r.json()["detail"]
+
+
+def test_piksel_sinirinin_altindaki_gorsel_gecmeli(client, monkeypatch):
+    """Sinir gercek kullaniciyi engellememeli.
+
+    413 donmedigi surece yeterli: gorsel cozumleyiciye ulasti demektir.
+    """
+    from app.core.config import get_settings
+
+    monkeypatch.setattr(get_settings(), "max_pixels", 10_000)
+
+    r = client.post(
+        "/api/verify", files={"file": ("kucuk.jpg", _duz_jpeg(80, 80), "image/jpeg")}
+    )
+
+    assert r.status_code != 413
+
+
+def test_pillow_kendi_bomba_hatasini_atarsa_da_413(client, monkeypatch):
+    """Pillow'un kendi esigi asilinca `Image.open` patliyor.
+
+    Bu dal genel `except`e dusseydi en buyuk gorsel sinirdan *gecerdi* -
+    korumanin tam tersi. Pillow'un esigi burada yapay olarak dusuruluyor.
+    """
+    monkeypatch.setattr(Image, "MAX_IMAGE_PIXELS", 100)
+
+    r = client.post(
+        "/api/verify", files={"file": ("bomba.jpg", _duz_jpeg(400, 400), "image/jpeg")}
     )
 
     assert r.status_code == 413

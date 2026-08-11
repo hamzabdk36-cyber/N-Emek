@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import io
 import tempfile
 from pathlib import Path
 
 import cv2
 import numpy as np
 from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, UploadFile
+from PIL import Image
 from fastapi.responses import FileResponse
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
@@ -174,7 +176,47 @@ async def _read_upload(file: UploadFile) -> bytes:
                 413, f"Dosya çok büyük: en fazla {limit_mb} MB kabul ediliyor."
             )
         parcalar.append(parca)
-    return b"".join(parcalar)
+    raw = b"".join(parcalar)
+    _piksel_sinirini_uygula(raw)
+    return raw
+
+
+def _piksel_sinirini_uygula(raw: bytes) -> None:
+    """Cozulen goruntunun piksel sayisina ust sinir.
+
+    Bayt siniri tek basina korumuyor: sikistirma oranlari cok yuksek
+    olabildigi icin 32 MB'i asmayan bir dosya bellekte cok daha buyuk
+    bir diziye acilabilir (bkz. `config.max_pixels`).
+
+    Olcum *cozmeden once* yapiliyor - bu isin butun noktasi bu.
+    `Image.open` tembeldir: yalnizca dosya basligini okuyup boyutu
+    verir, piksel verisine dokunmaz. Once `cv2.imdecode` edip sonra
+    `shape` bakmak korumaz, cunku bellek tam o cagride tukenirdi.
+
+    Cozulemeyen dosyada sessizce geciyoruz: bu fonksiyonun isi bicim
+    dogrulamak degil. Bozuk dosyayi cagiran taraf zaten yakalayip 400
+    donuyor.
+    """
+    limit = get_settings().max_pixels
+    mp = limit // 1_000_000
+    try:
+        with Image.open(io.BytesIO(raw)) as im:
+            genislik, yukseklik = im.size
+    except Image.DecompressionBombError as exc:
+        # Pillow'un kendi esigi (~178 MP) bizimkinin cok ustunde ve
+        # asilinca `Image.open` bile patliyor. Bunu genel `except`e
+        # birakmak, en buyuk gorseli sinirdan *gecirirdi*.
+        raise HTTPException(
+            413, f"Görsel çok büyük: en fazla {mp} megapiksel kabul ediliyor."
+        ) from exc
+    except Exception:
+        return
+    if genislik * yukseklik > limit:
+        raise HTTPException(
+            413,
+            f"Görsel çok büyük: {genislik}×{yukseklik} piksel. "
+            f"En fazla {mp} megapiksel kabul ediliyor.",
+        )
 
 
 def _require_content(session: Session, content_id: str) -> Content:

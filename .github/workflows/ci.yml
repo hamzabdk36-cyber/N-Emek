@@ -92,7 +92,7 @@ jobs:
       - name: Test korpusu (8 görsel)
         run: python scripts/fetch_eval_images.py 8
 
-      - name: Testler (122 test)  # sayim: backend-hizli
+      - name: Testler (125 test)  # sayim: backend-hizli
         working-directory: backend
         # -rs: atlanan varsa sebebi gunluge yazilsin. Atlama artik
         # CI'da hata, ama baska bir sebeple atlama cikarsa gorulsun.

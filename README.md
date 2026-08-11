@@ -130,14 +130,15 @@ cd backend && ../.venv/Scripts/python.exe -m pytest tests/
 cd frontend && npm test
 ```
 
-Backend — 125 test, <!-- sayim: backend --> altı katman:
+Backend — 128 test, <!-- sayim: backend --> altı katman:
 
 - **22** — pay motorunun değişmez kuralları (paylar 1,0'a toplanır, derin kaynak daha az
   alır, taban/tavan ihlal edilmez)
 - **13** — uçtan uca altın senaryo (servis katmanı)
-- **65** — API uç noktalarının sözleşmesi: döndürülen alanlar, durum kodları, hatalı
+- **68** — API uç noktalarının sözleşmesi: döndürülen alanlar, durum kodları, hatalı
   girdiye tepki, oturum/yetki kuralları (jetonsuz **401**, başkasının payına **403**,
-  moderatörsüz moderasyon **403**) ve silme (**409** ödemesi olan içerikte)
+  moderatörsüz moderasyon **403**), silme (**409** ödemesi olan içerikte) ve yükleme
+  sınırları (**413** hem bayt hem piksel sayısında)
 - **12** — indeks kalıcılığı: açılışta CLIP'in yeniden çalışmadığı ve model değişince
   yeniden hesaplandığı doğrudan sınanıyor
 - **7** — Emek Kartı'nın maliyeti: alt grafik bir kez hesaplanıyor, sorgu sayısı zincir
