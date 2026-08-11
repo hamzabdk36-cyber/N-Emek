@@ -227,8 +227,9 @@ Saklamıyoruz — jüri karşısında güvenilirliği bu sağlar.
 | Kırpma %30'un altında Top-1 | %92,5 |
 | Filigran döndürme/kırpmaya dayanmıyor | 3–5. aşamalar bu iş için |
 | Sentetik yeniden çizim | Ölçülemez — "ölçülemedi" denir |
-| Silme ucu yok | Ürünleşmede eklenecek |
-| Kullanılabilirlik testi | 5 kullanıcıyla henüz yapılmadı |
+| Ödemesi olan içerik silinemez | Silme hakkı bu durumda tam karşılanmıyor; çözümü ödeme kayıtlarının anonimleştirilmesi |
+| Kullanıcı silme yok | Yalnızca içerik silinebiliyor — ürünleşmede eklenecek |
+| Kullanılabilirlik testi | Protokol hazır, 5 katılımcıyla henüz koşulmadı — `KULLANILABILIRLIK-PROTOKOL.md` |
 
 ---
 

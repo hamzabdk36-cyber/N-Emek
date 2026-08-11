@@ -27,6 +27,7 @@ Kullanıcı gözünden: `docs/KULLANICI-AKISLARI.md` (yolculuk + akış diyagram
 İş modeli: `docs/IS-MODELI.md` — dağıtım rakamları kayıtlı `Payout` satırlarından okundu, uydurulmadı
 YZ mimarisi: `docs/YZ-MIMARISI.md` — model seçimi, eğitim yok–çıkarım var gerekçesi, GPU/CPU ölçümü
 Veri, model, etik: `docs/VERI-MODEL-ETIK.md` — ne saklanıyor, yanlış atıf asimetrisi, itiraz hakkı, bilinen açıklar
+Kullanıcı tarafı ölçüm: `docs/ERISILEBILIRLIK.md` (denetim + bulgular) · `docs/KULLANICI-ARASTIRMASI.md` ve `docs/KULLANILABILIRLIK-PROTOKOL.md` (düzenek) → `docs/KULLANILABILIRLIK-SONUCLARI.md`. **Son ikisi gerçek katılımcı bekliyor; şablonlardaki `___` alanları tahminle doldurulmaz.**
 Demo ve sunum: `docs/DEMO-SENARYOSU.md` (replikli çekim senaryosu) · `docs/SUNUM.md` (slayt içeriği, Marp uyumlu)
 Ölçümler: `docs/FAZ0-SONUCLARI.md` (risk kapatma) · `docs/DEGERLENDIRME.md` (tam korpus) · `docs/GECIKME.md` (uçtan uca) · `docs/ACILIS-SURESI.md` (indeks kalıcılığı)
 

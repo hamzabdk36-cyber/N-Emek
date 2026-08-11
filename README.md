@@ -26,6 +26,8 @@ Kullanıcı gözünden yolculuk ve akış diyagramları: [`docs/KULLANICI-AKISLA
 Yapay zekâ mimarisi: [`docs/YZ-MIMARISI.md`](docs/YZ-MIMARISI.md)
 Veri, model, etik ve performans: [`docs/VERI-MODEL-ETIK.md`](docs/VERI-MODEL-ETIK.md)
 Mimari ve diyagramlar: [`docs/MIMARI.md`](docs/MIMARI.md)
+Erişilebilirlik değerlendirmesi: [`docs/ERISILEBILIRLIK.md`](docs/ERISILEBILIRLIK.md)
+Kullanıcı araştırması: [`docs/KULLANICI-ARASTIRMASI.md`](docs/KULLANICI-ARASTIRMASI.md) · Kullanılabilirlik testi: [`docs/KULLANILABILIRLIK-PROTOKOL.md`](docs/KULLANILABILIRLIK-PROTOKOL.md) → [sonuçlar](docs/KULLANILABILIRLIK-SONUCLARI.md) *(henüz koşulmadı)*
 Ekran görüntüleri: [`docs/gorseller/`](docs/gorseller/)
 Demo çekim senaryosu: [`docs/DEMO-SENARYOSU.md`](docs/DEMO-SENARYOSU.md) · Sunum içeriği: [`docs/SUNUM.md`](docs/SUNUM.md)
 
