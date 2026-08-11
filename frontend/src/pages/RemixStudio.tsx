@@ -23,6 +23,13 @@ import {
   inputClass,
 } from "../components/ui";
 import { useSession } from "../session";
+import {
+  gecmiseYaz,
+  gecmistenAl,
+  type DuzenlemeDurumu,
+  type Stroke,
+  type TextLayer,
+} from "./duzenlemeGecmisi";
 
 type Tool = "kirp" | "yazi" | "cizim" | "yok";
 type FilterName = "yok" | "sicak" | "soguk" | "mono" | "canli";
@@ -35,18 +42,6 @@ const FILTERS: Record<FilterName, { label: string; css: string }> = {
   canli: { label: "Canlı", css: "saturate(1.65) contrast(1.15)" },
 };
 
-interface TextLayer {
-  x: number;
-  y: number;
-  text: string;
-  size: number;
-  color: string;
-}
-interface Stroke {
-  points: { x: number; y: number }[];
-  color: string;
-  width: number;
-}
 interface Rect {
   x: number;
   y: number;
@@ -69,6 +64,8 @@ export default function RemixStudio() {
   const [texts, setTexts] = useState<TextLayer[]>([]);
   const [strokes, setStrokes] = useState<Stroke[]>([]);
   const [filter, setFilter] = useState<FilterName>("yok");
+
+  const [gecmis, setGecmis] = useState<DuzenlemeDurumu[]>([]);
 
   const [textDraft, setTextDraft] = useState("SEHRIN RENKLERI");
   const [inkColor, setInkColor] = useState("#f2b134");
@@ -186,8 +183,11 @@ export default function RemixStudio() {
 
   useEffect(render, [render]);
 
-  /* -- fare olaylari ----------------------------------------------------- */
-  function toImageCoords(e: React.MouseEvent<HTMLCanvasElement>) {
+  /* -- isaretci olaylari -------------------------------------------------- */
+  // `onMouse*` degil `onPointer*`: dokunmatik ekranda fare olaylari
+  // uretilmiyordu, yani tuvale parmakla hicbir sey cizilemiyordu. Tek
+  // olay ailesiyle fare, dokunma ve kalem birlikte geliyor.
+  function toImageCoords(e: React.PointerEvent<HTMLCanvasElement>) {
     const canvas = canvasRef.current!;
     const rect = canvas.getBoundingClientRect();
     const area: Rect = crop ?? {
@@ -202,15 +202,26 @@ export default function RemixStudio() {
     };
   }
 
-  function onDown(e: React.MouseEvent<HTMLCanvasElement>) {
+  /** Islem oncesi durumu yigina koyar; geri alma buraya doner. */
+  function gecmisiIsaretle() {
+    setGecmis((prev) => gecmiseYaz(prev, { strokes, texts }));
+  }
+
+  function onDown(e: React.PointerEvent<HTMLCanvasElement>) {
     if (!image) return;
     const p = toImageCoords(e);
     if (tool === "cizim") {
+      // Isaretciyi yakala: parmak ya da imlec tuvalden cikinca olaylar
+      // buraya gelmeye devam etsin, cizgi ortasindan kopmasin.
+      e.currentTarget.setPointerCapture?.(e.pointerId);
+      gecmisiIsaretle();
       drawing.current = { points: [p], color: inkColor, width: brush };
       setStrokes((prev) => [...prev, drawing.current!]);
     } else if (tool === "kirp") {
+      e.currentTarget.setPointerCapture?.(e.pointerId);
       dragStart.current = p;
     } else if (tool === "yazi" && textDraft.trim()) {
+      gecmisiIsaretle();
       const area = crop ?? { w: image.naturalWidth };
       setTexts((prev) => [
         ...prev,
@@ -225,7 +236,7 @@ export default function RemixStudio() {
     }
   }
 
-  function onMove(e: React.MouseEvent<HTMLCanvasElement>) {
+  function onMove(e: React.PointerEvent<HTMLCanvasElement>) {
     if (!image) return;
     const p = toImageCoords(e);
     if (drawing.current) {
@@ -248,9 +259,24 @@ export default function RemixStudio() {
     }
   }
 
-  function onUp() {
+  function onUp(e: React.PointerEvent<HTMLCanvasElement>) {
+    e.currentTarget.releasePointerCapture?.(e.pointerId);
     drawing.current = null;
     dragStart.current = null;
+  }
+
+  /**
+   * Son cizim ya da yazi islemini geri alir.
+   *
+   * Kirpma ve filtreye dokunmaz - onlarin kendi geri donusu var
+   * ("Vazgec" ve "Filtresiz"). Gerekce `duzenlemeGecmisi.ts` basinda.
+   */
+  function geriAl() {
+    const { gecmis: kalan, durum } = gecmistenAl(gecmis);
+    if (!durum) return;
+    setGecmis(kalan);
+    setStrokes(durum.strokes);
+    setTexts(durum.texts);
   }
 
   function applyCrop() {
@@ -271,6 +297,9 @@ export default function RemixStudio() {
     setTexts([]);
     setStrokes([]);
     setFilter("yok");
+    // Sifirlama kirpma ve filtreyi de goturuyor; yigin yalnizca cizim
+    // ve yaziyi tasidigi icin sonrasinda geri alma yaniltici olurdu.
+    setGecmis([]);
   }
 
   /* -- yayinla ----------------------------------------------------------- */
@@ -341,10 +370,10 @@ export default function RemixStudio() {
         >
           <canvas
             ref={canvasRef}
-            onMouseDown={onDown}
-            onMouseMove={onMove}
-            onMouseUp={onUp}
-            onMouseLeave={onUp}
+            onPointerDown={onDown}
+            onPointerMove={onMove}
+            onPointerUp={onUp}
+            onPointerCancel={onUp}
             role="img"
             aria-label={
               `Remix tuvali. Kaynak: ${source.title}. ` +
@@ -352,7 +381,7 @@ export default function RemixStudio() {
               `${texts.length} yazı katmanı, ${strokes.length} çizim, ` +
               `filtre: ${filter === "yok" ? "uygulanmadı" : filter}.`
             }
-            className="w-full rounded-lg border border-[var(--color-line)]"
+            className="w-full touch-none rounded-lg border border-[var(--color-line)]"
             style={{
               cursor:
                 tool === "cizim"
@@ -449,9 +478,22 @@ export default function RemixStudio() {
                 </div>
               </Field>
 
-              <Button variant="ghost" onClick={reset} className="w-full">
-                Tümünü sıfırla
-              </Button>
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  variant="ghost"
+                  onClick={geriAl}
+                  disabled={gecmis.length === 0}
+                >
+                  Son işlemi geri al
+                </Button>
+                <Button variant="ghost" onClick={reset}>
+                  Tümünü sıfırla
+                </Button>
+              </div>
+              <p className="text-[11.5px] leading-relaxed text-[var(--color-ink-3)]">
+                Geri alma çizim ve yazı katmanlarını kapsar; kırpma ve filtre
+                yerinde kalır.
+              </p>
             </div>
           </Panel>
 

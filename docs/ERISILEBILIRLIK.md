@@ -127,7 +127,17 @@ tamamlanabiliyor.
 
 *(11 Ağustos eki: fırça artık işaretçi olaylarıyla çalışıyor, yani dokunmatik ekranda da
 çiziliyor — önceden yalnızca fare olaylarını dinliyordu ve dokunmatik cihazda hiçbir şey
-çizilmiyordu. Bu bir WCAG maddesi değil, düpedüz çalışmayan bir işlevdi.)*
+çizilmiyordu. Bu bir WCAG maddesi değil, düpedüz çalışmayan bir işlevdi. İşaretçi
+yakalama da eklendi: imleç ya da parmak tuvalden çıkınca çizgi artık ortasından
+kopmuyor.)*
+
+**Hata kurtarma (11 Ağustos).** Yanlış bir fırça darbesinin tek çaresi "Tümünü sıfırla"
+idi — kırpma, yazı ve filtre dahil her şey giderdi. Bu, titremesi olan ya da işaretçiyi
+hassas kullanamayan kullanıcıyı orantısız cezalandırıyordu: bir hata, bütün emeği
+siliyordu. **"Son işlemi geri al"** eklendi; çizim ve yazı katmanlarını kapsıyor, kırpma
+ve filtreye dokunmuyor (ikisinin kendi geri dönüşü var). Yığın mantığı
+`pages/duzenlemeGecmisi.ts` içinde saf fonksiyon olarak duruyor ve orada sınanıyor —
+stüdyonun kendisi jsdom'da canvas bağlamı olmadığı için test edilemiyor.
 
 ### 9. Atıf zinciri grafiği — 11 Ağustos'ta bulundu
 

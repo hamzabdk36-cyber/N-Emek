@@ -149,7 +149,7 @@ Backend — 125 test, <!-- sayim: backend --> altı katman:
 sessizce kırılıyordu — bu mutasyonla doğrulandı. Testler kendi geçici veritabanını
 kullanır, demo verisini bozmaz.
 
-Arayüz — 106 test <!-- sayim: arayuz --> (Vitest + Testing Library). Ağırlık merkezi zincir
+Arayüz — 114 test <!-- sayim: arayuz --> (Vitest + Testing Library). Ağırlık merkezi zincir
 yerleşiminin saf fonksiyonu: *hiçbir kapsama rozeti hiçbir düğüm kutusuyla kesişmez*.
 Ayrıntı: [`CLAUDE.md`](CLAUDE.md#arayüz-testleri-vitest--testing-library-jsdom).
 
