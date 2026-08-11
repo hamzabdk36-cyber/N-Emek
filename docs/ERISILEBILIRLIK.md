@@ -180,6 +180,44 @@ birimiyle yazılıyor; `title` özniteliğinde ölçümün ne olduğunu anlatan 
 Haritada karşılığı olmayan bir anahtar **gizlenmiyor**, ham hâliyle kalıyor — bu sayede
 atlanan bir alan (`remeasured`) ekranda görülüp eklendi.
 
+### 11. Mobil düzen — 11 Ağustos'ta ölçüldü (WCAG 1.4.10)
+
+Bu madde uzun süre "Yapılmayanlar" listesindeydi: arayüz masaüstünde çalışıyordu ama
+dar ekranda **hiç ölçülmemişti**. Ölçüm iki kez ertelendi çünkü tarayıcı penceresi bu
+ortamda yeniden boyutlandırılamıyordu (`window.innerWidth` sabit kalıyordu).
+
+Çözüm pencereyi zorlamak değil, ölçümü ondan bağımsız kılmak oldu: sayfa **390×844
+boyutunda bir `<iframe>` içine** yüklendi. iframe kendi görüntü alanını kurduğu için
+medya sorguları gerçekten tetikleniyor. Altı rota tek tek gezildi; taşan öğeler
+`getBoundingClientRect()` ile toplandı ve kendi yatay kaydırma kutusuna sahip olanlar
+(atıf zinciri SVG'si, gezinme şeridi) elenerek gerçek taşmalar ayrıldı.
+
+**Bulunan tek kusur üst çubuktu.** Kodda "başlık üç satır yerine iki satır oluyor" diyen
+bir yorum vardı; ölçüm bunun doğru olmadığını gösterdi. Çubuk **163 piksel**, yani
+844 piksellik ekranın beşte biri kadardı ve yapışkan olduğu için kalıcı olarak
+oradaydı — tam da yorumun önlemeye çalıştığı durum. İki sebebi vardı: gezinme
+bağlantıları sarmalanıyordu ("Kaynak bul" iki satıra kırılıyordu, şerit iki satır
+yüksekliğine çıkıyordu) ve logo ile kullanıcı seçici aynı satıra kıl payı sığmıyordu.
+
+Üç değişiklik: bağlantılara `whitespace-nowrap` (şerit tek satır, sığmayan kısım zaten
+yatay kayıyor), logonun ikinci satırı (`N'Sosyal emek katmanı`) dar ekranda gizlendi,
+yatay boşluk mobilde daraltıldı. **Çubuk 163 → 109 piksel**, iki satır.
+
+Ölçümün sonucu:
+
+| Ekran | Yatay kayma | Taşan öğe | Üst çubuk |
+|---|---|--:|--:|
+| Akış | yok | 0 | 109 px |
+| Emek Kartı (pay satırları açık) | yok | 0 | 109 px |
+| Kaynak Bul | yok | 0 | 109 px |
+| Kampanyalar | yok | 0 | 109 px |
+| İnceleme Kuyruğu | yok | 0 | 109 px |
+| Remix Stüdyosu | yok | 0 | 109 px |
+
+Atıf zinciri grafiği 390 piksele **sığıyor** (232 px); kendi kaydırma kutusu var ama
+kullanılmıyor. Emek Kartı'nda altı pay satırının hepsi açıkken de taşma yok — formül
+satırı ve kanıt listeleri dar ekranda sarmalanıyor, kırpılmıyor.
+
 ---
 
 ## Denetim sonucu
@@ -215,8 +253,9 @@ Dürüstlük gereği: aşağıdakiler henüz yapılmadı ve sonuçları bu belge
 - **Elle klavye gezintisi.** Sekme sırası ve odak halkası yapısal olarak doğrulandı,
   ancak uçtan uca elle gezinti (özellikle Remix Stüdyo'nun araç değişimleri) yapılmadı.
 - **Lighthouse erişilebilirlik skoru.** Hedef ≥90; henüz ölçülmedi.
-- **Küçültme ve yeniden akış** (WCAG 1.4.4 / 1.4.10). Arayüz şu an masaüstü ağırlıklı;
-  mobil düzen ayrı bir iş kalemi olarak duruyor.
+- **Metin büyütme** (WCAG 1.4.4). Yalnızca 390 piksel *genişlikte* ölçüldü; tarayıcı
+  yazı boyutunu %200'e çıkarınca düzenin ne olduğu ayrıca denenmedi. (Yeniden akış —
+  1.4.10 — artık ölçüldü, bkz. 11 numaralı bulgu.)
 *(Bu listede önce `prefers-reduced-motion` de vardı; kontrol edince temada zaten
 karşılandığı görüldü — `theme.css` hem animasyon yardımcılarını kapatıyor hem tüm
 geçiş sürelerini sıfırlıyor. Madde yanlış yazılmıştı, kaldırıldı.)*

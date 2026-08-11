@@ -75,14 +75,17 @@ function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--color-line)] bg-[var(--color-bg)]/92 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-3 px-4 py-3 sm:px-6">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-3 gap-y-3 px-4 py-3 sm:gap-x-6 sm:px-6">
         <NavLink to="/" className="order-1 flex items-center gap-2.5">
           <Logo />
           <span className="leading-tight">
             <span className="block text-[15px] font-semibold tracking-tight">
               N-Emek
             </span>
-            <span className="block text-[10.5px] tracking-wide text-[var(--color-ink-3)] uppercase">
+            {/* Alt satir 390 pikselde gizleniyor: logo ve kullanici
+                seciciyi ayni satira sigdiran sey bu. Marka adi zaten
+                ustte duruyor, kaybolan yalnizca aciklama. */}
+            <span className="hidden text-[10.5px] tracking-wide text-[var(--color-ink-3)] uppercase sm:block">
               N'Sosyal emek katmanı
             </span>
           </span>
@@ -90,7 +93,12 @@ function Header() {
 
         {/* Dar ekranda gezinme kendi satirina duser (order-3 + w-full);
             boylece baslik uc satir yerine iki satir oluyor. Yapiskan
-            baslik telefonda ekranin bestebirini kaliciolarak yiyordu. */}
+            baslik telefonda ekranin bestebirini kaliciolarak yiyordu.
+            11 Agustos: 390 pikselde olculunce hedefe ulasilmadigi
+            gorusdu - baglantilar sarmalaniyordu ("Kaynak bul" iki
+            satira kiriliyordu), nav'in kendisi iki satir yuksekligindeydi
+            ve cubuk 163 piksele cikiyordu. `whitespace-nowrap` ile nav
+            tek satir; sigmayan kisim zaten yatay kayiyor. */}
         <nav
           className="order-3 flex w-full items-center gap-1 overflow-x-auto sm:order-2 sm:w-auto"
           aria-label="Ana gezinme"
@@ -101,7 +109,7 @@ function Header() {
               to={item.to}
               end={item.end}
               className={({ isActive }) =>
-                `rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors ${
+                `rounded-lg px-3 py-1.5 text-[13px] font-medium whitespace-nowrap transition-colors ${
                   isActive
                     ? "bg-[var(--color-surface-2)] text-[var(--color-ink)]"
                     : "text-[var(--color-ink-2)] hover:text-[var(--color-ink)]"
