@@ -13,6 +13,7 @@ import {
   Badge,
   Button,
   ConfidenceBadge,
+  EmptyState,
   ErrorNote,
   Panel,
   Spinner,
@@ -209,9 +210,11 @@ export default function Verify() {
 
           {!result && !busy && (
             <Panel>
-              <p className="py-10 text-center text-[13px] text-[var(--color-ink-3)]">
-                Sonuçlar burada görünecek.
-              </p>
+              <EmptyState
+                title="Sonuçlar burada görünecek"
+                hint="Denemek için akıştaki görsellerden birinin ekran görüntüsünü alıp
+                  buraya bırakın: içerik kimliği silinmiş olsa bile hat kaynağı bulmalı."
+              />
             </Panel>
           )}
         </div>

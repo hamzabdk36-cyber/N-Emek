@@ -12,6 +12,7 @@ import {
   Avatar,
   Button,
   CardSkeleton,
+  EmptyState,
   ErrorNote,
   Field,
   Panel,
@@ -64,13 +65,15 @@ export default function Feed() {
 
       {items && items.length === 0 && (
         <Panel>
-          <p className="py-8 text-center text-[13px] text-[var(--color-ink-2)]">
-            Henüz gönderi yok. Demo verisini kurmak için{" "}
-            <code className="num text-[12px] text-[var(--color-gold)]">
-              python scripts/seed_demo.py --reset
-            </code>{" "}
-            komutunu çalıştırın.
-          </p>
+          <EmptyState
+            title="Henüz gönderi yok"
+            hint="Sağ üstten kendi görselinizi yükleyebilir ya da demo senaryosunu kurabilirsiniz."
+            action={
+              <code className="num rounded-md border border-[var(--color-line)] bg-[var(--color-bg)] px-3 py-1.5 text-[12px] text-[var(--color-gold)]">
+                python scripts/seed_demo.py --reset
+              </code>
+            }
+          />
         </Panel>
       )}
 

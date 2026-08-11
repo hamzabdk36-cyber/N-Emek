@@ -82,6 +82,23 @@ export default function RemixStudio() {
   const drawing = useRef<Stroke | null>(null);
   const dragStart = useRef<{ x: number; y: number } | null>(null);
 
+  /* -- yazi tipi -------------------------------------------------------- */
+  // Canvas, CSS'in aksine yazi tipinin inmesini beklemez: yuklenmeden
+  // once cizilen katman yedek metriklerle olculur ve yazinin arkasindaki
+  // koyu serit yanlis genislikte cikar. Bayrak degisince `render`
+  // bagimliligi uzerinden bir kez daha ciziliyor.
+  const [yaziTipiHazir, setYaziTipiHazir] = useState(false);
+  useEffect(() => {
+    // jsdom'da `document.fonts` yok; testler tuvale hic girmiyor.
+    const fonts = document.fonts;
+    if (!fonts) return setYaziTipiHazir(true);
+    let cancelled = false;
+    fonts.ready.then(() => !cancelled && setYaziTipiHazir(true));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   /* -- kaynagi yukle ---------------------------------------------------- */
   useEffect(() => {
     api
@@ -133,7 +150,7 @@ export default function RemixStudio() {
     }
 
     for (const layer of texts) {
-      ctx.font = `700 ${layer.size}px Inter, system-ui, sans-serif`;
+      ctx.font = `700 ${layer.size}px "Inter Variable", Inter, system-ui, sans-serif`;
       ctx.textBaseline = "middle";
       const x = layer.x - area.x;
       const y = layer.y - area.y;
@@ -162,7 +179,10 @@ export default function RemixStudio() {
       );
       ctx.setLineDash([]);
     }
-  }, [image, crop, filter, strokes, texts, pendingCrop]);
+    // `yaziTipiHazir` burada okunmuyor ama bagimlilikta: degistiginde
+    // tuval yeniden cizilsin diye (yukaridaki nota bakin).
+    void yaziTipiHazir;
+  }, [image, crop, filter, strokes, texts, pendingCrop, yaziTipiHazir]);
 
   useEffect(render, [render]);
 

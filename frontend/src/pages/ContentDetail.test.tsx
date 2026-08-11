@@ -171,8 +171,11 @@ describe("ContentDetail — Emek Kartı", () => {
     ekranaGetir();
     await kartYuklendi();
 
+    // Etiket artik sabit degil: zincirin tamamini anlatiyor. Metnin
+    // kendisi ChainGraph.test.tsx'te olculuyor, burada yalnizca
+    // grafigin ekrana geldigi ve etiketini kartin verisinden aldigi.
     expect(
-      screen.getByRole("img", { name: "İçerik atıf zinciri" }),
+      screen.getByRole("img", { name: /^Atıf zinciri, \d+ halka\./ }),
     ).toBeInTheDocument();
     expect(screen.getByText("YAYINLANAN")).toBeInTheDocument();
   });

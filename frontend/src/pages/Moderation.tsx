@@ -11,6 +11,7 @@ import { api, pctRaw, sayi, type DisputeQueueItem } from "../api";
 import {
   Badge,
   Button,
+  EmptyState,
   ErrorNote,
   Field,
   Panel,
@@ -52,9 +53,19 @@ export default function Moderation() {
 
       {items && items.length === 0 && (
         <Panel>
-          <p className="py-10 text-center text-[13px] text-[var(--color-ink-2)]">
-            Kuyruk boş. Bekleyen veya insana yükseltilmiş itiraz yok.
-          </p>
+          {/* Bos ekranin kendisi bir sey anlatmali: kuyrugun bos olmasi
+              sistemin calismadigi degil, *calistigi* anlamina geliyor.
+              Onceden yalnizca "Kuyruk bos" yaziyordu ve dort gezinme
+              sekmesinden biri jurinin karsisina anlamsiz bir bosluk
+              cikariyordu. */}
+          <EmptyState
+            title="Kuyruk boş — makine karar verebilmiş"
+            hint="Bir itiraz buraya ancak şu durumda düşer: bağ, daha hassas bir dedektörle
+              yeniden ölçülür ve ölçüm yine sonuç vermezse. Demo verisindeki itiraz yeniden
+              ölçüldü, sonuç değişmedi ve otomatik reddedildi — bu yüzden kuyruk boş.
+              Sistem karar veremediği yeri gizlemiyor; karar verebildiğinde de burayı
+              doldurmuyor."
+          />
         </Panel>
       )}
 

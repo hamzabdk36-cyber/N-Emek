@@ -37,6 +37,8 @@ düzeltildi ve düzeltmeler kodda gerekçeleriyle birlikte duruyor.
 | 6 | Kırpma yalnızca fareyle yapılabiliyordu | 2.1.1 Klavye | **Düzeltildi** |
 | 7 | Her sayfada gezinme baştan sekmeleniyordu | 2.4.1 Blokları Atlama | **Düzeltildi** |
 | 8 | Serbest el çizim fareye bağlı | 2.1.1 (istisna) | **Kabul edildi**, aşağıda |
+| 9 | Atıf zinciri ekran okuyucuya tek cümle söylüyordu | 1.1.1 Metin Olmayan İçerik | **Düzeltildi** |
+| 10 | Ölçüm adları İngilizce değişken adlarıyla yazılıydı | 3.1.2 Parçaların Dili | **Düzeltildi** |
 
 ### 1. Klavyeyle görsel yüklenemiyordu — en ağır bulgu
 
@@ -122,6 +124,51 @@ edilebilir — ve o yüzden klavye karşılığı eklendi.
 Çizim yapamayan kullanıcı sistemin geri kalanını kullanabiliyor: yükleme, kırpma, yazı
 ekleme, filtre, yayınlama, Emek Kartı, itiraz ve moderasyon akışlarının hepsi klavyeyle
 tamamlanabiliyor.
+
+*(11 Ağustos eki: fırça artık işaretçi olaylarıyla çalışıyor, yani dokunmatik ekranda da
+çiziliyor — önceden yalnızca fare olaylarını dinliyordu ve dokunmatik cihazda hiçbir şey
+çizilmiyordu. Bu bir WCAG maddesi değil, düpedüz çalışmayan bir işlevdi.)*
+
+### 9. Atıf zinciri grafiği — 11 Ağustos'ta bulundu
+
+`ChainGraph` SVG'si `role="img"` idi ve erişilebilir adı tek bir sabit dizgeydi:
+*"İçerik atıf zinciri"*. Görsel olmayan kullanıcı için grafiğin **tamamı** bu altı
+harften ibaretti — kimin kimden türediği, hangi oranda katkı verdiği, hangi halkanın pay
+almadığı; hiçbiri ulaşmıyordu.
+
+Bu, 5 numaralı bulgunun aynısı. `ShareBar` düzeltilirken zincir grafiği gözden kaçmış.
+Aynı desen uygulandı: yerleşim değil **anlam** metne çevrildi, yapraktan kökene doğru
+okuma sırasıyla:
+
+> Atıf zinciri, 3 halka. Bulduğum kare — Ceyda Aksoy, yayınlanan. Kaynağı: Şehrin
+> Renkleri — Burak Demir, 1 adım geride, kullanılan alan %97,5. Onun kaynağı: Sabah ışığı
+> — Ayşe Yılmaz, 2 adım geride, kullanılan alan %87,5.
+
+Ölçülemeyen alan gizlenmiyor (*"kullanılan alan ölçülemedi"*), pay eşiğinin altında kalan
+ara halka da atlanmıyor (*"ara halka, payı yok"*) — ekranda ne yazıyorsa metinde de o var.
+
+**Düğümlerin tıklanabilirliği bilinçli olarak klavyeye açılmadı.** Bir düğüme tıklamak,
+o kaynağın maskesini seçiyor; **aynı seçim** Emek Kartı'ndaki pay satırlarından da
+yapılabiliyor ve onlar zaten `<button>`, yani sekmeyle ulaşılabilir. Grafik, işlevi başka
+yerde tam karşılanan bir görsel kısayol. `role="img"` içine `role="button"` gömmek
+(erişilebilirlik ağacında görünmez) ya da grafiği `application` yapmak, kazanç olmadan
+karmaşıklık eklerdi.
+
+Metin karşılığı `ChainGraph.test.tsx` içinde dört testle sabitlendi; etiket sabit bir
+dizgeye indirildiğinde beşi birden kırmızıya dönüyor (mutasyonla doğrulandı).
+
+### 10. Ölçüm adları — 11 Ağustos'ta bulundu
+
+Kanıt satırlarındaki "ölçümler" panelinde backend'in sözlük anahtarları olduğu gibi
+yazıyordu: `INLIER_COUNT`, `VISUAL_COVERAGE`, `SOURCE_USAGE`, `ROTATION_DEG`. Sayfa dili
+`tr` olduğu için ekran okuyucu bunları **Türkçe okuma kurallarıyla seslendiriyordu**;
+görsel kullanıcı için de anlamsızdı. Karışım ayrıca tutarsızdı: `esik` ve `tam` Türkçe,
+`hamming` ve `cosine` İngilizce.
+
+Her ölçüm artık Türkçe adı, doğru biçimi (oranlar yüzde, ondalık ayracı virgül) ve
+birimiyle yazılıyor; `title` özniteliğinde ölçümün ne olduğunu anlatan bir cümle var.
+Haritada karşılığı olmayan bir anahtar **gizlenmiyor**, ham hâliyle kalıyor — bu sayede
+atlanan bir alan (`remeasured`) ekranda görülüp eklendi.
 
 ---
 

@@ -132,7 +132,7 @@ jobs:
       - name: Tip denetimi
         run: npx tsc --noEmit
 
-      - name: Testler (95 test)  # sayim: arayuz
+      - name: Testler (106 test)  # sayim: arayuz
         run: npx vitest run
 
       - name: Derleme

@@ -100,6 +100,21 @@ def _content_out(session: Session, content: Content) -> ContentOut:
     )
 
 
+def _etiketli_kanitlar(evidence: list[dict]) -> list[dict]:
+    """Her kanit satirina asamanin Turkce adini ekler.
+
+    Etiket tablosu tek yerde: `explain.STAGE_LABELS`. Onceden arayuz
+    kendi kopyasini tutuyordu ve kopya eksikti - `declared` ve
+    `phash_blok` yoktu. Emek Karti'nda gorunmuyordu cunku orada etiket
+    zaten buradan geliyor; ama /verify ham sozlukleri donduruyordu ve
+    Kaynak Bul ekraninda duz "phash_blok" yaziyordu.
+    """
+    return [
+        {**item, "label": STAGE_LABELS.get(item.get("stage", ""), item.get("stage", ""))}
+        for item in evidence
+    ]
+
+
 def _recovery_out(session: Session, result: recovery.RecoveryResult) -> RecoveryOut:
     links = []
     for link in result.links:
@@ -116,7 +131,7 @@ def _recovery_out(session: Session, result: recovery.RecoveryResult) -> Recovery
                 visual_coverage=link.visual_coverage,
                 source_usage=link.source_usage,
                 geometry_verified=link.geometry_verified,
-                evidence=link.evidence,
+                evidence=_etiketli_kanitlar(link.evidence),
             )
         )
     return RecoveryOut(

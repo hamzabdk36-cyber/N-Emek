@@ -23,8 +23,56 @@
  * Boylece hicbir cizgi bir rozetin ustune dusemez ve hicbir rozet bir
  * dugum kutusunun altinda kalmaz.
  */
-import { sayi, type ChainEdgeView, type ChainNodeView } from "../api";
+import { pct, sayi, type ChainEdgeView, type ChainNodeView } from "../api";
 import { NODE_H, NODE_W, chainLayout } from "./chainLayout";
+
+/**
+ * Zincirin tamaminin metin karsiligi.
+ *
+ * Grafik `role="img"` ve tek bir etiketi vardi: "İçerik atıf zinciri".
+ * Gorsel olmayan kullanici icin grafigin tamami bu alti harften
+ * ibaretti - kim kimden turemis, hangi oranda, hicbiri ulasmiyordu.
+ *
+ * Ayni sorun `ShareBar`'da vardi ve cozulmustu (ERISILEBILIRLIK.md §5):
+ * dagilimin tamami metne cevrildi. Zincir grafigi o duzeltmeden pay
+ * almamisti; burada ayni desen uygulaniyor.
+ *
+ * Dugumler derinlige gore siralaniyor - yapraktan kokene, yani okuma
+ * sirasi turetmenin tersi: "bu yayinlandi, kaynagi su, onun kaynagi su".
+ */
+export function zincirMetni(
+  nodes: ChainNodeView[],
+  edges: ChainEdgeView[],
+): string {
+  if (nodes.length === 0) return "Atıf zinciri boş.";
+
+  // Bir dugume gelen kenar: o dugumun *kaynak* olarak katildigi bag.
+  const gelen = new Map(edges.map((e) => [e.from, e]));
+  const sirali = [...nodes].sort((a, b) => a.depth - b.depth);
+
+  const halkalar = sirali.map((node, i) => {
+    const konum =
+      node.role === "leaf"
+        ? "yayınlanan"
+        : node.contributes === false
+          ? `${node.depth} adım geride, ara halka, payı yok`
+          : `${node.depth} adım geride`;
+
+    const kenar = gelen.get(node.id);
+    const alan =
+      kenar?.visual_coverage != null
+        ? `, kullanılan alan ${pct(kenar.visual_coverage)}`
+        : kenar
+          ? ", kullanılan alan ölçülemedi"
+          : "";
+
+    const bas = i === 0 ? "" : i === 1 ? "Kaynağı: " : "Onun kaynağı: ";
+    return `${bas}${node.title || "başlıksız"} — ${node.owner}, ${konum}${alan}.`;
+  });
+
+  const halka = sirali.length === 1 ? "1 halka" : `${sirali.length} halka`;
+  return `Atıf zinciri, ${halka}. ${halkalar.join(" ")}`;
+}
 
 export function ChainGraph({
   nodes,
@@ -50,7 +98,7 @@ export function ChainGraph({
         viewBox={`0 0 ${width} ${height}`}
         className="mx-auto block"
         role="img"
-        aria-label="İçerik atıf zinciri"
+        aria-label={zincirMetni(nodes, edges)}
       >
         <defs>
           <marker

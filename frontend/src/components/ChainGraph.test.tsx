@@ -23,7 +23,7 @@ describe("ChainGraph", () => {
       <ChainGraph nodes={DUZ_ZINCIR.nodes} edges={DUZ_ZINCIR.edges} />,
     );
 
-    expect(screen.getByRole("img", { name: "İçerik atıf zinciri" })).toBeVisible();
+    expect(screen.getByRole("img", { name: /^Atıf zinciri, 3 halka\./ })).toBeVisible();
     // Kenar basina bir <path>; ok isaretcisinin kendi <path>'i <defs>
     // icinde oldugu icin disarida sayilmiyor.
     expect(container.querySelectorAll("g[fill='none'] > path")).toHaveLength(2);
@@ -93,6 +93,56 @@ describe("ChainGraph", () => {
 
     expect(screen.getByText("%84")).toBeInTheDocument();
     expect(screen.getByText("ölçülemedi")).toBeInTheDocument();
+  });
+
+  /**
+   * Grafik bilgiyi yalnizca *cizimle* tasiyor; gorsel olmayan
+   * kullanicinin zinciri ogrenebilecegi tek yer `aria-label`. Onceden
+   * orada yalnizca "İçerik atıf zinciri" yaziyordu - yani kim kimden
+   * turemis, hangi oranda, hicbiri ulasmiyordu. `ShareBar` ile ayni
+   * desen (ERISILEBILIRLIK.md §5).
+   */
+  describe("metin karşılığı", () => {
+    const ad = () => screen.getByRole("img").getAttribute("aria-label")!;
+
+    it("zincirin tamamını yapraktan kökene anlatıyor", () => {
+      render(<ChainGraph nodes={DUZ_ZINCIR.nodes} edges={DUZ_ZINCIR.edges} />);
+
+      expect(ad()).toBe(
+        "Atıf zinciri, 3 halka. " +
+          "C baslik — C sahibi, yayınlanan. " +
+          "Kaynağı: B baslik — B sahibi, 1 adım geride, kullanılan alan %84,0. " +
+          "Onun kaynağı: A baslik — A sahibi, 2 adım geride, kullanılan alan %84,0.",
+      );
+    });
+
+    it("ölçülemeyen alanı gizlemiyor", () => {
+      render(
+        <ChainGraph
+          nodes={DUZ_ZINCIR.nodes}
+          edges={[
+            kenar("e-ab", "A", "B", { visual_coverage: null }),
+            kenar("e-bc", "B", "C"),
+          ]}
+        />,
+      );
+      expect(ad()).toContain("kullanılan alan ölçülemedi");
+    });
+
+    it("payı olmayan ara halkayı da söylüyor", () => {
+      render(
+        <ChainGraph
+          nodes={[dugum("A", 2), dugum("B", 1, { contributes: false }), dugum("C", 0)]}
+          edges={DUZ_ZINCIR.edges}
+        />,
+      );
+      expect(ad()).toContain("1 adım geride, ara halka, payı yok");
+    });
+
+    it("tek düğümlü zincirde de anlamlı", () => {
+      render(<ChainGraph nodes={[dugum("C", 0)]} edges={[]} />);
+      expect(ad()).toBe("Atıf zinciri, 1 halka. C baslik — C sahibi, yayınlanan.");
+    });
   });
 
   it("düğüme tıklayınca kimliği bildiriliyor", async () => {

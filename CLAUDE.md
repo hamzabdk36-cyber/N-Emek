@@ -54,7 +54,7 @@ cd frontend && npm test                                      # yerleşim + bile�
 cd frontend && npm run dev                                                   # :5173
 ```
 
-Backend 125 test, arayüz 95 test. <!-- sayim: backend, arayuz --> Bu sayılar elle
+Backend 125 test, arayüz 106 test. <!-- sayim: backend, arayuz --> Bu sayılar elle
 tutulmuyor: `python scripts/dokuman_denetimi.py` dokümanlardaki her sayısal iddiayı
 ölçümle karşılaştırır ve CI'da koşar.
 

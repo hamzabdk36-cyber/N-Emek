@@ -6,7 +6,7 @@
  * cumlesi burada tek bakista okunur.
  */
 import { useState } from "react";
-import { sayi, type EvidenceItem, type EvidenceRow, type StageLog } from "../api";
+import { pct, sayi, type EvidenceItem, type EvidenceRow, type StageLog } from "../api";
 import { Badge } from "./ui";
 
 const STAGE_META: Record<string, { order: number; title: string; note: string }> = {
@@ -145,21 +145,30 @@ function timingKey(stage: string): string {
  */
 type Detail = Record<string, unknown>;
 
+/**
+ * Kanit satirinin basligi.
+ *
+ * Etiket her zaman backend'den geliyor (`explain.STAGE_LABELS`) - hem
+ * Emek Karti hem /verify yolunda. Burada ikinci bir tablo tutmuyoruz:
+ * onceki surumde tutuyorduk ve kopya eksikti, `declared` ve
+ * `phash_blok` Kaynak Bul ekraninda ham haliyle yaziyordu.
+ *
+ * `STAGE_META` yalnizca zaman cizelgesinin acilis metnini tasiyor; o,
+ * olcumun adi degil arayuzun anlatisi.
+ */
 function rowLabel(row: EvidenceRow | EvidenceItem): string {
-  return (
-    (row as EvidenceRow).label ??
-    STAGE_META[row.stage as string]?.title ??
-    String(row.stage)
-  );
+  return (row as EvidenceRow).label ?? String(row.stage);
 }
+
+// `label` da disarida: artik /verify yolunda da geliyor ve olcum
+// listesinde "LABEL: Geometrik dogrulama" diye gorunurdu.
+const OLCUM_DISI = ["stage", "label", "found", "matched", "aciklama"];
 
 function rowDetail(row: EvidenceRow | EvidenceItem): Detail {
   return (
     (row as EvidenceRow).detay ??
     Object.fromEntries(
-      Object.entries(row).filter(
-        ([k]) => !["stage", "found", "matched", "aciklama"].includes(k),
-      ),
+      Object.entries(row).filter(([k]) => !OLCUM_DISI.includes(k)),
     )
   );
 }
@@ -263,16 +272,24 @@ export function EvidenceList({
                     key={j}
                     className="grid grid-cols-2 gap-x-4 gap-y-1 px-3 py-2.5 not-first:border-t not-first:border-[var(--color-line-soft)] sm:grid-cols-3"
                   >
-                    {Object.entries(detail).map(([key, value]) => (
-                      <div key={key} className="min-w-0">
-                        <dt className="truncate text-[10.5px] tracking-wide text-[var(--color-ink-3)] uppercase">
-                          {key}
-                        </dt>
-                        <dd className="num truncate text-[12px] text-[var(--color-ink)]">
-                          {formatValue(value)}
-                        </dd>
-                      </div>
-                    ))}
+                    {Object.entries(detail).map(([key, value]) => {
+                      const { etiket, deger, ipucu } = olcumSatiri(key, value);
+                      return (
+                        <div key={key} className="min-w-0">
+                          {/* Etiket artik bir cumle olabiliyor; BUYUK HARF
+                              bicimi kaldirildi, okunmuyordu. */}
+                          <dt
+                            className="truncate text-[10.5px] tracking-wide text-[var(--color-ink-3)]"
+                            title={ipucu}
+                          >
+                            {etiket}
+                          </dt>
+                          <dd className="num truncate text-[12px] text-[var(--color-ink)]">
+                            {deger}
+                          </dd>
+                        </div>
+                      );
+                    })}
                   </dl>
                 ))}
               </div>
@@ -282,6 +299,162 @@ export function EvidenceList({
       })}
     </ul>
   );
+}
+
+/* -------------------------------------------------------------------------- */
+/**
+ * Ham olcumlerin Turkce karsiliklari.
+ *
+ * `BASLARKEN.md` juriye "kanit satirlarina tiklarsan ham olcumler
+ * acilir" diyor. Aciliyordu - ama backend'in sozluk anahtarlariyla:
+ * `INLIER_COUNT`, `VISUAL_COVERAGE`, `ROTATION_DEG`. Projenin
+ * aciklanabilirlik iddiasinin en dip katmani, ingilizce degisken
+ * adlariyla yaziliydi. Ustelik karisik: `esik` ve `tam` Turkce,
+ * `hamming` ve `cosine` ingilizce.
+ *
+ * Bicimlendirme `api.ts`'teki yardimcilarla; ondalik ayraci ve yuzde
+ * kurali orada tanimli ve tek yerde kalmali.
+ *
+ * `birim` degeri sayidan sonra yazilir; `ipucu` `<dt>` uzerinde
+ * baslik olarak durur ve olcumun ne oldugunu bir cumleyle anlatir.
+ */
+type Bicim = "oran" | "ondalik" | "tamsayi" | "evet-hayir" | "metin";
+
+interface OlcumMeta {
+  etiket: string;
+  bicim: Bicim;
+  birim?: string;
+  ipucu?: string;
+}
+
+const OLCUM_META: Record<string, OlcumMeta> = {
+  // Geometrik dogrulama
+  good_matches: {
+    etiket: "Aday eşleşme",
+    bicim: "tamsayi",
+    ipucu: "Oran testini geçen ham anahtar nokta çifti sayısı.",
+  },
+  inlier_count: {
+    etiket: "Doğrulanan nokta",
+    bicim: "tamsayi",
+    ipucu: "RANSAC'ın tek bir dönüşümle açıklayabildiği eşleşme sayısı.",
+  },
+  inlier_ratio: {
+    etiket: "Doğrulanan oran",
+    bicim: "oran",
+    ipucu: "Doğrulanan noktaların aday eşleşmelere oranı.",
+  },
+  geometric_coverage: {
+    etiket: "Geometrik alan",
+    bicim: "oran",
+    ipucu: "Kaynağın türev üzerine düşürüldüğü dörtgenin kapladığı alan.",
+  },
+  visual_coverage: {
+    etiket: "İçerikte kullanılan alan",
+    bicim: "oran",
+    ipucu: "Piksel doğrulamasından sonra kalan alan — pay hesabına giren sayı.",
+  },
+  source_usage: {
+    etiket: "Kaynağın kullanılan bölümü",
+    bicim: "oran",
+    ipucu: "Kaynak görselin ne kadarı türevde kullanılmış.",
+  },
+  scale: {
+    etiket: "Ölçek",
+    bicim: "ondalik",
+    birim: "×",
+    ipucu: "Kaynak, türevde bu katsayıyla büyütülmüş/küçültülmüş.",
+  },
+  rotation_deg: { etiket: "Dönme", bicim: "ondalik", birim: "°" },
+  mirrored: { etiket: "Aynalanmış", bicim: "evet-hayir" },
+  reason: { etiket: "Gerekçe", bicim: "metin" },
+  // Itiraz uzerine yeniden olcum (`services/ingest.remeasure`). Bu
+  // anahtar ilk envanterde atlanmisti ve ekranda ham haliyle
+  // "REMEASURED evet" diye gorundu - tanimsiz anahtarin gizlenmemesi
+  // sayesinde fark edildi.
+  remeasured: {
+    etiket: "İtiraz üzerine yeniden ölçüldü",
+    bicim: "evet-hayir",
+    ipucu: "Bu ölçüm, itirazdan sonra daha hassas dedektörle (SIFT) tekrarlandı.",
+  },
+
+  // Algisal parmak izi
+  hamming: {
+    etiket: "Hamming uzaklığı",
+    bicim: "tamsayi",
+    birim: " bit",
+    ipucu: "İki algısal özet arasında farklı olan bit sayısı; küçük olması iyi.",
+  },
+  esik: {
+    etiket: "Eşik",
+    bicim: "tamsayi",
+    birim: " bit",
+    ipucu: "Bu değerin altındaki uzaklık eşleşme sayılır.",
+  },
+  region: {
+    etiket: "Bölge",
+    bicim: "metin",
+    ipucu: "Sorgu görselinin hangi parçasından üretildiği.",
+  },
+
+  // Gorsel benzerlik
+  cosine: {
+    etiket: "Kosinüs benzerliği",
+    bicim: "ondalik",
+    ipucu: "CLIP gömme uzayında iki görselin yakınlığı; 1,00 aynı yöndür.",
+  },
+
+  // Icerik kimligi ve filigran
+  manifest_urn: { etiket: "Manifest kimliği", bicim: "metin" },
+  issuer: { etiket: "İmzalayan", bicim: "metin" },
+  validation: { etiket: "İmza doğrulaması", bicim: "metin" },
+  content_hash: {
+    etiket: "Dosya özeti",
+    bicim: "metin",
+    ipucu: "SHA-256; birebir aynı dosyayı yakalar.",
+  },
+  tag: { etiket: "Filigran kimliği", bicim: "metin" },
+  vote_confidence: {
+    etiket: "Filigran oy güveni",
+    bicim: "ondalik",
+    ipucu: "Gömülü bitlerin çoğunluk oyunda ne kadar tutarlı çıktığı.",
+  },
+};
+
+function bicimlendir(value: unknown, bicim: Bicim): string {
+  if (value === null || value === undefined) return "—";
+  switch (bicim) {
+    case "oran":
+      return typeof value === "number" ? pct(value) : String(value);
+    case "ondalik":
+      return typeof value === "number" ? sayi(value) : String(value);
+    case "tamsayi":
+      return typeof value === "number" ? String(Math.round(value)) : String(value);
+    case "evet-hayir":
+      return value ? "evet" : "hayır";
+    default:
+      return String(value);
+  }
+}
+
+/**
+ * Tanimsiz bir anahtar **gizlenmez**, ham haliyle gosterilir.
+ *
+ * Backend yeni bir olcum eklediginde ekrandan sessizce kaybolmasin.
+ * Bu projede bir olcumu saklamak, cirkin gostermekten kotudur.
+ */
+function olcumSatiri(key: string, value: unknown): {
+  etiket: string;
+  deger: string;
+  ipucu?: string;
+} {
+  const meta = OLCUM_META[key];
+  if (!meta) return { etiket: key, deger: formatValue(value) };
+  return {
+    etiket: meta.etiket,
+    deger: bicimlendir(value, meta.bicim) + (meta.birim ?? ""),
+    ipucu: meta.ipucu,
+  };
 }
 
 function formatValue(value: unknown): string {
