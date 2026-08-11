@@ -22,11 +22,13 @@ export const KULLANICILAR: User[] = [
     display_name: "Burak Demir",
     accent: "#3fbf7f",
   }),
+  // Demo verisindeki gibi: moderator rolu Ceyda'da (scripts/seed_demo.py).
   kullanici({
     id: "u-ceyda",
     handle: "ceyda",
     display_name: "Ceyda Arslan",
     accent: "#b47ae0",
+    role: "moderator",
   }),
 ];
 
@@ -62,6 +64,11 @@ export function kur(
       <SessionProvider>
         <Routes>
           <Route path={desen} element={ui} />
+          {/* Akisa yonlendiren ekranlar (ornegin silme sonrasi
+              `navigate("/")`) bosluga dusmesin: eslesmeyen rota
+              React Router'i konsola uyari yazdiriyor ve testte
+              yonlendirmenin gerceklestigi dogrulanamiyordu. */}
+          {desen !== "/" && <Route path="/" element={<p>Akış</p>} />}
         </Routes>
       </SessionProvider>
     </MemoryRouter>,

@@ -107,6 +107,7 @@ export function kullanici(ek: Partial<User> = {}): User {
     handle: "ayse",
     display_name: "Ayşe Yıldız",
     accent: "#5b8def",
+    role: "uye",
     ...ek,
   };
 }

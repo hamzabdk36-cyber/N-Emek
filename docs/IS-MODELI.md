@@ -36,11 +36,16 @@ Her gönderinin payı zincire bölündüğünde ortaya çıkan kayıtlı ödemel
 
 | Kişi | Üretici olarak | Kaynak olarak | **Toplam** | Ödeme sayısı |
 |---|--:|--:|--:|--:|
-| Ayşe Yılmaz | ₺6.750,00 | ₺27.795,80 | **₺34.545,80** | 3 |
-| Burak Demir | ₺2.925,00 | ₺2.804,20 | **₺5.729,20** | 2 |
+| Ayşe Yılmaz | ₺6.750,00 | ₺27.798,96 | **₺34.548,96** | 3 |
+| Burak Demir | ₺2.925,00 | ₺2.801,04 | **₺5.726,04** | 2 |
 | Ceyda Aksoy | ₺4.725,00 | ₺0,00 | **₺4.725,00** | 1 |
 | N'Sosyal (platform) | — | — | **₺5.000,00** | 3 |
 | | | | **₺50.000,00** | |
+
+> Rakamlar `scripts/seed_demo.py --reset` sonrası veritabanından okundu. Kaynak payları
+> koşumlar arasında birkaç lira oynayabiliyor: geometrik doğrulama RANSAC kullanıyor ve
+> ölçülen alan oranı her koşumda tıpatıp aynı çıkmıyor. Sabit olan, dağıtılan toplamın
+> havuza eşit olması ve payların sıralaması.
 
 > **Tezin tek rakamda özeti:** Ayşe kampanyaya **bir** içerik yükledi ve hiç remix
 > yapmadı. Havuzun **%69'unu** aldı — çünkü içeriği zincirde yaşıyor ve bu ölçüldü.
@@ -55,8 +60,8 @@ aynı gönderiler, iki model:
 
 | Kişi | Bugünkü model | N-Emek ile | Fark |
 |---|--:|--:|--:|
-| Ayşe (özgün üretici) | ₺6.750,00 | ₺34.545,80 | **5,1×** |
-| Burak (remixleyen) | ₺14.625,00 | ₺5.729,20 | 0,39× |
+| Ayşe (özgün üretici) | ₺6.750,00 | ₺34.548,96 | **5,1×** |
+| Burak (remixleyen) | ₺14.625,00 | ₺5.726,04 | 0,39× |
 | Ceyda (paylaşan) | ₺23.625,00 | ₺4.725,00 | 0,20× |
 | Platform | ₺5.000,00 | ₺5.000,00 | aynı |
 

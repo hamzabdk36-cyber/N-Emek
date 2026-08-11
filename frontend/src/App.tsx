@@ -1,6 +1,6 @@
 import { NavLink, Route, Routes, useLocation } from "react-router-dom";
 import { HataSiniri } from "./components/HataSiniri";
-import { Avatar } from "./components/ui";
+import { Avatar, Badge } from "./components/ui";
 import { SessionProvider, useSession } from "./session";
 import Feed from "./pages/Feed";
 import ContentDetail from "./pages/ContentDetail";
@@ -144,6 +144,17 @@ function Header() {
                   </option>
                 ))}
               </select>
+              {/* Iki uc moderator yetkisi istiyor (kampanya havuzunu
+                  dagitmak, itirazi karara baglamak). Rol gorunmezken 403
+                  alan kisi sebebini anlamiyordu; rozet bunu soyluyor. */}
+              {currentUser.role === "moderator" && (
+                <Badge
+                  tone="link"
+                  title="Kampanya havuzunu dağıtabilir ve insan incelemesine düşen itirazları karara bağlayabilir."
+                >
+                  moderatör
+                </Badge>
+              )}
             </label>
           )}
         </div>

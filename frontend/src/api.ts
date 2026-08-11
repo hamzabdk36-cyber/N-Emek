@@ -73,6 +73,8 @@ export interface User {
   handle: string;
   display_name: string;
   accent: string;
+  /** "uye" | "moderator" — moderatör yetkisi isteyen uçlar için. */
+  role: string;
 }
 
 export interface Content {
@@ -343,6 +345,20 @@ export const api = {
     }),
   distribute: (id: string) =>
     req<Record<string, unknown>>(`/contents/${id}/distribute`, { method: "POST" }),
+
+  /**
+   * İçeriği ve ondan türemiş her izi siler — "unutulma hakkı".
+   * Ödemesi olan içerikte uç **409** döner; mesaj kullanıcıya
+   * olduğu gibi gösterilir (mali kayıt korunuyor).
+   */
+  deleteContent: (id: string) =>
+    req<{
+      content_id: string;
+      silinen_bag: number;
+      silinen_itiraz: number;
+      silinen_maske: number;
+      gorsel_silindi: boolean;
+    }>(`/contents/${id}`, { method: "DELETE" }),
 
   campaigns: () => req<Campaign[]>("/campaigns"),
   createCampaign: (body: Omit<Campaign, "id" | "status" | "content_count">) =>

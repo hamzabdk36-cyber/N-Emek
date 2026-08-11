@@ -302,8 +302,14 @@ bunu gerektiriyor. `/verify` boyut sınırıyla korunuyor (32 MB, 413).
 
 **Moderatör rolü** (`User.role = "moderator"`) yalnızca iki şeye yetiyor: insana yükselen
 itirazı karara bağlamak ve kampanya havuzunu dağıtmak. İkisi de geri alınamaz sonuç
-doğuruyor. Demo verisinde **atanmış moderatör yok** — bu doğru davranış; rol açıkça
-verilmeli.
+doğuruyor. Rol açıkça veriliyor, hiçbir kullanıcı onu kendiliğinden kazanmıyor: demo
+verisinde yalnızca **Ceyda** moderatör (`scripts/seed_demo.py`), var olan bir
+veritabanında `scripts/set_role.py` ile atanıyor. Arayüzde kullanıcı adının yanında rozet
+olarak görünüyor — 403 alan kişi sebebini görebilsin diye.
+
+Rol ataması bir uç değil, bir **betik**. Bilinçli: prototipte rol veren bir uç açmak,
+"kim rol verebilir" sorusunu doğurur ve o soru bu prototipin cevaplayacağı bir soru
+değil (bkz. §12).
 
 **İnceleme kuyruğunun oturumla görülebilir olması bilinçli:** sistemin karar veremediği
 yerler gizlenmiyor. Karara bağlamak ayrı bir yetki.

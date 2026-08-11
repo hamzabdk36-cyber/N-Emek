@@ -57,7 +57,11 @@ def index_dep() -> IndexService:
 # ---------------------------------------------------------------------------
 def _user_out(user: User) -> UserOut:
     return UserOut(
-        id=user.id, handle=user.handle, display_name=user.display_name, accent=user.accent
+        id=user.id,
+        handle=user.handle,
+        display_name=user.display_name,
+        accent=user.accent,
+        role=user.role,
     )
 
 
@@ -195,9 +199,10 @@ def current_user(
 def current_moderator(user: User = Depends(current_user)) -> User:
     """Yalnizca moderator rolu.
 
-    Tek bir uc bunu istiyor: insan incelemesine dusen itirazi karara
-    baglamak. Rol acikca veriliyor; demo verisinde kimse moderator
-    degil, cunku atanmis bir moderator yok (bkz. VERI-MODEL-ETIK.md).
+    Iki uc bunu istiyor: insan incelemesine dusen itirazi karara
+    baglamak ve kampanya havuzunu dagitmak. Rol acikca veriliyor; demo
+    verisinde yalnizca Ceyda moderator (scripts/seed_demo.py), var olan
+    bir veritabaninda `scripts/set_role.py` ile atanir.
     """
     if not user.is_moderator:
         raise HTTPException(403, "Bu işlem için moderatör yetkisi gerekli.")

@@ -9,7 +9,7 @@
  * -> uygulanan kurallar -> itiraz.
  */
 import { useCallback, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   api,
   money,
@@ -188,6 +188,10 @@ export default function ContentDetail() {
               </Button>
             </div>
           </Panel>
+
+          {content.owner.id === currentUser?.id && (
+            <SilmeKutusu contentId={content.id} />
+          )}
 
           {campaign && (
             <Panel title="Kampanya">
@@ -524,6 +528,76 @@ function DisputeBox({ edgeId, onDone }: { edgeId: string; onDone: () => void }) 
         </div>
       )}
     </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/**
+ * "Unutulma hakki" - tehlikeli islem bolumu.
+ *
+ * `DELETE /api/contents/{id}` bir sure once yazildi ama arayuzde
+ * karsiligi yoktu; yani hak vardi, kullaniciya ulasmiyordu. Yalnizca
+ * icerigin sahibine gorunur.
+ *
+ * Odemesi olan icerikte uc **409** doner ve mesaj oldugu gibi
+ * gosterilir. Demo verisindeki icerige odeme yapildigi icin juri bu
+ * mesaji gorecek; bu *istenen* davranis - mali kaydin korundugunu
+ * silme denemesinden daha iyi anlatan bir sey yok.
+ *
+ * Onay ayri bir kipte degil satir icinde: `DisputeBox` ile ayni desen,
+ * ayrica `window.confirm` tarayici kipini kilitliyor.
+ */
+function SilmeKutusu({ contentId }: { contentId: string }) {
+  const navigate = useNavigate();
+  const [onayda, setOnayda] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function sil() {
+    setBusy(true);
+    setError(null);
+    try {
+      await api.deleteContent(contentId);
+      navigate("/");
+    } catch (e) {
+      setError((e as Error).message);
+      setOnayda(false);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <Panel
+      title="İçeriği sil"
+      subtitle="Görsel dosyası, ölçüm maskeleri, parmak izleri, bağlar ve o bağlara açılmış itirazlar birlikte silinir. Geri alınamaz."
+    >
+      {error && <ErrorNote error={error} />}
+      {!onayda ? (
+        <Button
+          variant="danger"
+          className="mt-1 w-full"
+          onClick={() => setOnayda(true)}
+        >
+          İçeriği sil
+        </Button>
+      ) : (
+        <div className="mt-1 space-y-2.5">
+          <p className="text-[12.5px] leading-relaxed text-[var(--color-ink-2)]">
+            Bu içerik ve ondan türemiş her iz kalıcı olarak silinecek. Emin
+            misiniz?
+          </p>
+          <div className="flex gap-2">
+            <Button variant="danger" onClick={sil} disabled={busy}>
+              {busy ? "Siliniyor…" : "Evet, sil"}
+            </Button>
+            <Button variant="ghost" onClick={() => setOnayda(false)}>
+              Vazgeç
+            </Button>
+          </div>
+        </div>
+      )}
+    </Panel>
   );
 }
 

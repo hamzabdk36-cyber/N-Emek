@@ -9,7 +9,8 @@
 # Ilk surumde backend isi korpussuz kosuyordu ve yesil yaniyordu:
 # `test_api_ucnoktalari` ile `test_e2e_altin_senaryo` modul
 # fikstürlerinden atlaniyor, geriye yalnizca 22 saf pay testi kaliyordu.
-# 47 test sessizce atlanmis, is yine basarili gorunmustu. Iki karsi
+# 47 test sessizce atlanmis, is yine basarili gorunmustu.  # sayim: tarihsel
+# Iki karsi
 # onlem var: korpus CI'da indiriliyor (asagida) ve `tests/conftest.py`
 # korpus yokken CI'da atlamak yerine duruyor.
 #
@@ -91,11 +92,21 @@ jobs:
       - name: Test korpusu (8 görsel)
         run: python scripts/fetch_eval_images.py 8
 
-      - name: Testler (115 hızlı test)
+      - name: Testler (122 test)  # sayim: backend-hizli
         working-directory: backend
         # -rs: atlanan varsa sebebi gunluge yazilsin. Atlama artik
         # CI'da hata, ama baska bir sebeple atlama cikarsa gorulsun.
         run: python -m pytest -m "not slow" -rs
+
+      # Dokumanlardaki "N test" / "N uc" iddialarini olcumle karsilastirir.
+      # Bu sayilar bir gelistirme oturumunda dort kez eskidi; her seferinde
+      # elle duzeltildi ve kaymayi yakalayan bir sey yoktu.
+      #
+      # `--atla arayuz`: bu iste node yok. Arayuz sayisi, node'u olan
+      # arayuz isinde denetleniyor - yani iki is birlikte her sayiyi
+      # kapsiyor ve hicbiri sessizce atlanmiyor.
+      - name: Doküman denetimi
+        run: python scripts/dokuman_denetimi.py --atla arayuz
 
   frontend:
     name: Arayüz — tip denetimi, testler, derleme
@@ -121,8 +132,17 @@ jobs:
       - name: Tip denetimi
         run: npx tsc --noEmit
 
-      - name: Testler (87 test)
+      - name: Testler (95 test)  # sayim: arayuz
         run: npx vitest run
 
       - name: Derleme
         run: npm run build
+
+      # Backend isinin karsi yarisi: orada `--atla arayuz`, burada
+      # `--atla backend`. Bu iste backend bagimliliklari (torch, faiss)
+      # kurulu degil; arayuz sayisini olcmek icin de gerekmiyorlar.
+      # Bu isin varsayilan calisma dizini `frontend`; betik depo kokunden
+      # kosmali.
+      - name: Doküman denetimi (arayüz sayıları)
+        working-directory: ${{ github.workspace }}
+        run: python3 scripts/dokuman_denetimi.py --atla backend

@@ -211,7 +211,17 @@ def test_kullanici_listesi_bicimi(client):
     assert r.status_code == 200
     kullanicilar = r.json()
     assert isinstance(kullanicilar, list) and kullanicilar
-    alanlar(kullanicilar[0], "id", "handle", "display_name", "accent")
+    alanlar(kullanicilar[0], "id", "handle", "display_name", "accent", "role")
+
+
+def test_kullanici_listesi_rolu_dogru_bildirir(client, veri):
+    """Rol arayuzde rozet olarak gorunuyor; sabit dizge donerse fark edilmez.
+
+    Iki yon de kontrol ediliyor: moderator "moderator", digerleri "uye".
+    """
+    kullanicilar = {u["id"]: u["role"] for u in client.get("/api/users").json()}
+    assert kullanicilar[veri["moderator_id"]] == "moderator"
+    assert kullanicilar[veri["ayse_id"]] == "uye"
 
 
 def test_kazanc_ucu_rollere_ayirir(client, veri):

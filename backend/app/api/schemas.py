@@ -10,6 +10,10 @@ class UserOut(BaseModel):
     handle: str
     display_name: str
     accent: str
+    # "uye" | "moderator". Arayuz bunu rozet olarak gosteriyor: moderator
+    # yetkisi isteyen dugmeler 403 verdiginde kullanicinin sebebi
+    # gorebilmesi icin rolun gorunur olmasi gerekiyor.
+    role: str = "uye"
 
 
 class ContentOut(BaseModel):

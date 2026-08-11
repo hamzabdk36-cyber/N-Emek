@@ -171,7 +171,14 @@ def main() -> int:
     # hicbir durum rengiyle karismiyor.
     ayse = User(handle="ayse", display_name="Ayşe Yılmaz", accent="#B47AE0")
     burak = User(handle="burak", display_name="Burak Demir", accent="#5CC9C4")
-    ceyda = User(handle="ceyda", display_name="Ceyda Aksoy", accent="#E87BA8")
+    # Ceyda ayni zamanda moderator: insan incelemesine dusen itirazi karara
+    # baglayan ve kampanya havuzunu dagitan uclar moderator yetkisi istiyor.
+    # Demo verisinde atanmis moderator olmadiginda o iki ekrandaki dugmeler
+    # 403 veriyordu. Dorduncu bir kullanici eklemek yerine mevcut birine rol
+    # verildi; kullanici secici uc kisi kaliyor.
+    ceyda = User(
+        handle="ceyda", display_name="Ceyda Aksoy", accent="#E87BA8", role="moderator"
+    )
     session.add_all([ayse, burak, ceyda])
 
     campaign = Campaign(

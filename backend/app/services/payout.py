@@ -3,8 +3,22 @@
 Paylar veritabaninda tutulmaz, her seferinde olcumlerden hesaplanir.
 Tek istisna buradaki `Payout` kaydidir: para dagitildigi an hesap
 dondurulur, cunku odenen bir tutarin gerekcesi sonradan degismemelidir.
-Bir itiraz kabul edilirse yeni bir dagitim yapilir, eskisi silinmez -
-denetim izi korunur.
+
+Yeniden dagitim *degistirir*, eklemez
+-------------------------------------
+Ilk yazimda dagitim uclari idempotent degildi: ayni gonderi iki kez
+dagitilinca ikinci kosum yeni `Payout` satirlari yaziyor, eskiler
+duruyordu. Sonuc `GET /users/{id}/earnings` icin iki kat kazanc, kampanya
+icin havuzu asan bir toplamdi - yani para ile ilgili bir doğruluk
+hatasi. Dugmeye iki kez basmak bunu tetiklemeye yetiyordu.
+
+Simdi her dagitim, o gonderinin onceki odemelerini silip yerine yenisini
+yaziyor: **bir gonderi, bir odeme kumesi** (`_kapsam_temizle`).
+
+Bu bir denetim izi kaybi degil: dagitilan tutarin *gerekcesi*
+donduruluyor, ama "en son ne dagitildi" tek bir gercek olmali. Odeme
+gecmisinin surumlenmesi (kim ne zaman neyi yeniden dagitti) urunlesme
+isi ve `docs/VERI-MODEL-ETIK.md` icinde kayitli.
 """
 
 from __future__ import annotations
@@ -31,10 +45,40 @@ class CampaignDistribution:
     platform_total: float
 
 
+def _kapsam_temizle(session: Session, content_id: str) -> int:
+    """Bu gonderinin onceki odemelerini siler ve sayisini doner.
+
+    Kural tek cumle: **bir gonderi, bir odeme kumesi.** Kampanyaya gore
+    daraltmak da denenebilirdi ama bir gonderinin odemeleri zaten tek bir
+    kampanyaya ait - `distribute_content` kampanyayi gonderinin kendi
+    `campaign_id` alanindan cozuyor. Daraltma, yalnizca gonderinin
+    kampanyasi degistiginde eski odemelerin oksuz kalmasi riskini
+    eklerdi.
+
+    `source_content_id` uzerinden gelen odemeler bilerek disarida: onlar
+    *baska* bir gonderinin dagitimina ait ve o dagitim yeniden
+    kosuldugunda kendi kapsaminda temizlenir.
+    """
+    stmt = select(Payout).where(Payout.content_id == content_id)
+    eskiler = list(session.scalars(stmt))
+    for odeme in eskiler:
+        session.delete(odeme)
+    if eskiler:
+        # Silmeler sonraki `add`'lerden once veritabanina insin: ayni
+        # oturumda once ekleyip sonra silmek, silinmesi gerekenlerin
+        # yerine yenilerini silme riskini tasiyor.
+        session.flush()
+    return len(eskiler)
+
+
 def distribute_content(
     session: Session, content_id: str, revenue: float, campaign: Campaign | None = None
 ) -> tuple[Distribution, list[Payout]]:
-    """Tek bir gonderinin gelirini zincire dagitir."""
+    """Tek bir gonderinin gelirini zincire dagitir.
+
+    Idempotent: ayni kapsamdaki onceki odemeler silinip yerine yenisi
+    yazilir. Iki kez cagirmak odemeleri ikiye katlamaz.
+    """
     content = session.get(Content, content_id)
     if content is None:
         raise ValueError(f"İçerik bulunamadı: {content_id}")
@@ -54,6 +98,8 @@ def distribute_content(
         revenue,
         rules_for(content, campaign),
     )
+
+    _kapsam_temizle(session, content_id)
 
     payouts: list[Payout] = []
     for party in distribution.parties:
@@ -99,6 +145,16 @@ def distribute_campaign(session: Session, campaign_id: str) -> CampaignDistribut
     )
     if not contents:
         return CampaignDistribution(campaign_id, campaign.reward_pool, [], [], 0.0, 0.0)
+
+    # Havuz butun olarak yeniden bolunuyor, dolayisiyla temizlik de butun
+    # olmali. `distribute_content` yalnizca kendi gonderisinin kapsamini
+    # temizler; kampanyadan cikarilmis bir gonderinin eski odemesi orada
+    # yakalanmaz. Havuzun asilmamasini garanti eden sey bu satir.
+    eski = list(session.scalars(select(Payout).where(Payout.campaign_id == campaign_id)))
+    for odeme in eski:
+        session.delete(odeme)
+    if eski:
+        session.flush()
 
     total_signal = sum(c.revenue for c in contents)
     per_content: list[dict] = []

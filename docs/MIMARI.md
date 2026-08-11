@@ -21,7 +21,8 @@ flowchart TB
         moderasyon["Moderasyon Kuyruğu"]
     end
 
-    subgraph api["FastAPI — 21 uç"]
+    subgraph api["FastAPI — 22 uç"]
+        %% sayim: uc
         rest["routes.py + schemas.py"]
     end
 

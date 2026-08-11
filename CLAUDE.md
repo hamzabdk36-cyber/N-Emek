@@ -45,14 +45,18 @@ Sertifikalar ve korpus depoda değil; her ikisi de yukarıdaki komutlarla yenide
 ## Doğrulama
 
 ```bash
-cd backend && ../.venv/Scripts/python.exe -m pytest tests/   # 118 test: pay motoru + uçtan uca + API + yetki + silme + indeks + maliyet
-cd frontend && npm test                                      # 87 test: yerleşim + bileşenler + ekranlar + oturum
+cd backend && ../.venv/Scripts/python.exe -m pytest tests/   # pay motoru + uçtan uca + API + yetki + silme + indeks + maliyet + dağıtım
+cd frontend && npm test                                      # yerleşim + bileşenler + ekranlar + oturum
 .venv/Scripts/python.exe scripts/seed_demo.py --reset        # altın senaryoyu kur ve anlat
 
 # Uygulamayı çalıştır (iki terminal)
 .venv/Scripts/python.exe -m uvicorn app.main:app --reload --app-dir backend  # :8000
 cd frontend && npm run dev                                                   # :5173
 ```
+
+Backend 125 test, arayüz 95 test. <!-- sayim: backend, arayuz --> Bu sayılar elle
+tutulmuyor: `python scripts/dokuman_denetimi.py` dokümanlardaki her sayısal iddiayı
+ölçümle karşılaştırır ve CI'da koşar.
 
 Vite `/api` isteklerini 8000'e vekilliyor; arayüz kodunda mutlak URL yok. **Backend'i `--reload` olmadan başlattıysanız, Python tarafında yaptığınız değişiklik sunucuya yansımaz** — tarayıcıda eski metinleri görürseniz önce bunu kontrol edin.
 
@@ -85,7 +89,7 @@ Testler kendi geçici veritabanını kullanır (`tests/conftest.py`), demo veris
 Üç katman ayrı ayrı ölçülüyor ve biri diğerinin yerine geçmez: `test_contribution.py`
 pay formülünün değişmez kurallarını, `test_e2e_altin_senaryo.py` servis katmanını,
 `test_api_ucnoktalari.py` ise HTTP sözleşmesini sınar. Sonuncusu olmadan `schemas.py`'de
-bir alan adı değişse diğer 35 test yeşil kalıyor ama arayüz sessizce kırılıyordu — bu
+bir alan adı değişse diğer 35 test yeşil kalıyor ama arayüz sessizce kırılıyordu <!-- sayim: tarihsel --> — bu
 mutasyonla doğrulandı. Ağır iki test `slow` işaretli: `-m "not slow"` ile atlanabilir.
 
 ### Arayüz testleri (Vitest + Testing Library, jsdom)
@@ -146,12 +150,12 @@ React 19'da da hata sınırı yazmanın tek yolu sınıf bileşeni;
 
 | İş | Ne koşar |
 |---|---|
-| backend | torch **önce** ve CPU indeksinden → `requirements.txt` → C2PA sertifikaları → 8 görsellik test korpusu → `pytest -m "not slow" -rs` (115 test) |
-| arayüz | `npm ci` → `tsc --noEmit` → `vitest run` → `npm run build` |
+| backend | torch **önce** ve CPU indeksinden → `requirements.txt` → C2PA sertifikaları → 8 görsellik test korpusu → `pytest -m "not slow" -rs` (122 test) <!-- sayim: backend-hizli --> → doküman denetimi |
+| arayüz | `npm ci` → `tsc --noEmit` → `vitest run` → `npm run build` → doküman denetimi |
 
 **Yeşil rozet gerçekten bir şey söylemeli.** İlk CI koşusu korpussuz çalıştı ve yeşil
 yandı: `test_api_ucnoktalari` ile `test_e2e_altin_senaryo` modül fikstürlerinden atlandı,
-geriye yalnızca 22 saf pay testi kaldı. 47 test sessizce atlanmıştı ama iş başarılı
+geriye yalnızca 22 saf pay testi kaldı. 47 test sessizce atlanmıştı <!-- sayim: tarihsel, tarihsel --> ama iş başarılı
 görünüyordu — yani rozet, API sözleşmesini ve altın senaryoyu hiç doğrulamadığı halde
 doğruluyormuş gibi duruyordu. İki karşı önlem kondu:
 
@@ -269,8 +273,16 @@ sınır ve `VERI-MODEL-ETIK.md` §10'da açıkça yazılı.
 `delete`, `distribute` (içerik), `disputes` (payın sahibi), `resolve` (itirazı açan).
 **Moderatör** (`User.role = "moderator"`) yalnızca ikisine yetiyor:
 `disputes/{id}/moderate` ve `campaigns/{id}/distribute` — ikisi de geri alınamaz sonuç
-doğuruyor. Demo verisinde atanmış moderatör **yok**; rol açıkça verilmeli. Tam harita:
+doğuruyor. Rol açıkça veriliyor: demo verisinde **Ceyda** moderatör (`seed_demo.py`), var
+olan bir veritabanında `scripts/set_role.py ceyda moderator`. Rol vermek bilerek bir uç
+değil betik — "kim rol verebilir" sorusu bu prototipin kapsamı dışında. Tam harita:
 `VERI-MODEL-ETIK.md` §11.
+
+**Dağıtım idempotent.** `distribute_content` yeni ödemeleri yazmadan önce o gönderinin
+eski ödemelerini siliyor; `distribute_campaign` kampanyanın tümünü. Kural: *bir gönderi,
+bir ödeme kümesi.* Önceden değildi ve düğmeye iki kez basmak kazançları ikiye
+katlıyordu — para ile ilgili sessiz bir doğruluk hatası. Üç mutasyonla doğrulandı
+(`tests/test_dagitim_idempotent.py`).
 
 ### İndeks kalıcılığı ve açılış süresi
 

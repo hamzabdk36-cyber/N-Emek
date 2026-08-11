@@ -177,6 +177,86 @@ describe("ContentDetail — Emek Kartı", () => {
     expect(screen.getByText("YAYINLANAN")).toBeInTheDocument();
   });
 
+  it("silme düğmesi yalnızca içeriğin sahibine çıkıyor", async () => {
+    // Fiksturde icerigin sahibi Ceyda.
+    ekranaGetir("u-ayse");
+    await kartYuklendi();
+    expect(
+      screen.queryByRole("button", { name: "İçeriği sil" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("sahibinde silme düğmesi var ve tek tıkla silmiyor", async () => {
+    ekranaGetir("u-ceyda");
+    const sil = vi.spyOn(api, "deleteContent");
+    await kartYuklendi();
+
+    await userEvent.click(screen.getByRole("button", { name: "İçeriği sil" }));
+
+    // Onay adimi: dugme silme cagrisini dogrudan yapmiyor.
+    expect(sil).not.toHaveBeenCalled();
+    expect(screen.getByText(/kalıcı olarak silinecek/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Evet, sil" })).toBeInTheDocument();
+  });
+
+  it("onaylanınca siliniyor", async () => {
+    ekranaGetir("u-ceyda");
+    const sil = vi.spyOn(api, "deleteContent").mockResolvedValue({
+      content_id: "C",
+      silinen_bag: 2,
+      silinen_itiraz: 0,
+      silinen_maske: 2,
+      gorsel_silindi: true,
+    });
+    await kartYuklendi();
+
+    await userEvent.click(screen.getByRole("button", { name: "İçeriği sil" }));
+    await userEvent.click(screen.getByRole("button", { name: "Evet, sil" }));
+
+    expect(sil).toHaveBeenCalledWith("C");
+    // Icerik artik yok; sayfada kalmak 404 demek olurdu.
+    expect(await screen.findByText("Akış")).toBeInTheDocument();
+  });
+
+  it("vazgeçilince silme çağrısı yapılmıyor", async () => {
+    ekranaGetir("u-ceyda");
+    const sil = vi.spyOn(api, "deleteContent");
+    await kartYuklendi();
+
+    await userEvent.click(screen.getByRole("button", { name: "İçeriği sil" }));
+    await userEvent.click(screen.getByRole("button", { name: "Vazgeç" }));
+
+    expect(sil).not.toHaveBeenCalled();
+    expect(
+      screen.getByRole("button", { name: "İçeriği sil" }),
+    ).toBeInTheDocument();
+  });
+
+  it("ödemesi olan içerikte 409 mesajı gösteriliyor", async () => {
+    // Uc, 409 govdesindeki `detail` metnini `Error.message` olarak
+    // veriyor (bkz. api.ts::req). Juri bu mesaji gorecek: mali kaydin
+    // korundugunu anlatan yer burasi.
+    ekranaGetir("u-ceyda");
+    vi.spyOn(api, "deleteContent").mockRejectedValue(
+      new Error(
+        "Bu içeriğe 3 ödeme bağlı. Gerçekleşmiş ödemelerin kaydı silinemez; " +
+          "mali kayıtların bütünlüğü korunmalıdır.",
+      ),
+    );
+    await kartYuklendi();
+
+    await userEvent.click(screen.getByRole("button", { name: "İçeriği sil" }));
+    await userEvent.click(screen.getByRole("button", { name: "Evet, sil" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      /Gerçekleşmiş ödemelerin kaydı silinemez/,
+    );
+    // Onay kapaniyor, icerik duruyor.
+    expect(
+      screen.getByRole("button", { name: "İçeriği sil" }),
+    ).toBeInTheDocument();
+  });
+
   it("uç hata verirse mesaj gösteriliyor", async () => {
     oturumKur();
     vi.spyOn(api, "labourCard").mockRejectedValue(new Error("İçerik bulunamadı"));

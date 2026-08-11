@@ -8,6 +8,9 @@ __pycache__/
 # Node
 node_modules/
 frontend/dist/
+# tsc'nin artimli derleme onbellegi: her `tsc -b` kosumunda degisiyor ve
+# her testte sahte bir degisiklik olarak goruluyordu.
+frontend/tsconfig.tsbuildinfo
 
 # Veri: korpus ve uretilen turevler depoya girmez.
 # Korpus tekrar indirilebilir: python scripts/fetch_eval_images.py
