@@ -28,7 +28,7 @@ Veri, model, etik ve performans: [`docs/VERI-MODEL-ETIK.md`](docs/VERI-MODEL-ETI
 Mimari ve diyagramlar: [`docs/MIMARI.md`](docs/MIMARI.md)
 Erişilebilirlik değerlendirmesi: [`docs/ERISILEBILIRLIK.md`](docs/ERISILEBILIRLIK.md)
 Kullanıcı araştırması: [`docs/KULLANICI-ARASTIRMASI.md`](docs/KULLANICI-ARASTIRMASI.md) · Kullanılabilirlik testi: [`docs/KULLANILABILIRLIK-PROTOKOL.md`](docs/KULLANILABILIRLIK-PROTOKOL.md) → [sonuçlar](docs/KULLANILABILIRLIK-SONUCLARI.md) *(henüz koşulmadı)*
-Ekran görüntüleri: [`docs/gorseller/`](docs/gorseller/)
+Ekran görüntüleri: [`docs/gorseller/`](docs/gorseller/) — çalışan sistemden, `scripts/ekran_goruntuleri.py` ile yeniden üretilebilir
 Demo çekim senaryosu: [`docs/DEMO-SENARYOSU.md`](docs/DEMO-SENARYOSU.md) · Sunum içeriği: [`docs/SUNUM.md`](docs/SUNUM.md)
 
 ---
@@ -175,6 +175,9 @@ betiğin çıktısıdır.
 ../.venv/Scripts/python.exe -m eval.run_benchmark --corpus 20  # hızlı deneme
 ../.venv/Scripts/python.exe -m eval.run_latency                # adım adım gecikme
 ../.venv/Scripts/python.exe -m eval.run_startup                # açılış süresi, indeks kalıcılığı
+
+# Rapor görselleri — çalışan sistemden, on bir kare (docker ayakta olmalı)
+.venv/Scripts/python.exe scripts/ekran_goruntuleri.py
 ```
 
 `run_benchmark.py`, korpusun bir kısmını indekse hiç almaz (negatif kontrol): bu
