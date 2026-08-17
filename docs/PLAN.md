@@ -15,7 +15,7 @@ Bu proje, takımın elektronik harp (Zenith EH) çalışmasından **tamamen bağ
 | 2 Eyl 2026 | Teknik rapor sonuçları | |
 | 2–7 Eyl 2026 | Mentörlük ve geliştirme | |
 | **14 Eyl 2026, 17:00 TSİ** | **Final sunumu + prototip teslimi** | **37 gün** |
-| Eylül 2026 | Jüriye canlı sunum/demo | |
+| **20 Eyl 2026** | Jüri ve katılımcılara canlı sunum | |
 | 30 Eyl – 4 Eki 2026 | TEKNOFEST Şanlıurfa | |
 
 Rapor şablona uygun değilse veya geç yüklenirse **doğrudan eleme**. Şablon KYS'de yayımlanıyor — takım kaptanı indirmeli.
@@ -202,7 +202,7 @@ Marka ödül havuzu tanımlar, remix kuralları ve süre belirler; kampanya sonu
 - Kaynak kod temizliği, README, tek komutla çalışan Docker kurulumu
 - **14 Eylül 17:00'dan önce teslim**
 
-### Faz 6 — Eylül: Canlı sunum
+### Faz 6 — 15–20 Eylül: Canlı sunum
 - Prova, jüri soru-cevap hazırlığı, yedek plan (internet/GPU olmayan ortam için önceden kaydedilmiş demo)
 
 ---

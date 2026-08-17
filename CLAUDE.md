@@ -18,7 +18,13 @@ Ayırt edici iddia: kaynağı *bulmak* değil, kullanılan içerik oranını **�
 | 2 Eyl 2026 | Teknik rapor sonuçları |
 | 2–7 Eyl 2026 | Mentörlük |
 | **14 Eyl 2026, 17:00 TSİ** | Final sunumu + çalışan prototip teslimi |
+| 20 Eyl 2026 | Jüri ve katılımcılara canlı sunum |
 | 30 Eyl – 4 Eki 2026 | TEKNOFEST Şanlıurfa |
+
+Tarihler şartnamenin **V3** sürümünden (17.08.2026). V2'ye göre iki değişiklik var:
+canlı sunum "Eylül 2026" iken **20 Eylül** olarak kesinleşti, ve bir takım artık
+yarışma kapsamında yalnızca **tek başvuru** yapabilir (çok temalı başvuru hakkı
+kalktı; N-Emek zaten tek başvuru, İçerik Ekonomisi).
 
 Puan ağırlıkları: Yenilikçilik %20 · Teknik Yeterlilik %20 · Problem Çözme %20 · **UI/UX %20** · Sunum ve Prototip Kalitesi %10 · İş Modeli %10. Arayüz, AI motoruyla eşit ağırlıkta — "geliştirici demosu" görünümü puanın beşte birini götürür.
 
