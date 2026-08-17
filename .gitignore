@@ -54,3 +54,15 @@ frontend/dist/
 # olmasin diye buraya yazildi.
 docs/*SARTNAMESI*.pdf
 N-Emek-Plani.md
+
+# Teknik raporun uretilen hali. Tek kaynak `docs/RAPOR/*.md`; docx ve pdf
+# `rapor_docx.py` + `rapor_word.ps1` ile yeniden uretiliyor, tipki
+# `frontend/dist/` gibi. Ikisi birlikte 4,5 MB ve her uretimde bastan
+# yaziliyor - surum kontrolunde tutmak depoyu her koseden sisirirdi.
+# KYS sablonu bunun disinda: o bir *girdi*, hicbir betikle uretilemiyor
+# ve olmadan `rapor_docx.py` duruyor. Bu yuzden depoda tutuluyor.
+docs/RAPOR/N-Emek-Teknik-Rapor.docx
+docs/RAPOR/N-Emek-Teknik-Rapor.pdf
+
+# Word'un acik belge icin biraktigi kilit dosyalari.
+~$*
