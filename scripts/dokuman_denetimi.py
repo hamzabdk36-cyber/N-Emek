@@ -80,6 +80,9 @@ DEPO_DISI = {"N-Emek-Plani.md"}
 def taranan_dosyalar() -> list[Path]:
     dosyalar = [p for p in sorted(ROOT.glob("*.md")) if p.name not in DEPO_DISI]
     dosyalar += sorted((ROOT / "docs").glob("*.md"))
+    # Teknik raporun kaynak metni. Jurinin okuyacagi tek belge burasi;
+    # sayilarin dogrulanmadigi tek yer olmasi anlamsiz olurdu.
+    dosyalar += sorted((ROOT / "docs" / "RAPOR").glob("*.md"))
     akis = ROOT / ".github" / "workflows" / "ci.yml"
     if akis.exists():
         dosyalar.append(akis)
