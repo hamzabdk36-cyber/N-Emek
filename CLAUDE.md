@@ -28,7 +28,7 @@ kalktı; N-Emek zaten tek başvuru, İçerik Ekonomisi).
 
 Puan ağırlıkları: Yenilikçilik %20 · Teknik Yeterlilik %20 · Problem Çözme %20 · **UI/UX %20** · Sunum ve Prototip Kalitesi %10 · İş Modeli %10. Arayüz, AI motoruyla eşit ağırlıkta — "geliştirici demosu" görünümü puanın beşte birini götürür.
 
-Plan: `docs/PLAN.md` · Mimari ve diyagramlar: `docs/MIMARI.md` · Rapor içeriği: `docs/RAPOR-ICERIK.md`
+Plan: `docs/PLAN.md` · Mimari ve diyagramlar: `docs/MIMARI.md` · Teknik raporun kaynak metni: `docs/RAPOR/`
 Kullanıcı gözünden: `docs/KULLANICI-AKISLARI.md` (yolculuk + akış diyagramları) · `docs/REHBER.md` (ekran ekran) · `docs/gorseller/` (ekran görüntüleri — elle çekilmiyor, `scripts/ekran_goruntuleri.py` çalışan sistemden üretiyor ve yazı tipi inmemişse durur)
 İş modeli: `docs/IS-MODELI.md` — dağıtım rakamları kayıtlı `Payout` satırlarından okundu, uydurulmadı
 YZ mimarisi: `docs/YZ-MIMARISI.md` — model seçimi, eğitim yok–çıkarım var gerekçesi, GPU/CPU ölçümü
