@@ -253,25 +253,21 @@ notlarıdır; oturum sonunda Türkçeleştirilmiş SUS ölçeği uygulanır.
 
 | Ölçüt | Sonuç |
 |---|---|
-| Katılımcı sayısı | 5 — iki içerik üreticisi, iki sıradan paylaşan, bir marka yöneticisi |
+| Katılımcı sayısı | 5 — 2 üretici · 2 paylaşan · 1 marka yöneticisi |
 | Görev başarı oranı (altı görev ortalaması) | **%60,0** yardımsız · %80,0 yardımla |
 | Payın gerekçesini doğru anlatan katılımcı | **3 / 5** |
 | SUS skoru (hedef ≥ 68) | **60,0 — hedefin altında** |
 
 **Sonuç hedefin altında kaldı ve bu saklanmıyor.** Ölçümün amacı arayüzü doğrulamak
-değil, kusurlarını bulmaktı; bulundu. En ağır dört bulgu, dördü de doğrudan
-açıklanabilirlik iddiasına dokunuyor: kaynak arama ekranını beş katılımcıdan yalnızca
-biri yardımsız buldu; itiraz iki katılımcıda bir şikâyet kutusu sanıldı, yeniden ölçüm
-başlattığı ekrandan anlaşılmadı; ölçülen bölge maskesi iki katılımcıda ters okundu —
-parlak alan, kaynaktan gelen bölge değil *değiştirilen* bölge sanıldı; pay oranlarının
-hangi ölçüme göre değiştiği üç katılımcıda anlaşılmadı. Bulgular kayıt altındadır ve
-düzeltmeleri mentörlük dönemine planlanmıştır; bu raporun teslimi itibarıyla hiçbiri
-kapatılmamıştır.
-
-Ölçümün sınırları da yazılıdır: beş katılımcı istatistik üretmez, SUS bir eğilim
-göstergesidir, oturumların tamamını tek moderatör yürütmüştür ve başarısız görevlerde
-gerçek süre kaydedilmediği için ortalamalar protokolün üç dakikalık sınırıyla
-hesaplanmıştır.
+değil kusurlarını bulmaktı; dördü doğrudan açıklanabilirlik iddiasına dokunan yedi bulgu
+çıktı. Kaynak arama ekranını beş katılımcıdan yalnızca biri yardımsız buldu; itiraz iki
+katılımcıda şikâyet kutusu sanıldı, yeniden ölçüm başlattığı anlaşılmadı; ölçülen bölge
+maskesi iki katılımcıda ters okundu — parlak alan, kaynaktan gelen bölge değil
+*değiştirilen* bölge sanıldı; pay oranlarının hangi ölçüme göre değiştiği üç katılımcıda
+anlaşılmadı. Hiçbiri teslim itibarıyla kapatılmadı, düzeltmeler mentörlük dönemine
+planlandı. Sınırlar da kayıtlı: beş katılımcı istatistik üretmez, oturumları tek
+moderatör yürüttü ve başarısız görevlerde gerçek süre kaydedilmediği için ortalamalar
+protokolün üç dakikalık sınırıyla hesaplandı.
 
 Protokolün tamamı, moderatör kuralları ve boş kayıt formları
 `docs/KULLANILABILIRLIK-PROTOKOL.md` ile `docs/KULLANILABILIRLIK-SONUCLARI.md`
