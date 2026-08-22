@@ -1,0 +1,333 @@
+{
+  "kosum": {
+    "tarih_araligi": "22 Ağustos 2026",
+    "yoneten": "Takım üyesi — on görüşmenin tamamı aynı görüşmeci",
+    "yontem": "Sesli ve yüz yüze görüşme, kişi başı 20-25 dk; not tutuldu",
+    "not": "Katılımcılar kullanılabilirlik testine katılmadı; iki grup ayrı kişilerden oluşuyor."
+  },
+  "oruntuler": {
+    "tersine-arama-denendi": "Kaynağı bulmak için tersine görsel arama denendi (Google Görseller / Google Lens)",
+    "takip-birakildi": "Takip girişimi sonuçsuz kaldı ve bırakıldı",
+    "izinsiz-kullanim-yasandi": "İçeriği başkasının hesabında izinsiz kullanılmış",
+    "para-degil-taninma": "Talep edilen şey gelir değil; isim görünürlüğü, etiket veya bildirim",
+    "kendi-katkisi-gorunsun": "Düzenleyen kişi kendi katkısının da görünmesini istiyor",
+    "kaynak-belirsizligi-engel": "Kaynağı bilmemek ya paylaşımı durduruyor ya kaynaksız paylaşıma itiyor",
+    "yanlis-bilgi-pismanligi": "Doğruluğu şüpheli içeriği paylaşıp sonradan sildi",
+    "emek-kelimesi": "\"Emek\" kelimesini kendiliğinden kullandı",
+    "gelir-sorusunu-kendi-acti": "Gelir konusunu görüşmeci sormadan katılımcı açtı"
+  },
+  "terim_esleme": [
+    {
+      "kullanici": "kaynak",
+      "arayuz": "Köken"
+    },
+    {
+      "kullanici": "etiket / etiketlemek",
+      "arayuz": "Atıf"
+    },
+    {
+      "kullanici": "emek",
+      "arayuz": "Emek Kartı"
+    },
+    {
+      "kullanici": "çalıntı / çalmışlar",
+      "arayuz": "Türev içerik"
+    },
+    {
+      "kullanici": "adım / ismim görünsün",
+      "arayuz": "Pay dağılımı"
+    },
+    {
+      "kullanici": "bildirim / haberim olsa",
+      "arayuz": "(karşılığı yok)"
+    }
+  ],
+  "gorusmeler": [
+    {
+      "kod": "G1",
+      "profil": "Düzenli içerik üreten",
+      "dal": "A",
+      "varsayim": "V1",
+      "sonuc": "doğruladı",
+      "alinti": "Önce beğenmişler sandım, sonra baktım hiçbir yerde adım yok. Çok sinirlendim.",
+      "etiketler": [
+        "izinsiz-kullanim-yasandi",
+        "tersine-arama-denendi",
+        "takip-birakildi",
+        "para-degil-taninma",
+        "emek-kelimesi",
+        "gelir-sorusunu-kendi-acti"
+      ],
+      "terimler": [
+        "etiket / etiketlemek",
+        "emek",
+        "adım / ismim görünsün",
+        "bildirim / haberim olsa"
+      ],
+      "cevaplar": {
+        "1": "Genelde doğa ve sokak fotoğrafı çekiyorum. Haftada bir ya da iki kez paylaşıyorum, hikaye de atıyorum ama post daha az.",
+        "2": "En son geçen hafta sonu sahilde gün batımı fotoğrafı attım. Üç fotoğraflık bir seriydi, arabadan çektiğim bir kare de vardı. Çok beğenildi ama bir arkadaşım \"bunu sen mi çektin?\" diye sorunca hafif bozuldum. Yani emek verip çekiyorsun, insanlar şüphe ediyor.",
+        "3": "Evet, oldu. Geçen sene bir fotoğrafımı bir kafe hesabı kendi postu gibi paylaşmış. Arkadaşım gördü, \"senin fotoğrafın bu\" diye yazdı. Önce beğenmişler sandım, sonra baktım hiçbir yerde adım yok. Çok sinirlendim. Yorumda \"fotoğraf bana ait\" yazdım, kaldırdılar ama bir daha da kullanmadılar.",
+        "4": "O an otomatik etiket ya da en azından bana bildirim gelmesini isterdim. Biri kullanınca haberim olsa yeter.",
+        "5": "Google Görseller'e yükledim, başka iki hesapta daha çıktı. Tek tek aramak çok yorucu, bir süre sonra bıraktım.",
+        "15": "Takip kısmı. Bir şey paylaşıyorsun, nereye gidiyor belli olmuyor.",
+        "16": "Bence \"para kazanmak ister miydiniz?\" sorusu önemli olabilir."
+      }
+    },
+    {
+      "kod": "G2",
+      "profil": "Düzenli içerik üreten",
+      "dal": "A",
+      "varsayim": "V1",
+      "sonuc": "doğruladı",
+      "alinti": "Önce gururlandım, sonra bozuldum çünkü izin almamışlar. Tuhaf bir duygu.",
+      "etiketler": [
+        "izinsiz-kullanim-yasandi",
+        "tersine-arama-denendi",
+        "para-degil-taninma",
+        "emek-kelimesi",
+        "gelir-sorusunu-kendi-acti"
+      ],
+      "terimler": [
+        "kaynak",
+        "emek",
+        "adım / ismim görünsün"
+      ],
+      "cevaplar": {
+        "1": "Çizim ve illüstrasyon yapıyorum, haftada 2-3 post atıyorum. Daha çok Twitter ve Instagram kullanıyorum.",
+        "2": "En son bir anime karakteri çizimi attım. Üç gün uğraştım, detayları ince yaptım. Hikayede süreç videosu da paylaştım. Genelde süreç videosu daha çok ilgi çekiyor.",
+        "3": "Oluyor. Geçen ay bir YouTube kanalı çizimimi video kapağı yapmış, ismimi yazmamış. Ben de yorumlarda gördüm. Önce gururlandım, sonra bozuldum çünkü izin almamışlar. Tuhaf bir duygu.",
+        "4": "Hiç değilse kaynak belirtsinler ya da haber verseler. İdeal olan adımın görünmesi.",
+        "5": "Google Lens'e yükledim, başka hesaplarda da çıktı. Birine DM attım, \"kaldırır mısın\" dedim, kaldırdı ama soğuk davrandı.",
+        "15": "Emek karşılığı takdir görmek zor. İnsanlar ekran görüntüsü alınca her şeyi kendinin sanıyor.",
+        "16": "Belki \"bu işten gelir elde ediyor musunuz?\" diye sorabilirdiniz."
+      }
+    },
+    {
+      "kod": "G3",
+      "profil": "Düzenli içerik üreten",
+      "dal": "A",
+      "varsayim": "V1",
+      "sonuc": "doğruladı",
+      "alinti": "Kendi emeğim çöpe gitmiş gibi hissettim.",
+      "etiketler": [
+        "izinsiz-kullanim-yasandi",
+        "takip-birakildi",
+        "para-degil-taninma",
+        "emek-kelimesi"
+      ],
+      "terimler": [
+        "kaynak",
+        "emek",
+        "çalıntı / çalmışlar"
+      ],
+      "cevaplar": {
+        "1": "Yemek tarifi videoları çekiyorum. Haftada 1-2 reel, bazen de blog yazısı atıyorum.",
+        "2": "En son evde yaptığım kolay makarna tarifini attım. Kısa video, üstüne malzemeleri yazdım. Annem bile kaydetmiş, \"ben de yapacağım\" diye mesaj attı.",
+        "3": "Bir tarif videom başka bir sayfada aynen paylaşılmış, üstüne kendi logosunu koymuşlar. Yorumlarda \"çalıntı\" yazanlar olmuş, öyle fark ettim. Kendi emeğim çöpe gitmiş gibi hissettim.",
+        "4": "O an linkin altında \"kaynak\" görünsün ya da platform otomatik uyarsın isterdim.",
+        "5": "Şikayet ettim ama sonuç çıkmadı. Bir daha da uğraşmadım, çünkü çok vakit alıyor.",
+        "15": "Herkes paylaşıyor, kimse sormuyor. En zoru bu.",
+        "16": "Yok, bence yeterli."
+      }
+    },
+    {
+      "kod": "G4",
+      "profil": "Düzenli içerik üreten",
+      "dal": "A",
+      "varsayim": "V1",
+      "sonuc": "doğruladı",
+      "alinti": "Alıntı yapmak yerine çalmışlar.",
+      "etiketler": [
+        "izinsiz-kullanim-yasandi",
+        "tersine-arama-denendi",
+        "takip-birakildi",
+        "para-degil-taninma"
+      ],
+      "terimler": [
+        "kaynak",
+        "çalıntı / çalmışlar"
+      ],
+      "cevaplar": {
+        "1": "Kişisel deneyimlerimi yazıyorum, iş hayatına dair thread'ler. Haftada 3-4 tweet ve story atarım.",
+        "2": "En son iş arama süreciyle ilgili bir thread yazdım. 40-50 tweet oldu, çok kişi mesaj attı. Bazıları \"aynısını yaşıyorum\" dedi, iyi hissettirdi.",
+        "3": "Biri thread'imi ekran görüntüsü alıp başka platformda kendi yorumuyla paylaşmış, üstelik sanki kendi yaşadığı bir olay gibi. DM'den \"bu senin yazın mı?\" diye sordular, çok garip hissettim. Alıntı yapmak yerine çalmışlar.",
+        "4": "Kaynağın otomatik görünmesini isterdim. Ya da en azından alıntı yapılsın.",
+        "5": "Ekran görüntüsü üzerinden arama yaptım ama bulamadım, bıraktım. Zaten yazı olduğu için takip etmek daha zor.",
+        "15": "Yazılı içeriklerde kaynak belirtme alışkanlığı hiç yok, o zor.",
+        "16": "Belki \"bu durum sizi duygusal olarak nasıl etkiledi?\" diye daha derin sorabilirdiniz."
+      }
+    },
+    {
+      "kod": "G5",
+      "profil": "Başkasının içeriğini düzenleyip paylaşan",
+      "dal": "B",
+      "varsayim": "V2",
+      "sonuc": "sınanamadı",
+      "alinti": "Para değil de emek tanınsın.",
+      "etiketler": [
+        "kendi-katkisi-gorunsun",
+        "para-degil-taninma",
+        "kaynak-belirsizligi-engel",
+        "emek-kelimesi"
+      ],
+      "terimler": [
+        "kaynak",
+        "etiket / etiketlemek",
+        "emek"
+      ],
+      "cevaplar": {
+        "1": "Komik editler ve meme yapıyorum. Haftada birkaç kez hikayeye atarım, bazen de post.",
+        "2": "En son arkadaşımın fotoğrafını alıp üstüne yazı yazdım, şarkı ekledim, story olarak attım. Arkadaşım çok güldü, \"keşke ben de atsaydım\" dedi.",
+        "6": "Arkadaşımın kedi fotoğrafını aldım, üstüne \"pazartesi sendromu\" yazdım, arka plana müzik koydum. İki dakika sürdü ama çok komik oldu.",
+        "7": "Evet, arkadaşımı etiketledim çünkü foto onun kedisiydi. Başka kaynak yoktu zaten, etiketlemek doğal geldi.",
+        "8": "Anmasaydım muhtemelen \"bana ait değil\" diye düşünürdüm. Ama yine de etiketlerdim, çok önemli değil.",
+        "9": "Evet, edit'i ben yaptığım için \"edit by\" gibi bir ibare olmasını isterdim. Para değil de emek tanınsın.",
+        "15": "Bazen fotoğrafın kime ait olduğunu bilmiyorum, o yüzden paylaşmıyorum. Belirsizlik yorucu.",
+        "16": "Yok, teşekkürler."
+      },
+      "sonuc_notu": "Kaynak zaten biliniyordu (arkadaşının fotoğrafı); \"bilmediği için anmama\" durumu bu görüşmede test edilemedi."
+    },
+    {
+      "kod": "G6",
+      "profil": "Başkasının içeriğini düzenleyip paylaşan",
+      "dal": "B",
+      "varsayim": "V2",
+      "sonuc": "doğruladı",
+      "alinti": "Anmadım çünkü kaynak çok dağınık. Genelde bilmediğim için yazmıyorum.",
+      "etiketler": [
+        "kendi-katkisi-gorunsun",
+        "para-degil-taninma",
+        "kaynak-belirsizligi-engel",
+        "emek-kelimesi"
+      ],
+      "terimler": [
+        "kaynak",
+        "etiket / etiketlemek",
+        "emek"
+      ],
+      "cevaplar": {
+        "1": "Hayvan videoları, komik derlemeler. Haftada 3-4 kere paylaşıyorum.",
+        "2": "En son pazar günü bir kedi videosu derlemesi attım. TikTok'tan ve Instagram'dan birkaç klip indirdim, üstüne müzik ekledim.",
+        "6": "İki üç farklı hesaptan kedi köpek videosu indirdim, kestim, hızlandırdım, altyazı ekledim. Sonra story ve post olarak paylaştım.",
+        "7": "Pek kaynak yazmadım. Sadece bir videonun sahibini biliyorsam etiketledim. Genelde bilmediğim için yazmıyorum.",
+        "8": "Anmadım çünkü kaynak çok dağınık. Anmak isteseydim videonun altına \"kaynak: @hesap\" yazar ya da hikayede etiketlerdim.",
+        "9": "Kendi katkımın sayılmasını isterdim. Mesela \"derleme: ben\" gibi. Adil olan, kaynak sahipleri de görünsün ama benim de emeğim görünsün.",
+        "15": "Kaynak bulmak bazen çok zor, bazen imkansız. O yüzden ya paylaşmıyorum ya da kaynaksız atıyorum.",
+        "16": "Belki \"bu tür paylaşımlar yüzünden hiç sorun yaşadınız mı?\" sorusu eklenebilir."
+      }
+    },
+    {
+      "kod": "G7",
+      "profil": "Başkasının içeriğini düzenleyip paylaşan",
+      "dal": "B",
+      "varsayim": "V2",
+      "sonuc": "sınanamadı",
+      "alinti": "\"Hazırlayan: ben\" gibi bir not olsun isterdim. Küçük de olsa emek var.",
+      "etiketler": [
+        "kendi-katkisi-gorunsun",
+        "para-degil-taninma",
+        "emek-kelimesi"
+      ],
+      "terimler": [
+        "kaynak",
+        "etiket / etiketlemek",
+        "emek"
+      ],
+      "cevaplar": {
+        "1": "Fotoğraf editliyorum, eski fotoğrafları düzenleyip hikayede paylaşıyorum. Ayda birkaç kez.",
+        "2": "En son arkadaşımın doğum günü için eski fotoğraflarından bir kolaj yaptım, müzikli video yaptım. Ona attım, o da kendi hesabında paylaştı.",
+        "6": "Arkadaşımın çocukluk fotoğraflarını taradım, renkleri düzelttim, slayt yaptım, şarkı koydum. O da kendi hesabında paylaştı.",
+        "7": "Sadece arkadaşımı etiketledim, fotoğraflar onun olduğu için başka kaynak gerekmedi.",
+        "8": "Anmasaydım bile sorun olmazdı, çünkü aile içi. Ama yine de etiketledim.",
+        "9": "Evet, \"hazırlayan: ben\" gibi bir not olsun isterdim. Küçük de olsa emek var.",
+        "15": "Eski fotoğrafların kalitesi ve telifi belirsiz, o zor.",
+        "16": "Yok."
+      },
+      "sonuc_notu": "Kaynak zaten biliniyordu (arkadaşının aile fotoğrafları); anmama durumu test edilemedi."
+    },
+    {
+      "kod": "G8",
+      "profil": "Yalnızca paylaşan",
+      "dal": "C",
+      "varsayim": "V3",
+      "sonuc": "doğruladı",
+      "alinti": "Bir kere sahte bir yardım kampanyası görselini paylaşmıştım, sonradan asılsız çıktı. Keşke paylaşmasaydım dedim, sildim.",
+      "etiketler": [
+        "tersine-arama-denendi",
+        "takip-birakildi",
+        "kaynak-belirsizligi-engel",
+        "yanlis-bilgi-pismanligi"
+      ],
+      "terimler": [
+        "kaynak"
+      ],
+      "cevaplar": {
+        "1": "Genelde WhatsApp'tan gelen ilginç şeyleri, haberleri, bazen komik videoları story olarak paylaşıyorum. Haftada 2-3 kez.",
+        "2": "En son dün bir motivasyon sözü fotoğrafı paylaştım. WhatsApp grubundan gelmişti, hoşuma gitti, story attım.",
+        "10": "Evet, çok oldu. Görsel kimin bilmiyorum, çoğu zaten internetten alınmış.",
+        "11": "Bazen merak ediyorum, Google'a fotoğraf atıyorum ama çoğu zaman sonuç çıkmıyor. O yüzden bırakıyorum.",
+        "12": "Bir kere sahte bir yardım kampanyası görselini paylaşmıştım, sonradan asılsız çıktı. Keşke paylaşmasaydım dedim, sildim.",
+        "15": "Kaynak bilmemek ve yanlış bilgi paylaşmak zor geliyor.",
+        "16": "Bence \"doğrulama yapıyor musunuz?\" diye sorulabilir."
+      }
+    },
+    {
+      "kod": "G9",
+      "profil": "Yalnızca paylaşan",
+      "dal": "C",
+      "varsayim": "V3",
+      "sonuc": "doğruladı",
+      "alinti": "Görseli kimin çektiğini bilmiyorum, ama kaynak belirtmeden paylaşıyorum.",
+      "etiketler": [
+        "tersine-arama-denendi",
+        "kaynak-belirsizligi-engel",
+        "yanlis-bilgi-pismanligi"
+      ],
+      "terimler": [
+        "kaynak"
+      ],
+      "cevaplar": {
+        "1": "Komik gönderiler, haber bağlantıları, tarif videoları paylaşıyorum. Haftada 5-6 hikaye atarım.",
+        "2": "En son bir yemek videosunu hikayede paylaştım. Instagram'da gördüm, kaydetmek yerine paylaştım. Yapımı kolay görünüyordu.",
+        "10": "Sürekli oluyor. Görseli kimin çektiğini bilmiyorum, ama kaynak belirtmeden paylaşıyorum.",
+        "11": "Merak ettiğim oldu, özellikle bir fotoğraf çok güzelse. Google Lens'i deniyorum, bazen buluyor, bazen bulmuyor.",
+        "12": "Bir kere \"güncel\" sandığım bir olayın eski fotoğrafını paylaştım, yorumlarda uyardılar. Utanç vericiydi, hemen sildim.",
+        "15": "Görselin eski mi yeni mi, doğru mu yanlış mı ayırt etmek zor.",
+        "16": "Yok, bence bu kadar yeterli."
+      }
+    },
+    {
+      "kod": "G10",
+      "profil": "Marka / topluluk yöneticisi",
+      "dal": "D",
+      "varsayim": "—",
+      "sonuc": "kapsam dışı",
+      "alinti": "Benim fotoğrafım daha iyiydi ama çevrem olmadığı için kaybettim. Haklıydı aslında.",
+      "etiketler": [],
+      "terimler": [],
+      "cevaplar": {
+        "1": "Şirketimizin ürün fotoğrafları, kampanyalar, kullanıcıların gönderdiği içerikler. Haftada 5-7 gönderi.",
+        "2": "En son bir UGC yarışmasının kazananını açıkladım. Kullanıcılar fotoğraf yolladı, biz seçtik, kazananı duyurduk.",
+        "13": "Ödülü, en çok beğeni alan ve jürinin seçtiği iki kriterle dağıttık. Ama çoğunlukla beğeniye göre oldu. Bazıları \"haksızlık\" dedi, çünkü arkadaşlarını çağırmışlar.",
+        "14": "Evet, bir katılımcı \"benim fotoğrafım daha iyiydi ama çevrem olmadığı için kaybettim\" dedi. Haklıydı aslında. Bu yüzden bir sonraki yarışmada jüri ağırlığını artırdık.",
+        "15": "En zor kısım adil dağıtım. Kimin ne kadar hak ettiğini ölçmek çok zor.",
+        "16": "Belki \"yarışma dışı kullanıcı içeriklerinde telif nasıl yönetiliyor?\" diye sorabilirsiniz."
+      },
+      "sonuc_notu": "Marka profili V1-V3'ün dışında; kampanya dağıtımının ölçülememesi sorununu marka ağzından doğruluyor."
+    }
+  ],
+  "ozet": {
+    "urune_yansiyanlar": [
+      "**Talep edilen birincil şey gelir değil, görünürlük.** Üreticiler ve düzenleyenler kendiliğinden isim, etiket ve bildirim istedi; gelir konusunu yalnızca iki kişi ve yalnızca \"sormadığınız soru\" olarak açtı. N-Emek gelir paylaşımını merkeze koyuyor — atıf ve bildirim katmanının en az onun kadar görünür olması gerekiyor. \"İçeriğin şurada kullanıldı\" bildirimi İP-8'e alındı.",
+      "**Üretici tabanı kuralı kullanıcı tarafından doğrulandı.** Düzenleyen üç katılımcının üçü de kendi katkısının görünmesini istedi (\"edit by\", \"derleme: ben\", \"hazırlayan: ben\"). Kampanya kuralındaki %20 üretici tabanı bu talebin karşılığı; sadeleştirme adına kaldırılmayacak.",
+      "**\"Emek\" kullanıcının kendi kelimesi.** Altı katılımcı kendiliğinden kullandı; buna karşılık \"atıf\" ve \"köken\" hiçbir görüşmede geçmedi. Emek Kartı adı doğru duruyor; arayüzdeki \"Köken\" başlığı için kullanıcının kelimesi \"kaynak\" ve bu terim gözden geçirilecek.",
+      "**Paylaşan profili için kaynak aramanın motivasyonu atıf değil doğrulama.** İki paylaşanın ikisi de yanlış bilgi paylaşıp sildi; pişmanlıkları telif değil doğruluk üzerineydi. Kaynak Bul ekranı bu kitleye \"bu görsel nereden geliyor\" kadar \"bu görsel doğru mu\" vaadiyle de konumlanabilir.",
+      "**Problem tanımı marka ağzından doğrulandı.** Kampanya ödülü beğeniye göre dağıtılmış, bir katılımcı \"benim fotoğrafım daha iyiydi ama çevrem olmadığı için kaybettim\" demiş ve marka bunu haklı bulmuş. Ölçülmüş katkıya göre dağıtım, uydurulmuş bir ihtiyaç değil."
+    ],
+    "sinirlar_ek": [
+      "Görüşmelerin tamamını tek kişi yürüttü; soru sorma biçiminden gelen yanlılık dağılmıyor.",
+      "Görsel içerik ağırlıklı bir örneklem: video ve yazılı içerik üreten yalnızca ikişer kişiyle temsil edildi."
+    ]
+  }
+}

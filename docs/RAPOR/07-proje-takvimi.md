@@ -18,7 +18,8 @@ Takvim, yarışma takviminin dört sert tarihi etrafında kuruldu: **teknik rapo
 | İP-3 | Katkı payı ve gelir | Pay motoru, geçişli indirgeme, özel kapsama bölüntüsü, Emek Kartı, kampanya dağıtımı, itiraz akışı | 10-11 Ağu | Tamamlandı |
 | İP-4 | Değerlendirme ve ölçüm | 20 türev senaryosu, korpus tekilleştirme, 6.400 sorguluk değerlendirme, gecikme ölçümleri | 8-11 Ağu | Tamamlandı |
 | İP-5 | Arayüz ve erişilebilirlik | Referans istemci, remix stüdyosu, zincir görseli, tasarım sistemi, WCAG denetimi, mobil düzen | 10-11 Ağu | Tamamlandı |
-| İP-6 | Kullanıcı araştırması ve testi | Görüşme düzeneği, protokol, beş katılımcıyla oturumlar, SUS ölçeği | 12-20 Ağu | Sürüyor |
+| İP-6a | Kullanılabilirlik testi | Protokol, beş katılımcıyla oturumlar, SUS ölçeği, bulguların kaydı | 12-22 Ağu | Tamamlandı |
+| İP-6b | Kullanıcı araştırması | Görüşme rehberi, on katılımcıyla görüşme, varsayımların sınanması | 22 Ağu | Tamamlandı |
 | İP-7 | Teknik rapor | İçerik yazımı, kaynakça, görsellerin üretimi, biçim denetimi, KYS'ye yükleme | 14-23 Ağu | Sürüyor |
 | İP-8 | Ürünleştirme ve mentörlük | Mentör geri bildirimleri, ölçeklenme hazırlıkları, bilinen açıkların kapatılması | 25 Ağu - 7 Eyl | Planlı |
 | İP-9 | Final paketi | Demo videosu, sunum dosyası, kod temizliği, jüri makinesi tatbikatı | 8-14 Eyl | Planlı |
@@ -34,7 +35,8 @@ Takvim, yarışma takviminin dört sert tarihi etrafında kuruldu: **teknik rapo
 | KT-4 | Değerlendirme tamamlandı | 11 Ağu | 6.400 sorgu, Top-1 %98,7, F1 0,9753 |
 | KT-5 | Erişilebilirlik denetimi tamamlandı | 11 Ağu | Altı rotada sıfır bulgu, mobil düzen ölçüldü |
 | **KT-6** | **Teknik rapor KYS'ye yüklendi** | **23 Ağu** | Şartname son tarihi 24 Ağustos 17:00 |
-| KT-7 | Kullanılabilirlik testi sonuçlandı | 20 Ağu | Beş katılımcı, SUS skoru |
+| KT-7 | Kullanılabilirlik testi sonuçlandı | 22 Ağu | Beş katılımcı · SUS 60,0 · yedi bulgu kayıtlı |
+| KT-7b | Kullanıcı araştırması tamamlandı | 22 Ağu | On görüşme · üç varsayım sınandı |
 | KT-8 | Mentörlük geri bildirimleri uygulandı | 7 Eyl | Mentörlük süreci 2-7 Eylül |
 | **KT-9** | **Final paketi teslim edildi** | **14 Eyl** | Şartname son tarihi 14 Eylül 17:00 |
 | KT-10 | Jüri önünde canlı sunum yapıldı | 20 Eyl | Şartnamede ilan edilen canlı sunum tarihi |
@@ -44,9 +46,10 @@ Takvim, yarışma takviminin dört sert tarihi etrafında kuruldu: **teknik rapo
 - **Rapor 24 Ağustos'a değil, 23 Ağustos'a planlandı.** Şartname geç yüklenen raporun
   değerlendirmeye alınmayacağını söylüyor; son günün son saatine bırakmak, kabul
   edilebilir olmayan tek riski üretirdi.
-- **İP-6 rapordan önce bitiyor.** Kullanılabilirlik testi sonuçlarının rapora
-  girebilmesi için oturumların 20 Ağustos'ta tamamlanması gerekiyor. Sonuç gelmezse
-  rapor testi "planlanan yöntem" olarak anlatır ve sonuç iddia etmez.
+- **İP-6 ikiye ayrıldı.** Kullanıcı tarafındaki iki iş farklı sorular soruyor:
+  kullanılabilirlik testi *ürün kullanılabiliyor mu* (İP-6a), kullanıcı araştırması
+  *problem gerçek mi* (İP-6b). İkisi ayrı katılımcılarla koşuldu ve ikisi de rapordan
+  önce tamamlandı.
 - **25 Ağustos - 1 Eylül aralığı teknik rapor sonuçlarının beklendiği dönemdir.** Bu
   süre boş bırakılmadı; ürünleştirme çalışmaları bağımsız olarak sürüyor, mentörlük
   başladığında (2 Eylül) ürün geri bildirim alabilecek durumda oluyor.

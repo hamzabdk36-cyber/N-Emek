@@ -269,10 +269,25 @@ planlandı. Sınırlar da kayıtlı: beş katılımcı istatistik üretmez, otur
 moderatör yürüttü ve başarısız görevlerde gerçek süre kaydedilmediği için ortalamalar
 protokolün üç dakikalık sınırıyla hesaplandı.
 
-Protokolün tamamı, moderatör kuralları ve boş kayıt formları
-`docs/KULLANILABILIRLIK-PROTOKOL.md` ile `docs/KULLANILABILIRLIK-SONUCLARI.md`
-belgelerindedir; içerik üreticileriyle yapılan görüşmelerin özeti
-`docs/KULLANICI-ARASTIRMASI.md` içindedir.
+Protokolün tamamı ve oturum kayıt formu `docs/KULLANILABILIRLIK-PROTOKOL.md` ile
+`docs/KULLANILABILIRLIK-FORMU.md`, ham kayıtlar ve hesaplanmış sonuçlar
+`docs/KULLANILABILIRLIK-SONUCLARI.md` belgelerindedir.
+
+**Kullanıcı araştırması.** Ayrı bir soruyu sınamak için — *ürün kullanılabiliyor mu*
+değil, *problem gerçek mi* — dört profilden on kişiyle, kullanılabilirlik testine
+katılmamış katılımcılarla görüşüldü (`docs/KULLANICI-ARASTIRMASI.md`). Sorular
+bilerek geçmişe dairdi; hipotetik soru sorulmadı. Üreticilerin dördü de içeriğinin
+izinsiz kullanıldığı somut bir olay anlattı ve beşi tersine görsel arama deneyip
+sonuç alamadan bıraktı — problem tanımının doğrudan karşılığı. Marka tarafı da aynı
+boşluğu doğruladı: ödül beğeniye göre dağıtılmış, bir katılımcı *"benim fotoğrafım
+daha iyiydi ama çevrem olmadığı için kaybettim"* demiş ve marka bunu haklı bulmuş.
+
+En değerli bulgu beklenenin dışındaydı: **kendiliğinden talep edilen şey gelir değil
+görünürlüktü** (on kişinin yedisi isim, etiket veya bildirim istedi; gelir konusunu
+yalnızca iki kişi ve ancak "sormadığınız soru" olarak açtı). Bu, gelir paylaşımını
+geçersiz kılmıyor ama ürünün vurgusunu etkiliyor: atıf ve bildirim katmanı en az
+dağıtım kadar görünür olmalı. İkinci bulgu terim düzeyinde: "emek" kelimesini altı
+katılımcı kendiliğinden kullandı, "atıf" ve "köken" hiçbir görüşmede geçmedi.
 
 **Hedef kitleye uygunluk.** Arayüz, teknik olmayan bir içerik üreticisinin ürünü
 anlayabilmesi üzerine kuruldu. Akıştaki bir gönderinin kökeni tek satır düz metinle
