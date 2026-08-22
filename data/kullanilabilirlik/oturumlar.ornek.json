@@ -1,0 +1,42 @@
+{
+  "_ornek": true,
+  "_aciklama": "SEMA ORNEGI. Bu dosyayi oturumlar.json olarak kopyalayin, _ornek ve _aciklama alanlarini SILIN, gercek verilerle doldurun. Betik _ornek alani duruyorsa calismayi reddeder.",
+
+  "kosum": {
+    "tur": "dis",
+    "tarih_araligi": "22-23 Ağustos 2026",
+    "yoneten": "Takım üyesi 2",
+    "commit": "e1db5d9",
+    "ortam": "Chrome 141 · 1920×1080 · 1 oturum dokunmatik (iPhone Safari)"
+  },
+
+  "katilimcilar": [
+    {
+      "kod": "K1",
+      "profil": "İçerik üreticisi",
+      "haftalik_paylasim": "3-4",
+      "duzenleyip_paylasti": "Evet",
+      "atif_araci_deneyimi": "Hayır",
+      "cihaz": "Masaüstü · Chrome",
+      "dokunmatik": false,
+      "gorevler": {
+        "1": { "basari": "T", "sure": 0, "yanlis_tiklama": 0, "not": "" },
+        "2": { "basari": "T", "sure": 0, "yanlis_tiklama": 0, "not": "" },
+        "3": { "basari": "T", "sure": 0, "yanlis_tiklama": 0, "not": "" },
+        "4": { "basari": "T", "sure": 0, "yanlis_tiklama": 0, "not": "" },
+        "5": { "basari": "T", "sure": 0, "yanlis_tiklama": 0, "not": "" },
+        "6": { "basari": "T", "sure": 0, "yanlis_tiklama": 0, "not": "" }
+      },
+      "sus": [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+      "acik": {
+        "ne_yapiyor": "",
+        "kafa_karistiran": "",
+        "yukler_miydiniz": ""
+      }
+    }
+  ],
+
+  "bulgular": [
+    { "bulgu": "", "kac_katilimci": 0, "agirlik": "Yüksek", "durum": "Açık" }
+  ]
+}
