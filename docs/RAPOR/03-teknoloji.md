@@ -244,8 +244,8 @@ uçtan uca elle klavye gezintisi, Lighthouse skoru ve metin büyütme (WCAG 1.4.
 
 ![Şekil 4 — Aynı Emek Kartı 390×844 piksellik mobil görünümde: iki satırlık üst çubuk, pay dağılımı ve formül satırı; yatay kayma yok.](docs/gorseller/11-mobil.jpg)
 
-**Kullanılabilirlik testi.** Test, üç profilden (içerik üreticisi, remixleyen, marka
-tarafı) beş katılımcıyla, altı görevlik bir protokolle koşuldu. Protokolün merkezindeki
+**Kullanılabilirlik testi.** Test, üç profilden (içerik üreticisi, sıradan paylaşan, marka
+yöneticisi) beş katılımcıyla, altı görevlik bir protokolle koşuldu. Protokolün merkezindeki
 görev ikincidir: *"Emek Kartı'ndaki payın gerekçesini kendi cümlenle söyle."* Bu görev,
 projenin açıklanabilirlik iddiasını doğrudan sınar — kullanıcı formülü değil, **nedeni**
 anlatabiliyor mu. Ölçütler görev başına başarı, süre, hata sayısı ve sesli düşünme
@@ -253,12 +253,25 @@ notlarıdır; oturum sonunda Türkçeleştirilmiş SUS ölçeği uygulanır.
 
 | Ölçüt | Sonuç |
 |---|---|
-| Katılımcı sayısı | ___ |
-| Görev başarı oranı (altı görev ortalaması) | ___ |
-| Payın gerekçesini doğru anlatan katılımcı | ___ |
-| SUS skoru (hedef ≥ 68) | ___ |
+| Katılımcı sayısı | 5 — iki içerik üreticisi, iki sıradan paylaşan, bir marka yöneticisi |
+| Görev başarı oranı (altı görev ortalaması) | **%60,0** yardımsız · %80,0 yardımla |
+| Payın gerekçesini doğru anlatan katılımcı | **3 / 5** |
+| SUS skoru (hedef ≥ 68) | **60,0 — hedefin altında** |
 
-Bulunan başlıca kusurlar ve yapılan düzeltmeler: ___
+**Sonuç hedefin altında kaldı ve bu saklanmıyor.** Ölçümün amacı arayüzü doğrulamak
+değil, kusurlarını bulmaktı; bulundu. En ağır dört bulgu, dördü de doğrudan
+açıklanabilirlik iddiasına dokunuyor: kaynak arama ekranını beş katılımcıdan yalnızca
+biri yardımsız buldu; itiraz iki katılımcıda bir şikâyet kutusu sanıldı, yeniden ölçüm
+başlattığı ekrandan anlaşılmadı; ölçülen bölge maskesi iki katılımcıda ters okundu —
+parlak alan, kaynaktan gelen bölge değil *değiştirilen* bölge sanıldı; pay oranlarının
+hangi ölçüme göre değiştiği üç katılımcıda anlaşılmadı. Bulgular kayıt altındadır ve
+düzeltmeleri mentörlük dönemine planlanmıştır; bu raporun teslimi itibarıyla hiçbiri
+kapatılmamıştır.
+
+Ölçümün sınırları da yazılıdır: beş katılımcı istatistik üretmez, SUS bir eğilim
+göstergesidir, oturumların tamamını tek moderatör yürütmüştür ve başarısız görevlerde
+gerçek süre kaydedilmediği için ortalamalar protokolün üç dakikalık sınırıyla
+hesaplanmıştır.
 
 Protokolün tamamı, moderatör kuralları ve boş kayıt formları
 `docs/KULLANILABILIRLIK-PROTOKOL.md` ile `docs/KULLANILABILIRLIK-SONUCLARI.md`

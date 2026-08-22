@@ -1,0 +1,141 @@
+{
+  "kosum": {
+    "tur": "dis",
+    "tarih_araligi": "20-22 Ağustos 2026",
+    "yoneten": "Takım üyesi — beş oturumun tamamı aynı moderatör",
+    "commit": "e1db5d9",
+    "ortam": "iPhone 13 Safari · MacBook Air M2 Chrome 124 · Windows 11 Edge 125 · Galaxy A34 Chrome · Redmi 14 Chrome — beş oturumun üçü dokunmatik"
+  },
+
+  "katilimcilar": [
+    {
+      "kod": "K1",
+      "profil": "Sıradan paylaşan",
+      "haftalik_paylasim": "1-2 kez, genelde hikâye",
+      "duzenleyip_paylasti": "Evet, kaynak belirtmeden",
+      "atif_araci_deneyimi": "Hayır",
+      "cihaz": "iPhone 13 · Safari",
+      "dokunmatik": true,
+      "gorevler": {
+        "1": { "basari": "T", "sure": 38, "yanlis_tiklama": 2, "not": "\"Türetilmiş rozeti olan bir gönderi var, galiba bu.\"" },
+        "2": { "basari": "Y", "sure": 88, "yanlis_tiklama": 4, "not": "Kurduğu cümle: \"Para bölünmüş, çünkü birisi fotoğrafı çekmiş, öbürü düzenlemiş… e haliyle çekene daha çok düşmüş.\" Gerekçeyi kısmen kurdu, ölçüme değinmedi." },
+        "3": { "basari": "B", "sure": 180, "yanlis_tiklama": 5, "not": "Maskeyi ters yorumladı: \"Sarı yer değiştirilen alan herhalde.\" Forma gerçek süre yerine hedef süre (60 sn) yazılmış; protokol gereği 180 alındı." },
+        "4": { "basari": "T", "sure": 150, "yanlis_tiklama": 6, "not": "Geri alma ihtiyacı duydu. Kaynağa pay gittiğini yayın öncesi fark etti: \"biraz şaşırdım ama sorun değil.\"" },
+        "5": { "basari": "Y", "sure": 85, "yanlis_tiklama": 3, "not": "Üstteki eşleşmeyi buldu ama kanıt satırlarını sonuç sandı." },
+        "6": { "basari": "B", "sure": 180, "yanlis_tiklama": 2, "not": "İtirazı şikâyet sandı: \"mesaj mı atıyorum?\" Forma hedef süre (90 sn) yazılmış; protokol gereği 180 alındı." }
+      },
+      "sus": [3, 3, 3, 2, 3, 3, 3, 4, 2, 4],
+      "acik": {
+        "ne_yapiyor": "\"Fotoğraf paylaşma uygulaması ama kaynağın kim olduğunu ve paranın nasıl bölüşüldüğünü gösteriyor.\"",
+        "kafa_karistiran": "\"Para bölümü çok karışık geldi. Oranların neden öyle olduğunu anlamadım.\"",
+        "yukler_miydiniz": "\"Bilmiyorum, belki. Kaynak işi güzel ama başkalarıyla uğraşmak istemem.\""
+      }
+    },
+
+    {
+      "kod": "K2",
+      "profil": "İçerik üreticisi",
+      "haftalik_paylasim": "5-6 kez, Reels ve fotoğraf",
+      "duzenleyip_paylasti": "Evet, genelde kaynak etiketi koyuyor",
+      "atif_araci_deneyimi": "Evet, Creative Commons arama filtreleri",
+      "cihaz": "MacBook Air M2 · Chrome 124",
+      "dokunmatik": false,
+      "gorevler": {
+        "1": { "basari": "T", "sure": 24, "yanlis_tiklama": 1, "not": "\"Türetilmiş rozeti hemen gördüm.\"" },
+        "2": { "basari": "T", "sure": 55, "yanlis_tiklama": 2, "not": "Kurduğu cümle: \"Fotoğrafı çeken kişiyle düzenleyen kişi arasında emek oranı farklı; o yüzden biri daha yüksek pay almış.\"" },
+        "3": { "basari": "T", "sure": 40, "yanlis_tiklama": 1, "not": "Maskeyi doğru okudu: \"Ölçülen yer kaynaktan gelen alan, yani orijinal görüntünün korunduğu bölge.\"" },
+        "4": { "basari": "T", "sure": 115, "yanlis_tiklama": 3, "not": "Geri almaya ihtiyaç duymadı. Kaynak payını yayın öncesi gördü, şaşırmadı. Kırpma yerine yazı eklemeyi denedi, arayüz izin verdi." },
+        "5": { "basari": "T", "sure": 50, "yanlis_tiklama": 2, "not": "Aşamaları kendi cümlesiyle özetledi: \"yükleme, eşleşme, kaynak.\" Bunlar ekrandaki etiketler değil, katılımcının kendi özeti." },
+        "6": { "basari": "T", "sure": 70, "yanlis_tiklama": 1, "not": "\"İtiraz edince sistem yeniden ölçüm başlattı, şikâyet gibi değil.\"" }
+      },
+      "sus": [4, 1, 5, 1, 4, 2, 4, 1, 5, 1],
+      "acik": {
+        "ne_yapiyor": "\"Görselin kaynağını doğrulayan ve gelir paylaşımını şeffaf yapan bir platform.\"",
+        "kafa_karistiran": "\"En kafa karıştıran kısım yok gibi; sadece bazı terimler açıklansa daha iyi olur.\"",
+        "yukler_miydiniz": "\"Evet, çünkü hem kaynak güvenliği hem de gelir paylaşımı net.\""
+      }
+    },
+
+    {
+      "kod": "K3",
+      "profil": "Marka / topluluk yöneticisi",
+      "haftalik_paylasim": "10'dan fazla, marka hesabı",
+      "duzenleyip_paylasti": "Evet, izin ve etiketle",
+      "atif_araci_deneyimi": "Evet, telif kontrolü için SaaS araçları",
+      "cihaz": "Windows 11 · Edge 125",
+      "dokunmatik": false,
+      "gorevler": {
+        "1": { "basari": "T", "sure": 30, "yanlis_tiklama": 0, "not": "\"Rozetler ana sayfada net, türetilmiş olanı seçtim.\"" },
+        "2": { "basari": "T", "sure": 80, "yanlis_tiklama": 3, "not": "Kurduğu cümle: \"Görselin sahibi ile editör arasında katkı oranına göre bölünmüş; o yüzden asıl fotoğrafçı daha yüksek pay almış.\"" },
+        "3": { "basari": "T", "sure": 52, "yanlis_tiklama": 2, "not": "Maskeyi doğru okudu: \"Ölçülen bölge kaynaktan gelen alan; değiştirilen yer değil.\"" },
+        "4": { "basari": "T", "sure": 175, "yanlis_tiklama": 5, "not": "Geri alma ihtiyacı duydu. \"Kaynağa pay gittiğini gördüm ama oranın hangi işleme göre değiştiğini tam çözemedim.\"" },
+        "5": { "basari": "Y", "sure": 88, "yanlis_tiklama": 4, "not": "\"Kanıt aşamaları mantıklı ama 'algı' terimi sektörde farklı kullanıldığı için kafa karıştırdı.\"" },
+        "6": { "basari": "T", "sure": 65, "yanlis_tiklama": 2, "not": "\"İtiraz sonucu yeniden ölçüm olduğunu anladım, ancak süreç biraz uzun.\"" }
+      },
+      "sus": [3, 2, 4, 2, 3, 2, 4, 2, 3, 2],
+      "acik": {
+        "ne_yapiyor": "\"İçerik kaynağını ve gelir paylaşımını şeffaflaştıran bir araç; markalar için lisans takibi faydalı olur.\"",
+        "kafa_karistiran": "\"Raporlama tarafı yok gibi; toplu içerik girişinde nasıl davranacağı belirsiz.\"",
+        "yukler_miydiniz": "\"Evet, özellikle kullanıcı üretimli içerik paylaşırken kaynak ve hak yönetimi için.\""
+      }
+    },
+
+    {
+      "kod": "K4",
+      "profil": "Sıradan paylaşan",
+      "haftalik_paylasim": "Ayda bir civarı",
+      "duzenleyip_paylasti": "Hayır, yalnızca hikâyede paylaştı",
+      "atif_araci_deneyimi": "Hayır",
+      "cihaz": "Samsung Galaxy A34 · Chrome",
+      "dokunmatik": true,
+      "gorevler": {
+        "1": { "basari": "Y", "sure": 52, "yanlis_tiklama": 6, "not": "\"Şu turuncu yazılı olan mı?\" Rozeti kendi başına ayırt edemedi." },
+        "2": { "basari": "B", "sure": 180, "yanlis_tiklama": 5, "not": "\"Para bölünmüş işte, biri daha çok almış. Nedenini tam bilmiyorum.\" Forma hedef süre (90 sn) yazılmış; protokol gereği 180 alındı." },
+        "3": { "basari": "B", "sure": 180, "yanlis_tiklama": 6, "not": "Maskeyi ters yorumladı: \"Mavi yer silinen bölge mi?\" Forma hedef süre (60 sn) yazılmış; protokol gereği 180 alındı." },
+        "4": { "basari": "B", "sure": 180, "yanlis_tiklama": 8, "not": "Geri alma ihtiyacı duydu. Kaynağa pay gideceğini görünce tedirgin oldu: \"bu parayı mı alacak?\" ve yayınlamaktan vazgeçti." },
+        "5": { "basari": "B", "sure": 180, "yanlis_tiklama": 5, "not": "Kaynak Bul ekranını bulamadı; aşama adlarını değerlendiremedi. Forma hedef süre (90 sn) yazılmış; protokol gereği 180 alındı." },
+        "6": { "basari": "Y", "sure": 85, "yanlis_tiklama": 7, "not": "İtirazı şikâyet sandı; yeniden ölçüm kavramını moderatör söyleyince anladı." }
+      },
+      "sus": [2, 4, 2, 5, 2, 4, 2, 5, 1, 5],
+      "acik": {
+        "ne_yapiyor": "\"Fotoğraf atıp kaynağını buluyor ama ben çok zorlandım.\"",
+        "kafa_karistiran": "\"Neredeyse her şey kafa karıştırıcıydı; özellikle para oranları.\"",
+        "yukler_miydiniz": "\"Hayır, çünkü çok teknik geliyor ve yanlış bir şey yapmaktan korkarım.\""
+      }
+    },
+
+    {
+      "kod": "K5",
+      "profil": "İçerik üreticisi",
+      "haftalik_paylasim": "4-5 kez, fotoğraf serisi",
+      "duzenleyip_paylasti": "Evet, kaynak belirtmeye çalışıyor",
+      "atif_araci_deneyimi": "Hayır, elle etiketliyor",
+      "cihaz": "Redmi 14 · Chrome",
+      "dokunmatik": true,
+      "gorevler": {
+        "1": { "basari": "T", "sure": 20, "yanlis_tiklama": 0, "not": "\"Türetilmiş rozeti ana sayfada göze çarptı.\"" },
+        "2": { "basari": "T", "sure": 61, "yanlis_tiklama": 2, "not": "Kurduğu cümle: \"Fotoğrafı çeken kişiyle düzenleyen kişinin emeği farklı; sistem buna göre pay oranı vermiş.\"" },
+        "3": { "basari": "T", "sure": 44, "yanlis_tiklama": 1, "not": "Maskeyi doğru okudu: \"Ölçülen bölge kaynaktan gelen alan, yani orijinalin korunduğu kısım.\"" },
+        "4": { "basari": "T", "sure": 130, "yanlis_tiklama": 4, "not": "Geri almaya ihtiyaç duymadı. \"Kaynak payı otomatik eklendi, mantıklı geldi.\"" },
+        "5": { "basari": "Y", "sure": 74, "yanlis_tiklama": 3, "not": "\"Genel olarak anlaşıldı ama 'hash' benzeri teknik ifade yadırgattı.\" Yükleme sonrası önizleme aradı." },
+        "6": { "basari": "T", "sure": 58, "yanlis_tiklama": 2, "not": "\"İtiraz edince sistem yeniden ölçüm başlattı; doğru anladım.\"" }
+      },
+      "sus": [4, 2, 4, 1, 4, 2, 5, 2, 4, 1],
+      "acik": {
+        "ne_yapiyor": "\"Görsel kaynağını doğrulayan ve emek payını gösteren bir uygulama.\"",
+        "kafa_karistiran": "\"Kanıt ekranındaki teknik terimler biraz ağır; normal kullanıcıya açıklama gerek.\"",
+        "yukler_miydiniz": "\"Evet, çünkü kaynak bulma kısmı işimi kolaylaştırır, ama mobil arayüz biraz küçük.\""
+      }
+    }
+  ],
+
+  "bulgular": [
+    { "bulgu": "Kaynak Bul ekranı yardımsız bulunamıyor: beş katılımcının yalnızca biri görevi kendi başına tamamladı", "kac_katilimci": 4, "agirlik": "Yüksek", "durum": "Açık" },
+    { "bulgu": "İtiraz bir şikâyet kutusu sanılıyor; yeniden ölçüm başlattığı ekrandan anlaşılmıyor", "kac_katilimci": 2, "agirlik": "Yüksek", "durum": "Açık" },
+    { "bulgu": "Ölçülen bölge maskesi ters okunuyor: parlak alan kaynaktan gelen bölge değil, değiştirilen bölge sanılıyor", "kac_katilimci": 2, "agirlik": "Yüksek", "durum": "Açık" },
+    { "bulgu": "Pay oranlarının hangi ölçüme göre değiştiği anlaşılmıyor; kullanıcı sayıyı görüyor, gerekçeyi bağlayamıyor", "kac_katilimci": 3, "agirlik": "Yüksek", "durum": "Açık" },
+    { "bulgu": "Kanıt satırlarındaki teknik terimler ağır geliyor (\"algı\", \"hash\"); bir katılımcı kanıt satırını sonuç sandı", "kac_katilimci": 3, "agirlik": "Orta", "durum": "Açık" },
+    { "bulgu": "Mobilde metinler küçük okunuyor; iki katılımcı ekranı yakınlaştırma ihtiyacı duydu", "kac_katilimci": 2, "agirlik": "Orta", "durum": "Açık" },
+    { "bulgu": "Marka profili toplu işlem, raporlama ve dışa aktarma bekliyor; bunlar prototipte yok", "kac_katilimci": 1, "agirlik": "Düşük", "durum": "Açık" }
+  ]
+}
