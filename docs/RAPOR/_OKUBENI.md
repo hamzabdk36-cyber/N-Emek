@@ -27,20 +27,23 @@ kenar boşlukları 2,5 cm · **en fazla 30 sayfa** (kapak, içindekiler, kaynak�
 Şablon dosyasının kendi `docDefaults` değeri satır aralığını 1,5 veriyor ve yaslamayı
 hiç söylemiyor — yazılı kural kazanıyor, üretici bunu açıktan yazıyor.
 
-## Elle yapılacak tek iş: kapak
+## Kapak
 
-Kapak bir metin kutusu; `rapor_docx.py` ona dokunmuyor. Word'de açıp doldurulacak:
+Kapak, şablonun kendi metin kutusu ve `rapor_docx.py` her koşumda şablonu baştan
+kopyalıyor. Bu yüzden kapak **Word'de elle doldurulmaz**: doldurulsaydı bir sonraki
+üretimde sessizce silinirdi — gövdedeki yer tutucularla aynı tuzak.
 
-| Alan | Ne yazılacak |
+Değerler betikteki `KAPAK` sözlüğünde, tek kaynakta:
+
+| Alan | Değer |
 |---|---|
 | Proje Adı | N-Emek — Açıklanabilir İçerik Atıf ve Adil Gelir Paylaşım Sistemi |
-| Takım Adı | *(takımdan)* |
-| Takım ID | *(KYS'den)* |
-| Başvuru ID | *(KYS'den)* |
-| Tematik Alan | Yalnızca **İçerik Ekonomisi** bırakılacak, diğer iki tema silinecek |
+| Takım Adı | ZENITH N |
+| Takım ID | 1003461 |
+| Başvuru ID | 5382505 |
+| Tematik Alan | İçerik Ekonomisi *(şablondaki diğer iki tema düşüyor)* |
 
-Aynı şekilde **8.1'deki rol tablosunun satırları** da boş bırakıldı. `rapor_denetimi.py`
-bu alanlar dolmadan yeşile dönmez.
+Betik her üretimde kaç alan doldurduğunu basar; biri tutmazsa `KAPAK EKSİK` der.
 
 ## Sayı disiplini
 

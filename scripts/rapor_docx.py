@@ -81,6 +81,19 @@ except ModuleNotFoundError as exc:  # pragma: no cover - kurulum yonlendirmesi
 
 ROOT = Path(__file__).resolve().parents[1]
 SABLON = ROOT / "docs" / "NSosyal_Inovasyon_2026_-_Proje_Teknik_Raporu_1_u6IVb.docx"
+
+# Kapak, sablonun kendi metin kutusu. Bu betik her kosumda sablonu bastan
+# kopyaladigi icin (shutil.copy2), Word'de elle doldurulan bir kapak bir
+# sonraki uretimde sessizce silinirdi - govdedeki yer tutucularla ayni
+# tuzak. Bu yuzden kapak da tek kaynaktan, buradan doluyor.
+KAPAK = {
+    "Proje Adı:": "N-Emek — Açıklanabilir İçerik Atıf ve Adil Gelir Paylaşım Sistemi",
+    "Takım Adı:": "ZENITH N",
+    "Takım ID:": "1003461",
+    "Başvuru ID:": "5382505",
+    # Sablon uc temayi da yan yana yaziyor; yalnizca basvurulan tema kalir.
+    "Tematik Alan:": "İçerik Ekonomisi",
+}
 KAYNAK_DIZIN = ROOT / "docs" / "RAPOR"
 CIKTI = KAYNAK_DIZIN / "N-Emek-Teknik-Rapor.docx"
 
@@ -450,10 +463,45 @@ def bloklari_uret(belge, bloklar: list[tuple[str, list[str]]]) -> list:
 
 
 # ---------------------------------------------------------------------------
+def kapagi_doldur(belge) -> list[str]:
+    """Kapak metin kutusundaki alanlari doldurur.
+
+    Sablonda her alan tek bir run ("Proje Adı:" gibi); etiketi koruyup
+    degeri arkasina yaziyoruz. Kutu belgede iki kez geciyor - Word eski
+    surumler icin alternatif bir kopya birakiyor - ve ikisi de doluyor,
+    yoksa belgeyi acan surume gore kapak bos gorunebilirdi.
+    """
+    dolan: list[str] = []
+    for kutu in belge.element.body.iter(qn("w:txbxContent")):
+        for paragraf in kutu.iter(qn("w:p")):
+            metin = paragraf_metni(paragraf)
+            for etiket, deger in KAPAK.items():
+                if not metin.startswith(etiket):
+                    continue
+                calismalar = paragraf.findall(qn("w:r"))
+                if not calismalar:
+                    continue
+                ilk = calismalar[0].find(qn("w:t"))
+                if ilk is None:
+                    continue
+                ilk.text = f"{etiket} {deger}"
+                ilk.set(qn("xml:space"), "preserve")
+                for fazla in calismalar[1:]:
+                    metin_dugumu = fazla.find(qn("w:t"))
+                    if metin_dugumu is not None:
+                        metin_dugumu.text = ""
+                if etiket not in dolan:
+                    dolan.append(etiket)
+                break
+    return dolan
+
+
+# ---------------------------------------------------------------------------
 def uret(sablon: Path, cikti: Path, bolumler: dict[str, list[str]]) -> dict:
     cikti.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(sablon, cikti)
     belge = docx.Document(str(cikti))
+    kapak = kapagi_doldur(belge)
     govde = belge.element.body
 
     cocuklar = list(govde)
@@ -543,6 +591,7 @@ def uret(sablon: Path, cikti: Path, bolumler: dict[str, list[str]]) -> dict:
         "capa": len(capalar),
         "yazilan": yazilan,
         "bos": [ad for _, ad in capalar if ad not in bolumler],
+        "kapak": kapak,
     }
 
 
@@ -565,6 +614,11 @@ def main() -> int:
     boyut = args.cikti.stat().st_size / 1024
     print(f"✓ {args.cikti}  ({boyut:.0f} kB)")
     print(f"  {ozet['yazilan']}/{ozet['capa']} başlık dolduruldu")
+    eksik_kapak = [ad for ad in KAPAK if ad not in ozet["kapak"]]
+    if eksik_kapak:
+        print("  KAPAK EKSİK: " + ", ".join(eksik_kapak))
+    else:
+        print(f"  kapak: {len(ozet['kapak'])} alan dolduruldu")
     if ozet["bos"]:
         print("  henüz boş:")
         for ad in ozet["bos"]:
