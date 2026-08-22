@@ -8,35 +8,30 @@ tanımlar.
 
 | # | Rol / disiplin | Sorumlu olduğu iş paketleri | Projeye katkısı |
 |---|---|---|---|
-| 1 | ___ | ___ | ___ |
-| 2 | ___ | ___ | ___ |
-| 3 | ___ | ___ | ___ |
-| 4 | ___ | ___ | ___ |
-| 5 | ___ | ___ | ___ |
+| 1 | Tam yığın geliştirme — birincil sorumluluk: köken kurtarma motoru, ölçüm ve altyapı | İP-1, İP-2, İP-3, İP-4 birincil; İP-5 – İP-10 ortak | Köken kurtarma hattının altı aşaması, karar füzyonu ve güven eşiklerinin ölçümle kalibrasyonu; katkı payı motoru (geçişli indirgeme ve özel kapsama bölüntüsü dahil); backend servisleri, veri modeli ve katmanların veritabanından ayrıştırılması; 20 türev senaryosu, korpus tekilleştirmesi ve 6.400 sorguluk değerlendirme düzeneği |
+| 2 | Tam yığın geliştirme — birincil sorumluluk: arayüz, erişilebilirlik ve ürün | İP-5, İP-6 birincil; İP-1 – İP-4 ve İP-7 – İP-10 ortak | Referans istemci, Emek Kartı ve açıklanabilirlik ekranları, remix stüdyosu, tasarım sistemi ve zincir görselleştirmesi; WCAG 2.1 AA denetimi ve mobil düzen ölçümü; iş ve gelir modeli, kampanya kuralları; kullanıcı araştırması ile kullanılabilirlik testinin yürütülmesi |
 
-**Disiplinlerin projeye katkısı.** Proje, tek bir uzmanlıkla çözülemeyecek bir problem
-tanımı üzerine kuruludur ve iş paketleri bu nedenle farklı disiplinlere dağıtılmıştır:
+**Disiplinlerin projeye katkısı.** Proje tek bir uzmanlıkla çözülemeyecek bir problem
+tanımı üzerine kuruludur; iki kişilik takımda bu, keskin bir uzmanlık ayrımı yerine iki
+birincil sorumluluk alanı olarak tanımlandı. Her iki üye de yığının her katmanında
+çalıştı, birincil sorumluluk ise paketin kritik kararını kimin verdiğini gösterir:
 
-- **Yapay zekâ ve görüntü işleme.** Köken kurtarma hattının altı aşaması, karar füzyonu
-  ve eşik kalibrasyonu (İP-2). Bu paketin ayırt edici zorluğu model seçmek değil,
-  yöntemlerin hangi koşulda hangisine devredeceğine ölçümle karar vermekti.
-- **Veri bilimi ve değerlendirme.** Saldırı senaryosu üreticisi, korpus hazırlığı,
-  6.400 sorguluk değerlendirme düzeneği ve metrik üretimi (İP-4). Korpustaki veri
-  sızıntısını bulup temizleyen ve beklenen kapsama değerlerini geometriden türeten
-  çalışma bu pakettedir.
-- **Yazılım geliştirme ve mimari.** Backend servisleri, veri modeli, katman ayrımı,
-  Docker ile dağıtım ve sürekli tümleştirme kurulumu (İP-1, İP-3). `provenance/` ve
-  `attribution/` katmanlarının veritabanını tanımaması bu paketin ölçeklenebilirliğe
-  yaptığı yapısal katkıdır.
-- **Kullanıcı deneyimi (UI/UX) ve tasarım.** Referans istemci, Emek Kartı,
+- **Motor, ölçüm ve altyapı.** Köken kurtarma hattının aşamaları, karar füzyonu ve
+  eşiklerin kalibrasyonu (İP-2); katkı payı motoru ve gelir dağıtımı (İP-3); backend
+  mimarisi, Docker ile dağıtım ve sürekli tümleştirme (İP-1); saldırı senaryosu
+  üreticisi, değerlendirme düzeneği ve metrik üretimi (İP-4). Bu alanın ayırt edici
+  zorluğu model seçmek değildi; yöntemlerin hangi koşulda hangisine devredeceğine
+  ölçümle karar vermek, korpustaki veri sızıntısını bulup temizlemek ve beklenen
+  kapsama değerlerini elle etiketlemek yerine geometriden türetmekti.
+- **Arayüz, erişilebilirlik ve ürün.** Referans istemci, Emek Kartı ve
   açıklanabilirlik ekranları, tasarım sistemi, erişilebilirlik denetimi ve mobil düzen
-  (İP-5). Puanlamada UI/UX'in yapay zekâ bileşeniyle eşit ağırlıkta olması bu paketin
-  ayrı bir sorumluluk olarak tanımlanmasının sebebidir.
-- **Ürün yönetimi ve girişimcilik.** İş ve gelir modeli, kampanya kuralları, benimseme
-  yolu, kullanıcı araştırması ve kullanılabilirlik testinin yürütülmesi (İP-6). Ölçülen
-  dağıtım rakamlarının bugünkü modelle karşılaştırılması bu pakettedir.
+  ölçümü (İP-5); iş ve gelir modeli, kampanya kuralları, benimseme yolu, kullanıcı
+  araştırması ve kullanılabilirlik testinin yürütülmesi (İP-6). Bu alanın ayrı bir
+  birincil sorumluluk olarak tanımlanmasının sebebi, puanlamada kullanıcı deneyiminin
+  yapay zekâ bileşeniyle eşit ağırlıkta olması ve gelir dağıtan bir sistemde
+  açıklanabilirliğin bir arayüz süsü değil meşruiyet koşulu olmasıdır.
 
-**Ekip büyüklüğü.** Takım ___ kişiden oluşmaktadır; şartnamenin öngördüğü 2-5 kişilik
+**Ekip büyüklüğü.** Takım iki kişiden oluşmaktadır; şartnamenin öngördüğü 2-5 kişilik
 aralıktadır. Paketlerin tamamı takım içinde karşılık bulmakta, dışarıdan hizmet alımı
 gerektiren bir kalem bulunmamaktadır.
 
@@ -44,4 +39,6 @@ gerektiren bir kalem bulunmamaktadır.
 geçmişinde gerekçesiyle kayıtlıdır. Ölçüm sonuçları ve dokümanlar da aynı depodadır;
 bir doküman ile ürün arasında sayı uyuşmazlığı oluştuğunda sürekli tümleştirme bunu
 hata olarak bildirir. Bu düzen, iş paketleri arasında bilgi kaybını önlemek ve her
-iddianın kaynağına geri izlenebilmesini sağlamak için kuruldu.
+iddianın kaynağına geri izlenebilmesini sağlamak için kuruldu. İki kişilik bir takımda
+aynı düzen ikinci bir işlev daha görür: doğrulama yükünü kişiden betiğe aktardığı için
+her iddianın gözden geçirilmesi ekip büyüklüğüne bağlı kalmaz.
