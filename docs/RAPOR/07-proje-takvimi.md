@@ -13,16 +13,16 @@ Takvim, yarışma takviminin dört sert tarihi etrafında kuruldu: **teknik rapo
 
 | Kod | İş paketi | Alt faaliyetler | Tarih | Durum |
 |---|---|---|---|---|
-| İP-1 | Altyapı ve risk kapatma | Monorepo iskeleti, veri modeli, API sözleşmesi; üç riskli bileşenin kavram kanıtı (içerik kimliği imzalama, gömme indeksleme, geometrik alan ölçümü) | 8-9 Ağu | Tamamlandı |
-| İP-2 | Köken kurtarma hattı | Altı aşamanın uygulanması, karar füzyonu, kanıt üretimi, güven eşiklerinin kalibrasyonu | 9-10 Ağu | Tamamlandı |
-| İP-3 | Katkı payı ve gelir | Pay motoru, geçişli indirgeme, özel kapsama bölüntüsü, Emek Kartı veri katmanı, kampanya dağıtımı, itiraz akışı | 10-11 Ağu | Tamamlandı |
-| İP-4 | Değerlendirme ve ölçüm | 20 saldırı senaryosu üreticisi, korpus hazırlama ve tekilleştirme, 6.400 sorguluk değerlendirme, gecikme ve açılış ölçümleri | 8-11 Ağu | Tamamlandı |
-| İP-5 | Arayüz ve erişilebilirlik | Referans istemci, remix stüdyosu, zincir görselleştirmesi, tasarım sistemi, WCAG denetimi, mobil düzen ölçümü | 10-11 Ağu | Tamamlandı |
-| İP-6 | Kullanıcı araştırması ve testi | Görüşme düzeneği, kullanılabilirlik protokolü, beş katılımcıyla oturumlar, SUS ölçeği, bulguların uygulanması | 12-20 Ağu | Sürüyor |
+| İP-1 | Altyapı ve risk kapatma | Monorepo iskeleti, veri modeli, API sözleşmesi; üç riskli bileşenin kavram kanıtı | 8-9 Ağu | Tamamlandı |
+| İP-2 | Köken kurtarma hattı | Altı aşama, karar füzyonu, kanıt üretimi, eşik kalibrasyonu | 9-10 Ağu | Tamamlandı |
+| İP-3 | Katkı payı ve gelir | Pay motoru, geçişli indirgeme, özel kapsama bölüntüsü, Emek Kartı, kampanya dağıtımı, itiraz akışı | 10-11 Ağu | Tamamlandı |
+| İP-4 | Değerlendirme ve ölçüm | 20 türev senaryosu, korpus tekilleştirme, 6.400 sorguluk değerlendirme, gecikme ölçümleri | 8-11 Ağu | Tamamlandı |
+| İP-5 | Arayüz ve erişilebilirlik | Referans istemci, remix stüdyosu, zincir görseli, tasarım sistemi, WCAG denetimi, mobil düzen | 10-11 Ağu | Tamamlandı |
+| İP-6 | Kullanıcı araştırması ve testi | Görüşme düzeneği, protokol, beş katılımcıyla oturumlar, SUS ölçeği | 12-20 Ağu | Sürüyor |
 | İP-7 | Teknik rapor | İçerik yazımı, kaynakça, görsellerin üretimi, biçim denetimi, KYS'ye yükleme | 14-23 Ağu | Sürüyor |
-| İP-8 | Ürünleştirme ve mentörlük | Mentör geri bildirimlerinin uygulanması, ölçeklenme hazırlıkları, bilinen açıkların kapatılması | 25 Ağu - 7 Eyl | Planlı |
-| İP-9 | Final paketi | Demo videosu, sunum dosyası, kaynak kod temizliği, tek komutla kurulum provası, jüri makinesi tatbikatı | 8-14 Eyl | Planlı |
-| İP-10 | Canlı sunum | Sunum provası, jüri soru-cevap hazırlığı, internetsiz ve GPU'suz ortam için önceden kaydedilmiş yedek demo | 15-20 Eyl | Planlı |
+| İP-8 | Ürünleştirme ve mentörlük | Mentör geri bildirimleri, ölçeklenme hazırlıkları, bilinen açıkların kapatılması | 25 Ağu - 7 Eyl | Planlı |
+| İP-9 | Final paketi | Demo videosu, sunum dosyası, kod temizliği, jüri makinesi tatbikatı | 8-14 Eyl | Planlı |
+| İP-10 | Canlı sunum | Sunum provası, soru-cevap hazırlığı, internetsiz ortam için yedek demo kaydı | 15-20 Eyl | Planlı |
 
 **Kilometre taşları.**
 

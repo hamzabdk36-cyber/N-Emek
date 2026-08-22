@@ -6,10 +6,10 @@ Değerlendirme esasları gereği takım üyelerinin isim, fotoğraf ve benzeri k
 bilgilerine bu raporda yer verilmemiştir. Aşağıdaki tablo görev dağılımını rollerle
 tanımlar.
 
-| # | Rol / disiplin | Sorumlu olduğu iş paketleri | Projeye katkısı |
-|---|---|---|---|
-| 1 | Tam yığın geliştirme — birincil sorumluluk: köken kurtarma motoru, ölçüm ve altyapı | İP-1, İP-2, İP-3, İP-4 birincil; İP-5 – İP-10 ortak | Köken kurtarma hattı ve eşik kalibrasyonu; katkı payı motoru — geçişli indirgeme ve özel kapsama bölüntüsü dahil; backend mimarisi ve katman ayrımı; değerlendirme düzeneği ve metrik üretimi |
-| 2 | Tam yığın geliştirme — birincil sorumluluk: arayüz, erişilebilirlik ve ürün | İP-5, İP-6 birincil; İP-1 – İP-4 ve İP-7 – İP-10 ortak | Referans istemci, Emek Kartı, remix stüdyosu ve zincir görselleştirmesi; tasarım sistemi, WCAG 2.1 AA denetimi ve mobil düzen ölçümü; iş ve gelir modeli; kullanılabilirlik testinin yürütülmesi |
+| Rol / disiplin | Sorumlu olduğu iş paketleri | Projeye katkısı |
+|---|---|---|
+| Tam yığın geliştirme — birincil sorumluluk: köken kurtarma motoru, ölçüm ve altyapı | İP-1, İP-2, İP-3, İP-4 birincil; İP-5 – İP-10 ortak | Köken kurtarma hattı ve eşik kalibrasyonu; katkı payı motoru — geçişli indirgeme ve özel kapsama bölüntüsü dahil; backend mimarisi ve katman ayrımı; değerlendirme düzeneği ve metrik üretimi |
+| Tam yığın geliştirme — birincil sorumluluk: arayüz, erişilebilirlik ve ürün | İP-5, İP-6 birincil; İP-1 – İP-4 ve İP-7 – İP-10 ortak | Referans istemci, Emek Kartı, remix stüdyosu ve zincir görselleştirmesi; tasarım sistemi, WCAG 2.1 AA denetimi ve mobil düzen ölçümü; iş ve gelir modeli; kullanılabilirlik testinin yürütülmesi |
 
 **Disiplinlerin projeye katkısı.** Proje tek bir uzmanlıkla çözülemeyecek bir problem
 tanımı üzerine kuruludur; iki kişilik takımda bu, keskin bir uzmanlık ayrımı yerine iki

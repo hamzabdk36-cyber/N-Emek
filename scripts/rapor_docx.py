@@ -324,17 +324,91 @@ def govde_bicimi(paragraf, *, yasla: bool = True) -> None:
             calisma.font.size = GOVDE_PUNTO
 
 
+# Metin alani: A4 genisligi 21 cm, sablonun kenar bosluklari 2,5 cm.
+TABLO_GENISLIGI = Cm(16.0)
+EN_DAR_SUTUN = 1.3      # cm - "Kod", "#" gibi sutunlar bunun altina inmez
+EN_UZUN_SAYILAN = 60    # karakter - bunun ustu ayni agirlikta sayilir
+# Arial 10 pt'de ortalama karakter genisligi ~0,19 cm; hucre yan bosluklari
+# 2 x 80 twip. Kelimenin bolunmemesi icin gereken en dar genislik bundan cikiyor.
+KARAKTER_CM = 0.20
+HUCRE_BOSLUGU_CM = 0.30
+
+
 def kenarlik_ver(tablo) -> None:
-    """Ince gri cerceve. Sablonda tablo stili tanimli degil."""
+    """Disi koyu, ici acik gri cerceve + dar hucre bosluklari.
+
+    Sablonda tablo stili tanimli degil; cizgiyi kendimiz koyuyoruz. Ic
+    cizgiler dista kalanlardan acik: tablo bir izgara gibi degil, bir
+    blok gibi okunuyor.
+    """
     ozellik = tablo._tbl.tblPr
     kenarliklar = ozellik.makeelement(qn("w:tblBorders"), {})
-    for yon in ("top", "left", "bottom", "right", "insideH", "insideV"):
+    for yon, kalinlik, renk in (
+        ("top", "6", "7E8894"),
+        ("left", "6", "7E8894"),
+        ("bottom", "6", "7E8894"),
+        ("right", "6", "7E8894"),
+        ("insideH", "4", "C6CDD5"),
+        ("insideV", "4", "C6CDD5"),
+    ):
         e = kenarliklar.makeelement(qn(f"w:{yon}"), {})
         e.set(qn("w:val"), "single")
-        e.set(qn("w:sz"), "4")
-        e.set(qn("w:color"), "9AA4AE")
+        e.set(qn("w:sz"), kalinlik)
+        e.set(qn("w:color"), renk)
         kenarliklar.append(e)
     ozellik.append(kenarliklar)
+
+    # Varsayilan yan bosluk 0,19 cm; dar sutunlarda metnin yerini yiyor.
+    bosluk = ozellik.makeelement(qn("w:tblCellMar"), {})
+    for yon, deger in (("top", "40"), ("bottom", "40"), ("left", "80"), ("right", "80")):
+        e = bosluk.makeelement(qn(f"w:{yon}"), {})
+        e.set(qn("w:w"), deger)
+        e.set(qn("w:type"), "dxa")
+        bosluk.append(e)
+    ozellik.append(bosluk)
+
+
+def sutun_genislikleri(hucreler: list[list[str]], sutun: int) -> list[float]:
+    """Sutun genisliklerini icerige gore dagitir (cm doner).
+
+    Word'un varsayilani butun sutunlari esit genislikte yapiyor. Sonucu
+    olculdu: "Kod" sutunu ("IP-1") ile "Alt faaliyetler" sutunu (150
+    karakterlik metin) ayni genislikte kaliyor, uzun hucre sekiz satira
+    sariyor ve tek satir bir sayfanin dortte birini yiyordu.
+
+    Iki kural birlikte calisiyor:
+
+    1. **Hicbir sutun en uzun kelimesinden dar olamaz.** Salt orantiyla
+       dagitildiginda "Durum" sutunu 1,4 cm'e dusuyor ve "Tamamlandi"
+       uc satira bolunuyordu ("Tama/mland/i") - bu da tasarrufu geri
+       veriyor, cunku satiri o hucre uzatiyor.
+    2. Artan genislik, icerik uzunluguna gore paylastirilir. Cok uzun
+       hucreler bir tavanda kesiliyor; yoksa tek bir paragraf butun
+       tabloyu ezerdi.
+    """
+    def en_uzun_kelime(j: int) -> int:
+        kelimeler = [
+            k for s in hucreler if j < len(s) for k in s[j].split() if k
+        ]
+        return max((len(k) for k in kelimeler), default=1)
+
+    def en_uzun_hucre(j: int) -> int:
+        return max((len(s[j]) for s in hucreler if j < len(s)), default=1)
+
+    taban = [
+        max(EN_DAR_SUTUN, en_uzun_kelime(j) * KARAKTER_CM + HUCRE_BOSLUGU_CM)
+        for j in range(sutun)
+    ]
+    toplam = TABLO_GENISLIGI.cm
+
+    # Tabanlar sigmiyorsa orantili kucult: kelime bolunecek ama tablo
+    # sayfayi tasmayacak. Bu rapordaki tablolarda gerceklesmiyor.
+    if sum(taban) >= toplam:
+        return [toplam * t / sum(taban) for t in taban]
+
+    agirlik = [min(max(en_uzun_hucre(j), 4), EN_UZUN_SAYILAN) for j in range(sutun)]
+    artan = toplam - sum(taban)
+    return [t + artan * a / sum(agirlik) for t, a in zip(taban, agirlik)]
 
 
 def tablo_kur(belge, satirlar: list[str]):
@@ -351,9 +425,37 @@ def tablo_kur(belge, satirlar: list[str]):
 
     tablo = belge.add_table(rows=len(hucreler), cols=sutun)
     kenarlik_ver(tablo)
+
+    # Sabit duzen sart: "autofit" acikken Word hesapladigimiz genislikleri
+    # yok sayip yine kendi dagitimini uyguluyor.
+    tablo.autofit = False
+    duzen = tablo._tbl.tblPr.makeelement(qn("w:tblLayout"), {})
+    duzen.set(qn("w:type"), "fixed")
+    tablo._tbl.tblPr.append(duzen)
+
+    genislikler = [Cm(g) for g in sutun_genislikleri(hucreler, sutun)]
+    for izgara, genislik in zip(tablo._tbl.findall(qn("w:tblGrid"))[0], genislikler):
+        izgara.set(qn("w:w"), str(int(genislik.twips)))
+
     for i, satir in enumerate(hucreler):
+        # Satir sayfa ortasindan bolunmesin: onceki surumde bir is paketi
+        # satiri iki sayfaya bolunuyor ve ust sayfada basliksiz birkac
+        # kelime kaliyordu.
+        ozellik = tablo.rows[i]._tr.get_or_add_trPr()
+        ozellik.append(ozellik.makeelement(qn("w:cantSplit"), {}))
+        if i == 0:
+            # Baslik satiri her yeni sayfada tekrarlansin.
+            ozellik.append(ozellik.makeelement(qn("w:tblHeader"), {}))
+
         for j in range(sutun):
             hucre = tablo.cell(i, j)
+            hucre.width = genislikler[j]
+            if i == 0:
+                golge = hucre._tc.get_or_add_tcPr().makeelement(qn("w:shd"), {})
+                golge.set(qn("w:val"), "clear")
+                golge.set(qn("w:color"), "auto")
+                golge.set(qn("w:fill"), "EEF2F6")
+                hucre._tc.get_or_add_tcPr().append(golge)
             paragraf = hucre.paragraphs[0]
             metni_yaz(paragraf, satir[j] if j < len(satir) else "")
             for calisma in paragraf.runs:
