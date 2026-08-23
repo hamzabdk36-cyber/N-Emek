@@ -137,6 +137,20 @@ def commit_sayisi() -> int:
     )
     toplam = int(sayim.stdout.strip())
 
+    # Sig klonda (`actions/checkout` varsayilani fetch-depth: 1) rev-list
+    # 1 doner ve iddia haksiz yere uyusmazlik verir. Sessizce yanlis
+    # saymaktansa ne yapilmasi gerektigini soyleyip duruyoruz.
+    sig = subprocess.run(
+        ["git", "rev-parse", "--is-shallow-repository"],
+        cwd=ROOT, capture_output=True, text=True, check=True,
+    )
+    if sig.stdout.strip() == "true":
+        raise SystemExit(
+            "commit sayilamadi: depo sig klonlanmis (git rev-list = "
+            f"{toplam}). CI'da `actions/checkout` adimina "
+            "`fetch-depth: 0` ekleyin."
+        )
+
     kirli = subprocess.run(
         ["git", "status", "--porcelain", "--untracked-files=no"],
         cwd=ROOT, capture_output=True, text=True, check=True,

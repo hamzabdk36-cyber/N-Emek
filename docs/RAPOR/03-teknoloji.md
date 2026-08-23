@@ -8,7 +8,7 @@ saklanmaktadır:
 > **https://github.com/hamzabdk36-cyber/N-Emek**
 
 Geliştirme adımları commit geçmişinden takip edilebilir. Depo 8 Ağustos 2026'da açıldı;
-raporun yazıldığı tarih itibarıyla 57 commit <!-- sayim: commit --> içeriyor. Commit mesajları Türkçe ve her
+raporun yazıldığı tarih itibarıyla 58 commit <!-- sayim: commit --> içeriyor. Commit mesajları Türkçe ve her
 biri *neyin neden değiştiğini* söyler — ölçüm sonucu ortaya çıkan tasarım kararları
 mesajlarda kayıtlıdır. Sürekli tümleştirme (GitHub Actions) her itmede backend ve arayüz
 testlerini, tip denetimini, üretim derlemesini ve doküman tutarlılık denetimini koşar.

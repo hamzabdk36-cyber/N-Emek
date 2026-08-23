@@ -42,6 +42,10 @@ jobs:
       HF_HOME: ${{ github.workspace }}/.hf-cache
     steps:
       - uses: actions/checkout@v5
+        with:
+          # Dokuman denetimi commit sayiyor; sig klonda `git rev-list`
+          # 1 doner ve iddia haksiz yere uyusmazlik verir.
+          fetch-depth: 0
 
       - uses: actions/setup-python@v6
         with:
@@ -116,6 +120,10 @@ jobs:
         working-directory: frontend
     steps:
       - uses: actions/checkout@v5
+        with:
+          # Dokuman denetimi commit sayiyor; sig klonda `git rev-list`
+          # 1 doner ve iddia haksiz yere uyusmazlik verir.
+          fetch-depth: 0
 
       - uses: actions/setup-node@v5
         with:
