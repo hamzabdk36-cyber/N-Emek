@@ -11,7 +11,7 @@ alıyor [1]. Yerli bir sosyal medya platformuna entegre edilen bir emek katmanı
 tamamına ilk günden ulaşabilir.
 
 Küresel ölçekte tablo daha da büyük: içerik üretici ekonomisinin toplam pazar büyüklüğü
-2023'te 250 milyar dolar ölçüldü, 2027 için 480 milyar dolar öngörülüyor ve 50 milyon
+2023'te 250 milyar dolar olarak tahmin edildi, 2027 için 480 milyar dolar öngörülüyor ve 50 milyon
 üreticinin yıllık %10-20 büyümesi bekleniyor [2]. Bu pazarın gelir dağılımı ise dengesiz:
 üreticilerin %46'sı yılda 1.000 doların altında kazanıyor, tam zamanlı üreticilerin %57'si
 asgari geçim düzeyine ulaşamıyor [3].

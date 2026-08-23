@@ -61,8 +61,8 @@ standartlaşmış bir ekosistemin parçası hâline getirir.
 işlenir (476-666 ms köken kurtarma), sonra sonsuz kez dağıtıma girer — her dağıtım 31 ms.
 Aynı içerik ne kadar çok kampanyaya girerse birim maliyeti o kadar düşer.
 
-Depolama tarafı da ölçüldü: N-Emek'in içerik başına *eklediği* yük 40 KB
-mertebesindedir. Bir milyon içerik için yaklaşık 40 GB eder. Bunu para birimine
+Depolama tarafında bileşenler ölçüldü, toplamı kestirildi: N-Emek'in içerik başına
+*eklediği* yük 40 KB mertebesindedir. Bir milyon içerik için yaklaşık 40 GB eder. Bunu para birimine
 çevirmedik, çünkü bulut fiyatı sağlayıcıya ve bölgeye göre değişir; kararı etkileyen şey
 büyüklük mertebesidir ve o mertebe tek bir sunucunun diskine sığar.
 

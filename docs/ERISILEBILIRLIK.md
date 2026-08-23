@@ -6,8 +6,10 @@ Remix Stüdyo, Kaynak Bul, Kampanyalar, İnceleme Kuyruğu
 **Ölçüt:** WCAG 2.1 AA
 
 Şartnamenin istediği teslimatlardan biri. Değerlendirme, arayüz tamamlandıktan sonra
-"puan için" yapılan bir kontrol listesi değil; bulunan altı kusurun beşi aynı gün
-düzeltildi ve düzeltmeler kodda gerekçeleriyle birlikte duruyor.
+"puan için" yapılan bir kontrol listesi değil; ilk gün bulunan altı kusurun beşi aynı
+gün düzeltildi. Sonraki iki günde beş kusur daha bulundu; toplamda **on bir kusurun
+onu düzeltildi, biri gerekçesiyle kabul edildi** ve düzeltmeler kodda gerekçeleriyle
+birlikte duruyor.
 
 ---
 
@@ -39,6 +41,7 @@ düzeltildi ve düzeltmeler kodda gerekçeleriyle birlikte duruyor.
 | 8 | Serbest el çizim fareye bağlı | 2.1.1 (istisna) | **Kabul edildi**, aşağıda |
 | 9 | Atıf zinciri ekran okuyucuya tek cümle söylüyordu | 1.1.1 Metin Olmayan İçerik | **Düzeltildi** |
 | 10 | Ölçüm adları İngilizce değişken adlarıyla yazılıydı | 3.1.2 Parçaların Dili | **Düzeltildi** |
+| 11 | Mobil düzende yapışkan üst çubuk ekranın beşte birini kaplıyordu | 1.4.10 Yeniden Akış | **Düzeltildi** |
 
 ### 1. Klavyeyle görsel yüklenemiyordu — en ağır bulgu
 

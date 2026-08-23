@@ -94,7 +94,7 @@ def taranan_dosyalar() -> list[Path]:
 #
 # Ondeki `(?<![\w.])`: "CC0 test görselleri" ve "6.400 test" gibi
 # dizilerde sayinin ortasindan yakalamayi engelliyor.
-IDDIA = re.compile(r"(?<![\w.])(\d+)\s+(test\w*|uç)\b", re.IGNORECASE)
+IDDIA = re.compile(r"(?<![\w.])(\d+)\s+(test\w*|uç|commit)\b", re.IGNORECASE)
 # `sayim: a, b` -> ["a", "b"]. Bir satirda birden fazla sayi olabiliyor
 # (ornegin "125 test ... 95 test"); isaretler sirayla eslesiyor.
 ISARET = re.compile(r"sayim:\s*([\w./,\s-]+?)\s*(?:-->|#|$)")
@@ -118,6 +118,30 @@ def uc_sayisi() -> int:
     """
     kaynak = (ROOT / "backend" / "app" / "api" / "routes.py").read_text(encoding="utf-8")
     return len(re.findall(r"^@router\.", kaynak, re.MULTILINE))
+
+
+def commit_sayisi() -> int:
+    """Depodaki commit sayisi.
+
+    Rapor bu sayiyi *kendi commit'ini de sayarak* yazar: "raporun
+    yazildigi tarih itibariyla N commit". Dolayisiyla calisma agaci
+    kirliyken dogru deger HEAD+1'dir - yapilmak uzere olan commit.
+    Temizken (CI'da ve commit sonrasi) tam olarak HEAD sayisidir.
+
+    Bu ayrim olmadan iddia ya commit oncesi ya commit sonrasi yanlis
+    cikardi ve sayi elle tutulmaya geri donerdi.
+    """
+    sayim = subprocess.run(
+        ["git", "rev-list", "--count", "HEAD"],
+        cwd=ROOT, capture_output=True, text=True, check=True,
+    )
+    toplam = int(sayim.stdout.strip())
+
+    kirli = subprocess.run(
+        ["git", "status", "--porcelain", "--untracked-files=no"],
+        cwd=ROOT, capture_output=True, text=True, check=True,
+    )
+    return toplam + 1 if kirli.stdout.strip() else toplam
 
 
 def _pytest_toplar(*ek_args: str) -> dict[str, int]:
@@ -295,6 +319,9 @@ def main() -> int:
     # `uc` her zaman ölçülüyor: metin sayımı, hiçbir bağımlılık istemiyor.
     gercek: dict[str, int | None] = {"uc": uc_sayisi()}
     print(f"ölçüldü · uc = {gercek['uc']}")
+
+    gercek["commit"] = commit_sayisi()
+    print(f"ölçüldü · commit = {gercek['commit']}")
 
     if "backend" in atlananlar:
         gercek["backend"] = None

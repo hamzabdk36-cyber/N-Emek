@@ -38,7 +38,7 @@ toplu iş değil, akışın içinde bir adımdır.
 
 **Ekonomik verimlilik.** Aynı içerik ne kadar çok kampanyaya girerse birim maliyeti o
 kadar düşer: maliyet içerik başına tek seferlik, gelir ise kampanya havuzuyla doğrusal
-büyür. Depolama tarafındaki ek yük de ölçüldü ve küçüktür (bkz. 6.2).
+büyür. Depolama tarafındaki ek yük de küçüktür (bkz. 6.2).
 
 ## 4.2. Hedef Kitle
 
@@ -98,7 +98,9 @@ sona koşulabilir. Doğrulama otomatiktir: backend ve arayüz test paketleri, ti
 üretim derlemesi ve doküman tutarlılık denetimi her itmede sürekli tümleştirmede koşar.
 
 **Ölçeklenebilirlik.** Prototip tek makinede, SQLite ve kaba kuvvet indekslerle çalışır.
-On binler mertebesinde bu kurulum fazlasıyla hızlıdır ve %100 geri getirme garantilidir.
+On binler mertebesinde bu kurulum fazlasıyla hızlıdır ve aramanın eksiksizliği
+garantilidir: kaba kuvvet indeks hiçbir adayı atlamaz. Bu, aramanın bir özelliğidir;
+sistemin atıf doğruluğu değildir — o, ölçülen %98,7 Top-1 değeridir.
 Gecikme ölçümü, büyümede hangi düğmelerin çevrileceğini açıkça gösterir:
 
 | Darboğaz | Bugün | Ölçekte |

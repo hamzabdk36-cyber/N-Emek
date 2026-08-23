@@ -8,7 +8,7 @@ saklanmaktadır:
 > **https://github.com/hamzabdk36-cyber/N-Emek**
 
 Geliştirme adımları commit geçmişinden takip edilebilir. Depo 8 Ağustos 2026'da açıldı;
-raporun yazıldığı tarih itibarıyla 44 commit içeriyor. Commit mesajları Türkçe ve her
+raporun yazıldığı tarih itibarıyla 57 commit <!-- sayim: commit --> içeriyor. Commit mesajları Türkçe ve her
 biri *neyin neden değiştiğini* söyler — ölçüm sonucu ortaya çıkan tasarım kararları
 mesajlarda kayıtlıdır. Sürekli tümleştirme (GitHub Actions) her itmede backend ve arayüz
 testlerini, tip denetimini, üretim derlemesini ve doküman tutarlılık denetimini koşar.
@@ -172,7 +172,9 @@ ağır küçültmedir (F1 0,9106).
 Aşamaların iş bölümü de ölçüldü: doğru bulunan bağlarda belirleyici aşama %44,2 CLIP,
 %39,7 filigran, %16,1 algısal hash. Bu dağılım tasarımı doğrular — piksel düzeni
 korunmuşsa filigran kesin kanıt verir, geometrik dönüşümlerde devreyi CLIP alır. Tek bir
-yönteme dayanan bir sistem senaryoların yaklaşık yarısını kaçırırdı.
+yönteme dayanan bir sistem senaryoların yaklaşık yarısını kaçırırdı. Aşama 0 ve 1 bu
+dağılımda görünmez, çünkü değerlendirme türevleri üstverisi silinerek üretilir; Aşama 5
+ise aday bulmaz, bulunanın kapsamasını ölçer.
 
 **Dürüst sınırlar.** Ağır küçültmede (görsel 200×150 piksele indiğinde) yerel özellikler
 seyrekleşiyor ve kapsama eksik ölçülüyor: beklenen 1,00'e karşı 0,875. Sapmanın yönü
@@ -224,12 +226,12 @@ onaylayabilir ya da itiraz edebilir.
 `docs/ERISILEBILIRLIK.md` içinde belgelendi. Denetim gözle değil betikle yapıldı: altı
 rotada erişilebilir ad, `alt` metni ve form etiketi kontrol edildi; kontrast oranları
 WCAG göreli parlaklık formülünün doğrudan uygulanmasıyla hesaplandı. On bir kusur
-bulundu ve dokuzu düzeltildi.
+bulundu; onu düzeltildi, biri gerekçesiyle kabul edildi.
 
 En ağır bulgu, klavyeyle görsel yüklenememesiydi: dosya seçici gizlenmiş bir `input`
 üzerine kurulmuştu ve sekme sırasına hiç girmiyordu — klavye kullanan biri ürünün ilk
 adımını tamamlayamıyordu. İkinci önemli bulgu mobil düzendi. Arayüz masaüstünde
-çalışıyordu ama dar ekranda hiç ölçülmemişti; kodda "başlık iki satır oluyor" diyen bir
+çalışıyordu ama dar ekranda hiç ölçülmemişti; kodda "başlık üç satır yerine iki satır oluyor" diyen bir
 yorum vardı ve ölçüm bunun doğru olmadığını gösterdi: yapışkan üst çubuk **163 piksel**,
 yani 844 piksellik ekranın beşte biri kadardı. Üç değişiklikle çubuk **109 piksele**
 indirildi ve altı ekranın hiçbirinde yatay kayma kalmadı (WCAG 1.4.10).
@@ -277,8 +279,9 @@ Protokolün tamamı ve oturum kayıt formu `docs/KULLANILABILIRLIK-PROTOKOL.md` 
 değil, *problem gerçek mi* — dört profilden on kişiyle, kullanılabilirlik testine
 katılmamış katılımcılarla görüşüldü (`docs/KULLANICI-ARASTIRMASI.md`). Sorular
 bilerek geçmişe dairdi; hipotetik soru sorulmadı. Üreticilerin dördü de içeriğinin
-izinsiz kullanıldığı somut bir olay anlattı ve beşi tersine görsel arama deneyip
-sonuç alamadan bıraktı — problem tanımının doğrudan karşılığı. Marka tarafı da aynı
+izinsiz kullanıldığı somut bir olay anlattı; on kişiden beşi kaynağı bulmak için
+tersine görsel arama denedi, dördü takibi sonuçsuz bıraktı — problem tanımının
+doğrudan karşılığı. Marka tarafı da aynı
 boşluğu doğruladı: ödül beğeniye göre dağıtılmış, bir katılımcı *"benim fotoğrafım
 daha iyiydi ama çevrem olmadığı için kaybettim"* demiş ve marka bunu haklı bulmuş.
 

@@ -33,9 +33,9 @@ Takvim, yarışma takviminin dört sert tarihi etrafında kuruldu: **teknik rapo
 | KT-2 | Kimliği silinmiş içerikten zincir kuruldu | 10 Ağu | Altın senaryo uçtan uca koştu |
 | KT-3 | Havuz ölçülmüş katkıya göre bölündü | 11 Ağu | Kayıtlı ödeme satırları, toplam havuza eşit |
 | KT-4 | Değerlendirme tamamlandı | 11 Ağu | 6.400 sorgu, Top-1 %98,7, F1 0,9753 |
-| KT-5 | Erişilebilirlik denetimi tamamlandı | 11 Ağu | Altı rotada sıfır bulgu, mobil düzen ölçüldü |
+| KT-5 | Erişilebilirlik denetimi tamamlandı | 11 Ağu | On bir kusur bulundu; düzeltmelerden sonra altı rotada sıfır bulgu |
 | **KT-6** | **Teknik rapor KYS'ye yüklendi** | **23 Ağu** | Şartname son tarihi 24 Ağustos 17:00 |
-| KT-7 | Kullanılabilirlik testi sonuçlandı | 22 Ağu | Beş katılımcı · SUS 60,0 · yedi bulgu kayıtlı |
+| KT-7 | Kullanılabilirlik testi sonuçlandı | 22 Ağu | Beş katılımcı · SUS 60,0 — hedef ≥68'in altında · yedi bulgu |
 | KT-7b | Kullanıcı araştırması tamamlandı | 22 Ağu | On görüşme · üç varsayım sınandı |
 | KT-8 | Mentörlük geri bildirimleri uygulandı | 7 Eyl | Mentörlük süreci 2-7 Eylül |
 | **KT-9** | **Final paketi teslim edildi** | **14 Eyl** | Şartname son tarihi 14 Eylül 17:00 |
@@ -54,7 +54,7 @@ Takvim, yarışma takviminin dört sert tarihi etrafında kuruldu: **teknik rapo
   süre boş bırakılmadı; ürünleştirme çalışmaları bağımsız olarak sürüyor, mentörlük
   başladığında (2 Eylül) ürün geri bildirim alabilecek durumda oluyor.
 - **Final teslimi ile canlı sunum arasındaki altı gün geliştirmeye ayrılmadı.**
-  Prototip 14 Eylül'de teslim edildiği için 15-20 Eylül aralığında ürün donduruldu;
+  Prototip 14 Eylül'de teslim edileceği için 15-20 Eylül aralığında ürün dondurulacak;
   İP-10 yalnızca sunum provası, olası jüri sorularının hazırlığı ve yedek demo
   kaydından oluşuyor. Sunumun internet veya GPU bulunmayan bir ortamda da
   yapılabilmesi, canlı demonun tek noktaya bağlı kalmaması için gereklidir.

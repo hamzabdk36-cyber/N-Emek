@@ -11,6 +11,7 @@ Bu klasördeki her görüntü **çalışan sistemden** alındı; hiçbiri maket 
 ```bash
 docker compose up --build -d
 .venv/Scripts/python.exe scripts/ekran_goruntuleri.py            # on bir kare
+.venv/Scripts/python.exe scripts/rapor_takvim.py                 # 12-takvim.png
 .venv/Scripts/python.exe scripts/ekran_goruntuleri.py --sadece 03,11
 ```
 
@@ -39,6 +40,7 @@ Betik o döngüyü kapatıyor ve iki şeyi kendisi doğruluyor: Inter yüklenmem
 | `09-inceleme-kuyrugu.jpg` | İnceleme kuyruğu | Boş durum — aşağıdaki nota bakın |
 | `10-kaynak-bul.jpg` | Kaynak bul | **Gerçek bir sorgunun sonucu.** Burak'ın remixinin kırpılmış kopyası soruluyor: içerik kimliği yok, birebir eşleşme yok, filigran okunamıyor — sonra algısal parmak izi, görsel benzerlik ve geometrik doğrulama sırayla buluyor. Aşamaların süreleri ve "bulunan kaynaklar (3)" ekranda |
 | `11-mobil.jpg` | Mobil — Emek Kartı | 390×844'te aynı ekran: iki satırlık üst çubuk, pay dağılımı, açık gerekçe ve formül satırı. Yatay kayma yok |
+| `12-takvim.png` | — | Ekran görüntüsü değil: iş paketleri ve zaman çizelgesi. `scripts/rapor_takvim.py` üretiyor, kaynağı oradaki `PAKETLER` listesi |
 
 ## Üç not — dürüstlük için
 

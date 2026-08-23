@@ -27,7 +27,7 @@ güvenmez. İtiraz edemediği bir hesaplama, hata yaptığında düzeltilemez.
 **Problemin büyüklüğü.** Türkiye'de 16-74 yaş grubundaki bireylerin internet kullanım
 oranı 2025'te %90,9'a ulaştı; bireylerin %72,9'u YouTube, %68,1'i Instagram gibi içerik
 paylaşım platformlarını kullanıyor [1]. Küresel ölçekte içerik üretici ekonomisinin
-toplam pazar büyüklüğü 2023'te 250 milyar dolar olarak ölçüldü ve 2027 için 480 milyar
+toplam pazar büyüklüğü 2023'te 250 milyar dolar olarak tahmin edildi ve 2027 için 480 milyar
 dolar öngörülüyor; aynı çalışma 50 milyon küresel içerik üreticisinin yıllık %10-20
 bileşik büyüme hızıyla artacağını tahmin ediyor [2].
 
