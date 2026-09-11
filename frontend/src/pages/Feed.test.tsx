@@ -100,6 +100,15 @@ describe("Feed", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("akışın başında Kaynak Bul'a giden sabit bir giriş var (bulgu B1)", async () => {
+    ekranaGetir();
+
+    const giris = await screen.findByRole("link", {
+      name: /Elindeki bir görselin kaynağını mı arıyorsunuz/,
+    });
+    expect(giris).toHaveAttribute("href", "/kaynak-bul");
+  });
+
   it("akış boşken demo verisini kurma komutunu gösteriyor", async () => {
     ekranaGetir([]);
 
