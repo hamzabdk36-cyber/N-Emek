@@ -56,7 +56,7 @@ export default function Verify() {
         <h1 className="text-xl font-semibold tracking-tight">Kaynak bul</h1>
         <p className="mt-1 max-w-2xl text-[13px] leading-relaxed text-[var(--color-ink-2)]">
           Bir görselin kökenini platforma kaydetmeden sorgulayın. Hat sırasıyla
-          içerik kimliğini, dosya özetini, gömülü filigranı, algısal parmak izini
+          içerik kimliğini, dosya özetini, gömülü filigranı, görüntü parmak izini
           ve görsel benzerliği dener; bulduğu adayları geometrik olarak doğrular.
         </p>
       </div>
@@ -133,6 +133,11 @@ export default function Verify() {
                 <StageTimeline
                   stages={result.stage_log}
                   timings={result.timings_ms}
+                  sonucOzeti={
+                    result.links.length > 0
+                      ? `Sonuç: ${result.links.length} kaynak bulundu.`
+                      : "Sonuç: kaynak bulunamadı."
+                  }
                 />
               </Panel>
 

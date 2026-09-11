@@ -58,7 +58,7 @@ yokmuş" gibi girer.
 |---|---|
 | **Ne yapar** | Burak'ın gönderisinin ekran görüntüsünü alır ve yükler. Kaynak beyan etmez — bilmiyor bile |
 | **Ne görür** | "Yayınlandı. Köken hattı 2 kaynak buldu — içeriğe girip Emek Kartı'na bakın." |
-| **Arkada ne olur** | Ekran görüntüsü C2PA manifestini **siler**. Hat sırayla dener: kimlik yok → dosya özeti tutmuyor → **filigran okunur** → algısal parmak izi ve CLIP adayları verir → homografi + ZNCC alanı ölçer. Burak bulunur, onun üzerinden Ayşe de |
+| **Arkada ne olur** | Ekran görüntüsü C2PA manifestini **siler**. Hat sırayla dener: kimlik yok → dosya özeti tutmuyor → **filigran okunur** → görüntü parmak izi ve CLIP adayları verir → homografi + ZNCC alanı ölçer. Burak bulunur, onun üzerinden Ayşe de |
 | **Süre** | ~476 ms |
 | **Görsel** | `gorseller/02-emek-karti-koken.jpg` |
 
@@ -96,7 +96,7 @@ taban için oranlı olarak %80,0 düzeyine çekildi."*
 
 | | |
 |---|---|
-| **Ne yapar** | Kendi pay satırını açar, "Bu paya itiraz et", gerekçesini yazar |
+| **Ne yapar** | Kendi pay satırını açar, "Yeniden ölçüm iste", gerekçesini yazar |
 | **Ne görür** | Bağın SIFT ile yeniden ölçüldüğünü ve sonucu anlatan bir özet |
 | **Arkada ne olur** | Daha hassas dedektörle yeniden ölçüm. Sonuç anlamlı değişirse zincirin **tüm payları** güncellenir; değişmezse itiraz reddedilir; ölçüm kararsız kalırsa insana yükseltilir |
 | **Süre** | ~79 ms |
@@ -221,7 +221,7 @@ flowchart TD
 | "Neden bana bu kadar geldi?" | Emek Kartı → pay satırını aç | `03-pay-gerekcesi.jpg` |
 | "Gerçekten benim mi kullanılmış?" | Ölçülen bölge — yeşil maske | `05-olculen-bolge-oran.jpg` |
 | "Zincir nasıl kurulmuş?" | Atıf zinciri | `06-atif-zinciri.jpg` |
-| "Katılmıyorum, ne yapabilirim?" | Pay satırı → "Bu paya itiraz et" | `03-pay-gerekcesi.jpg` |
+| "Katılmıyorum, ne yapabilirim?" | Pay satırı → "Yeniden ölçüm iste" | `03-pay-gerekcesi.jpg` |
 | "Bu görselin kaynağı ne?" (yüklemeden) | Kaynak bul | `10-kaynak-bul.jpg` |
 | "Havuzum nasıl bölünecek?" | Kampanyalar | `08-kampanya-paneli.jpg` |
 | "Sistem karar veremediğinde ne oluyor?" | İnceleme kuyruğu | `09-inceleme-kuyrugu.jpg` |
@@ -263,7 +263,7 @@ sequenceDiagram
     UI->>API: POST /api/oturum {user_id}
     API-->>UI: imzalı jeton (kısa ömürlü)
     Note over UI: jeton bellekte tutulur
-    U->>UI: "Bu paya itiraz et"
+    U->>UI: "Yeniden ölçüm iste"
     UI->>API: POST /disputes + Bearer jeton
     API->>API: itiraz eden jetondan okunur — payın sahibi mi?
     alt sahibi

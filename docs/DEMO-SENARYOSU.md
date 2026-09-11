@@ -71,7 +71,7 @@ curl -s http://localhost:8000/api/health
 > de buldu — üstelik iki tanesini.
 >
 > Nasıl? Sırayla denedi: içerik kimliği yok, dosya özeti tutmuyor. Sonra piksellere
-> gömülü görünmez filigranı okudu, algısal parmak izi ve görsel benzerlikle adayları
+> gömülü görünmez filigranı okudu, görüntü parmak izi ve görsel benzerlikle adayları
 > daraltı, ve son adımda geometrik olarak doğruladı.
 >
 > Güven: **sıfır virgül doksan sekiz.**"
@@ -117,7 +117,7 @@ alanlarını fareyle işaret edin. Güven rozetinde bir saniye durun.
 > Ayşe'den geliyor. Her tarafa yalnızca **kendi kattığı** pikseller yazılıyor, yoksa
 > aynı emek iki kez ödüllendirilirdi."
 
-**Yönerge:** Maskeli görsele yakınlaşın. "Eşleşen bölgeyi vurgula" onay kutusunu bir kez
+**Yönerge:** Maskeli görsele yakınlaşın. "Kaynaktan gelen bölgeyi vurgula" onay kutusunu bir kez
 kapatıp açın — farkı izleyici görsün.
 
 ---
@@ -135,7 +135,7 @@ kapatıp açın — farkı izleyici görsün.
 
 ## Sahne 7 — İtiraz · 3:40–4:05 (25 sn)
 
-**Ekran:** Ayşe'nin satırına dönün, "Bu paya itiraz et" düğmesini gösterin. **Tıklamayın.**
+**Ekran:** Ayşe'nin satırına dönün, "Yeniden ölçüm iste" düğmesini gösterin. **Tıklamayın.**
 
 > "Katılmıyorsanız itiraz edebilirsiniz. İtiraz, bağı daha hassas bir dedektörle yeniden
 > ölçtürüyor. Sonuç değişirse zincirin **tüm payları** güncelleniyor.

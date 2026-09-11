@@ -33,8 +33,12 @@ STAGE_LABELS = {
     "c2pa": "İmzalı içerik kimliği (C2PA)",
     "exact": "Birebir dosya eşleşmesi",
     "watermark": "Piksele gömülü kimlik",
-    "phash": "Algısal parmak izi",
-    "phash_blok": "Blok bazlı algısal parmak izi",
+    # Bulgu B5 (kullanilabilirlik testi, KULLANILABILIRLIK-SONUCLARI.md
+    # Gorev 5): "algisal" sektorde farkli kullanildigi icin kafa
+    # karistirdi. Ayni degisiklik frontend/src/components/Pipeline.tsx
+    # STAGE_META'da da yapildi.
+    "phash": "Görüntü parmak izi",
+    "phash_blok": "Blok bazlı görüntü parmak izi",
     "clip": "Görsel benzerlik modeli",
     "declared": "Üretici beyanı",
     "geometry": "Geometrik doğrulama ve alan ölçümü",

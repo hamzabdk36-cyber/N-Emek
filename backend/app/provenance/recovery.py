@@ -282,7 +282,9 @@ def recover(
                     "region": region_name,
                     "hamming": int(hit.score),
                     "esik": fp.PHASH_MATCH_THRESHOLD,
-                    "aciklama": f"'{region_name}' bölgesinin algısal özeti kaynakla örtüşüyor.",
+                    # Bulgu B5 (kullanilabilirlik testi): "algisal" sektorde
+                    # farkli kullanildigi icin kafa karistirdi.
+                    "aciklama": f"'{region_name}' bölgesinin görüntü parmak izi kaynakla örtüşüyor.",
                 },
             )
         if region_name == "tam":

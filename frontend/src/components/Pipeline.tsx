@@ -27,7 +27,11 @@ const STAGE_META: Record<string, { order: number; title: string; note: string }>
   },
   phash: {
     order: 3,
-    title: "Algısal parmak izi",
+    // Bulgu B5: "algısal" ifadesi sektorde farkli kullanildigi icin
+    // kafa karistirdi (KULLANILABILIRLIK-SONUCLARI.md, Gorev 5, K3).
+    // Ayni etiket backend'de de degisti (explain.STAGE_LABELS) - ikisi
+    // tek kaynaktan gelmiyor ama ayni sozu soylemek zorunda.
+    title: "Görüntü parmak izi",
     note: "Yeniden sıkıştırma, ölçekleme ve renk oynamasına dayanıklı.",
   },
   clip: {
@@ -45,9 +49,18 @@ const STAGE_META: Record<string, { order: number; title: string; note: string }>
 export function StageTimeline({
   stages,
   timings,
+  sonucOzeti,
 }: {
   stages: StageLog[];
   timings?: Record<string, number>;
+  /**
+   * Asama listesinin basina, teknik kanit satirlarindan once giren tek
+   * cumlelik sonuc (bulgu B5): Kaynak Bul ekraninda bir katilimci
+   * "kanit aşamalarını mantıklı" buldu ama onlari sonucun kendisi
+   * sandi - asil cevap (kac kaynak bulundu) daha asagidaki ayri
+   * panelde, aynı ekranda gec goruluyordu.
+   */
+  sonucOzeti?: string;
 }) {
   const ordered = [...stages].sort(
     (a, b) => (STAGE_META[a.stage]?.order ?? 99) - (STAGE_META[b.stage]?.order ?? 99),
@@ -58,6 +71,11 @@ export function StageTimeline({
 
   return (
     <div>
+      {sonucOzeti && (
+        <p className="mb-4 rounded-lg border border-[var(--color-verify)]/35 bg-[var(--color-verify-dim)]/40 px-3.5 py-2.5 text-[13px] font-medium text-[var(--color-verify)]">
+          {sonucOzeti}
+        </p>
+      )}
       <ol className="relative">
         {ordered.map((stage, i) => {
           const meta = STAGE_META[stage.stage];
@@ -378,12 +396,15 @@ const OLCUM_META: Record<string, OlcumMeta> = {
     ipucu: "Bu ölçüm, itirazdan sonra daha hassas dedektörle (SIFT) tekrarlandı.",
   },
 
-  // Algisal parmak izi
+  // Goruntu parmak izi
+  // Bulgu B5: "hash benzeri teknik ifade yadırgattı" (K5, Gorev 5).
+  // Etiket artik matematiksel adi degil ne oldugunu soyluyor; teknik
+  // terim (Hamming uzakligi) ipucunda duruyor.
   hamming: {
-    etiket: "Hamming uzaklığı",
+    etiket: "Fark biti sayısı",
     bicim: "tamsayi",
     birim: " bit",
-    ipucu: "İki algısal özet arasında farklı olan bit sayısı; küçük olması iyi.",
+    ipucu: "İki görüntü parmak izi arasında farklı olan bit sayısı (Hamming uzaklığı); küçük olması iyi.",
   },
   esik: {
     etiket: "Eşik",
