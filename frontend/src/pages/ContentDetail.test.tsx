@@ -36,11 +36,19 @@ function kartYuklendi() {
   return screen.findByRole("heading", { level: 1, name: "Şehir kolajı" });
 }
 
-/** Bir tarafin pay satirini acar ve satirin kendisini dondurur. */
+/**
+ * Bir tarafin pay satirini acar ve satirin kendisini dondurur.
+ *
+ * Ilk kaynak satiri artik varsayilan acik geliyor (bulgu B4), yani
+ * "acmak" bazen hicbir tiklama gerektirmiyor - onceden kapali oldugunu
+ * varsaymiyoruz, once mevcut durumu okuyoruz.
+ */
 async function payiAc(isim: RegExp) {
   const dugme = await screen.findByRole("button", { name: isim });
-  await userEvent.click(dugme);
-  await waitFor(() => expect(dugme).toHaveAttribute("aria-expanded", "true"));
+  if (dugme.getAttribute("aria-expanded") !== "true") {
+    await userEvent.click(dugme);
+    await waitFor(() => expect(dugme).toHaveAttribute("aria-expanded", "true"));
+  }
   return dugme.closest("li")!;
 }
 
@@ -87,11 +95,20 @@ describe("ContentDetail — Emek Kartı", () => {
     expect(within(satir).getByText(/kaynak tabanı uygulandı/)).toBeInTheDocument();
   });
 
-  it("kapalı pay satırında gerekçe yazmıyor", async () => {
+  it("ilk kaynak satırı varsayılan açık geliyor, diğerleri kapalı kalıyor (bulgu B4)", async () => {
     ekranaGetir();
     await kartYuklendi();
 
-    expect(screen.queryByText(/pay = kapsama/)).not.toBeInTheDocument();
+    // Ilk kaynak (Burak, distribution.parties sirasinda ceyda'dan sonraki
+    // ilk source) tiklamadan aciliyor: kullanicilarin ucte biri gerekceyi
+    // satiri acmayi kesfedemedigi icin bulundu (KULLANILABILIRLIK-SONUCLARI.md).
+    const burak = (await screen.findByRole("button", { name: /Burak Demir/ }))
+      .closest("li")!;
+    expect(within(burak).getByText(/pay = kapsama/)).toBeInTheDocument();
+
+    // Baska bir kaynak (Ayse) acilmadan kapali kalmaya devam ediyor.
+    const ayse = screen.getByRole("button", { name: /Ayşe Yıldız/ }).closest("li")!;
+    expect(within(ayse).queryByText(/pay = kapsama/)).not.toBeInTheDocument();
   });
 
   it("itiraz kutusu yalnızca payın sahibine çıkıyor", async () => {
@@ -99,12 +116,12 @@ describe("ContentDetail — Emek Kartı", () => {
 
     const kendi = await payiAc(/Ayşe Yıldız/);
     expect(
-      within(kendi).getByRole("button", { name: "Bu paya itiraz et" }),
+      within(kendi).getByRole("button", { name: "Yeniden ölçüm iste" }),
     ).toBeInTheDocument();
 
     const baskasi = await payiAc(/Burak Demir/);
     expect(
-      within(baskasi).queryByRole("button", { name: "Bu paya itiraz et" }),
+      within(baskasi).queryByRole("button", { name: "Yeniden ölçüm iste" }),
     ).not.toBeInTheDocument();
   });
 
@@ -113,12 +130,12 @@ describe("ContentDetail — Emek Kartı", () => {
 
     const burak = await payiAc(/Burak Demir/);
     expect(
-      within(burak).getByRole("button", { name: "Bu paya itiraz et" }),
+      within(burak).getByRole("button", { name: "Yeniden ölçüm iste" }),
     ).toBeInTheDocument();
 
     const ayse = await payiAc(/Ayşe Yıldız/);
     expect(
-      within(ayse).queryByRole("button", { name: "Bu paya itiraz et" }),
+      within(ayse).queryByRole("button", { name: "Yeniden ölçüm iste" }),
     ).not.toBeInTheDocument();
   });
 
@@ -127,13 +144,30 @@ describe("ContentDetail — Emek Kartı", () => {
 
     const uretici = await payiAc(/Ceyda Arslan/);
     expect(
-      within(uretici).queryByRole("button", { name: "Bu paya itiraz et" }),
+      within(uretici).queryByRole("button", { name: "Yeniden ölçüm iste" }),
     ).not.toBeInTheDocument();
 
     const platform = await payiAc(/Platform/);
     expect(
-      within(platform).queryByRole("button", { name: "Bu paya itiraz et" }),
+      within(platform).queryByRole("button", { name: "Yeniden ölçüm iste" }),
     ).not.toBeInTheDocument();
+  });
+
+  it("itiraz düğmesinin altında kayıt açıldığı yazıyor ve açılınca üç adım listelenir (bulgu B2)", async () => {
+    ekranaGetir("u-ayse");
+    const satir = await payiAc(/Ayşe Yıldız/);
+
+    expect(
+      within(satir).getByText("İtiraz kaydı açılır"),
+    ).toBeInTheDocument();
+
+    await userEvent.click(
+      within(satir).getByRole("button", { name: "Yeniden ölçüm iste" }),
+    );
+
+    expect(within(satir).getByText(/hassas bir dedektörle/)).toBeInTheDocument();
+    expect(within(satir).getByText(/tüm dağıtımı güncellenir/)).toBeInTheDocument();
+    expect(within(satir).getByText(/insan incelemesine düşer/)).toBeInTheDocument();
   });
 
   it("itiraz gönderilince bağ yeniden ölçülüyor ve kart tazeleniyor", async () => {
@@ -151,7 +185,7 @@ describe("ContentDetail — Emek Kartı", () => {
 
     const satir = await payiAc(/Ayşe Yıldız/);
     await userEvent.click(
-      within(satir).getByRole("button", { name: "Bu paya itiraz et" }),
+      within(satir).getByRole("button", { name: "Yeniden ölçüm iste" }),
     );
     await userEvent.click(
       within(satir).getByRole("button", { name: "İtirazı gönder" }),
