@@ -5,6 +5,24 @@ düzenlenmez: bir düzeltme Word dosyasına yazılırsa bir sonraki üretimde ka
 
 Alt çizgiyle başlayan dosyalar (`_OKUBENI.md` gibi) rapora girmez.
 
+## Teslim edilen sürüm dondurulmuştur (11 Eyl 2026 notu)
+
+`N-Emek-Teknik-Rapor.pdf` 23 Ağustos'ta KYS'ye yüklendi ve değerlendirmeye girdi;
+o sürüm **içerik olarak dondurulmuştur** — yeniden üretilip tekrar yüklenmez. 11 Eylül'de
+iki tür güncelleme yapıldı, ikisi de raporun anlatısını veya iddialarını değiştirmez:
+
+1. `07-proje-takvimi.md`'deki **KT-8** satırı, yarışma takviminin mentörlük tarihini
+   değiştirmesi (2-7 Eylül → 12 Eylül 13:00, bkz. `CLAUDE.md` takvim notu ve
+   `docs/MENTORLUK.md`) nedeniyle **gerçekleşme kaydı** olarak güncellendi.
+2. `03-teknoloji.md`'deki test sayıları (129/126/124), bu belgenin kendisinin
+   söylediği kurala uyularak güncel tutuldu — "bu raporun kaynak metni de aynı
+   denetimden geçmektedir" (`dokuman_denetimi.py`), yani `sayim:` işaretli sayılar
+   burada da canlı kalır; yalnızca commit sayısı gibi "yazıldığı tarih itibarıyla"
+   diye çerçevelenen tarihsel iddialar donuyor.
+
+Basılan/yüklenen PDF dosyası bu güncellemelerden etkilenmez; yalnızca kaynak `.md`
+metinleri, deponun geri kalanıyla aynı doğruluk kuralına tabi tutuldu.
+
 ## Üretim
 
 ```bash

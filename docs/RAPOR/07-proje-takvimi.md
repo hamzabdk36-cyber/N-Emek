@@ -37,7 +37,7 @@ Takvim, yarışma takviminin dört sert tarihi etrafında kuruldu: **teknik rapo
 | **KT-6** | **Teknik rapor KYS'ye yüklendi** | **23 Ağu** | Şartname son tarihi 24 Ağustos 17:00 |
 | KT-7 | Kullanılabilirlik testi sonuçlandı | 22 Ağu | Beş katılımcı · SUS 60,0 — hedef ≥68'in altında · yedi bulgu |
 | KT-7b | Kullanıcı araştırması tamamlandı | 22 Ağu | On görüşme · üç varsayım sınandı |
-| KT-8 | Mentörlük geri bildirimleri uygulandı | 7 Eyl | Mentörlük süreci 2-7 Eylül |
+| KT-8 | İlk mentör görüşmesi yapıldı | 12 Eyl | Yarışma takvimi değişti — bkz. `_OKUBENI.md` |
 | **KT-9** | **Final paketi teslim edildi** | **14 Eyl** | Şartname son tarihi 14 Eylül 17:00 |
 | KT-10 | Jüri önünde canlı sunum yapıldı | 20 Eyl | Şartnamede ilan edilen canlı sunum tarihi |
 

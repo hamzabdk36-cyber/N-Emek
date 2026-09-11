@@ -71,19 +71,22 @@ PAKETLER = [
     ("İP-6b", "Kullanıcı araştırması: dört profilden on kişiyle görüşmeler",
      date(2026, 8, 22), date(2026, 8, 22), "bitti"),
     ("İP-7", "Teknik raporun yazımı, denetimi ve teslimi",
-     date(2026, 8, 14), date(2026, 8, 23), "suruyor"),
-    ("İP-8", "Ürünleştirme ve mentörlük geri bildirimlerinin uygulanması",
-     date(2026, 8, 25), date(2026, 9, 7), "planli"),
+     date(2026, 8, 14), date(2026, 8, 23), "bitti"),
+    ("İP-8", "Mentör görüşmesi (12 Eyl) ve kullanılabilirlik bulgularının kapatılması",
+     date(2026, 9, 11), date(2026, 9, 13), "planli"),
     ("İP-9", "Final paketi: demo videosu, sunum dosyası, prototip teslimi",
-     date(2026, 9, 8), date(2026, 9, 14), "planli"),
+     date(2026, 9, 13), date(2026, 9, 14), "planli"),
     ("İP-10", "Canlı sunum: prova, jüri soru-cevap ve yedek demo hazırlığı",
      date(2026, 9, 15), date(2026, 9, 20), "planli"),
 ]
 
-# Sartnamenin sert tarihleri.
+# Sartnamenin sert tarihleri. Mentorluk basvurusu "2-7 Eylul" idi;
+# yarisma iletisiminden gelen e-posta ilk gorusmeyi 12 Eylul 13:00'e aldi
+# (bkz. CLAUDE.md takvim notu, docs/MENTORLUK.md) - kilometre tasi
+# gerceklesen tarihi gosteriyor.
 KILOMETRE = [
     (date(2026, 8, 24), "Teknik rapor teslimi"),
-    (date(2026, 9, 2), "Mentörlük başlangıcı"),
+    (date(2026, 9, 12), "Mentörlük — ilk görüşme"),
     (date(2026, 9, 14), "Final sunumu ve prototip"),
     (date(2026, 9, 20), "Jüriye canlı sunum"),
 ]

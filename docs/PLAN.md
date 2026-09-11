@@ -13,7 +13,7 @@ Bu proje, takımın elektronik harp (Zenith EH) çalışmasından **tamamen bağ
 | 20 Ağu 2026 | Son başvuru (tamamlandı) | — |
 | **24 Ağu 2026, 17:00 TSİ** | **Teknik Rapor teslimi (KYS)** | **16 gün** |
 | 2 Eyl 2026 | Teknik rapor sonuçları | |
-| 2–7 Eyl 2026 | Mentörlük ve geliştirme | |
+| ~~2–7 Eyl 2026~~ **12 Eyl 2026, 13:00** | Mentörlük — ilk görüşme (kaydı: bkz. `docs/MENTORLUK.md`) | |
 | **14 Eyl 2026, 17:00 TSİ** | **Final sunumu + prototip teslimi** | **37 gün** |
 | **20 Eyl 2026** | Jüri ve katılımcılara canlı sunum | |
 | 30 Eyl – 4 Eki 2026 | TEKNOFEST Şanlıurfa | |
@@ -188,22 +188,38 @@ Marka ödül havuzu tanımlar, remix kuralları ve süre belirler; kampanya sonu
 - 23 Ağustos: rapor son okuma, şablon uygunluk kontrolü, ekler
 - **24 Ağustos 17:00'dan en az 6 saat önce KYS'ye yükleme.** Son gün son saate bırakılmayacak.
 
-### Faz 4 — 25 Ağustos – 7 Eylül: Ürünleştirme ve mentörlük
-- İtiraz akışı, moderatör inceleme kuyruğu, kampanya paneli
-- **UI/UX cilası** (puanın %20'si): tasarım sistemi, boş/yükleniyor/hata durumları, mikro animasyonlar, mobil görünüm
-- Erişilebilirlik değerlendirmesi (WCAG 2.1 AA kontrol listesi, klavye navigasyonu, kontrast)
-- 5 kullanıcıyla kullanılabilirlik testi + sonuç raporu
-- İş/gelir modeli, YZ mimarisi, veri-model-etik-performans dokümanları
-- Mentör geri bildirimlerinin uygulanması
+### Faz 4 — 25 Ağustos – 22 Ağustos: Ürünleştirme (gerçekleşen)
+- İtiraz akışı, moderatör inceleme kuyruğu, kampanya paneli — tamamlandı
+- Erişilebilirlik değerlendirmesi (WCAG 2.1 AA) — tamamlandı, on bir kusurun onu düzeltildi
+- 5 kullanıcıyla kullanılabilirlik testi (20-22 Ağu) — koşuldu, SUS 60,0, yedi bulgu
+- 10 görüşmeyle kullanıcı araştırması (22 Ağu) — koşuldu
+- İş/gelir modeli, YZ mimarisi, veri-model-etik-performans dokümanları — tamamlandı
 
-### Faz 5 — 8–14 Eylül: Final paketi
-- Demo videosu (3–5 dk, altın senaryo, Türkçe anlatım)
-- Sunum dosyası, kullanıcı akışları ve senaryo dokümanı
-- Kaynak kod temizliği, README, tek komutla çalışan Docker kurulumu
-- **14 Eylül 17:00'dan önce teslim**
+**Not (11 Eylül):** Bu fazdan sonra 23 Ağustos'tan 11 Eylül'e kadar **19 gün depoda
+ilerleme olmadı**. Mentörlük tarihi de şartnamenin "2–7 Eylül" penceresinden **12 Eylül
+13:00**'e kaydı (bkz. `CLAUDE.md` takvim notu, `docs/MENTORLUK.md`) — final teslimine
+36 saat kala. Aşağıdaki Faz 4b bu gerçeği yansıtan sıkıştırılmış plan; ayrıntılı iş
+listesi ve doğrulama adımları görüşme öncesi hazırlanan yol haritasında
+(`~/.claude/plans/teknofest-i-leti-im-iletisim-teknofest-dapper-phoenix.md`).
 
-### Faz 6 — 15–20 Eylül: Canlı sunum
-- Prova, jüri soru-cevap hazırlığı, yedek plan (internet/GPU olmayan ortam için önceden kaydedilmiş demo)
+### Faz 4b — 11–14 Eylül: Sıkıştırılmış final hazırlığı (mentörlük 12 Eylül'e kaydığı için)
+- 11 Eyl gece: duman testi (backend 130 test, arayüz 124 test <!-- sayim: backend, arayuz -->, `dokuman_denetimi.py`), mentör hazırlık paketi
+  (`docs/MENTORLUK.md`), belge hizalaması (bu dosya dahil)
+- 12 Eyl 13:00–15:00: mentör görüşmesi; geri bildirimler `docs/MENTORLUK.md` §4'teki
+  tabloya kaydedilir, her satır bir iş maddesine bağlanır veya gerekçesiyle reddedilir
+- 12 Eyl akşam – 13 Eyl: kullanılabilirlik testinin yedi bulgusunun kapatılması
+  (`docs/KULLANILABILIRLIK-SONUCLARI.md`) — dördü yüksek ağırlıklı ve zorunlu
+- 13 Eyl: demo videosu çekimi (`docs/DEMO-SENARYOSU.md`, düzeltilmiş arayüzle) + sunum
+  dosyasının üretimi (`docs/SUNUM.md` → Marp PDF)
+- 13 Eyl akşam: jüri makinesi tatbikatı (`docker compose down -v && up --build` sıfırdan)
+- **14 Eylül ≤ 11:00: final paketi teslim** (17:00 sınırına 6 saat marj)
+
+### Faz 5 — 15–19 Eylül: Sunum provası
+- Jüri soru-cevap hazırlığı
+- Yedek plan: internet/GPU olmayan ortam için önceden kaydedilmiş demo videosu kullanılır
+
+### Faz 6 — 20 Eylül: Canlı sunum
+- Jüri ve katılımcılara sunum, şartnamede ilan edilen tarih
 
 ---
 

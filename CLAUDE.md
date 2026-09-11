@@ -16,7 +16,7 @@ Ayırt edici iddia: kaynağı *bulmak* değil, kullanılan içerik oranını **�
 |---|---|
 | **24 Ağu 2026, 17:00 TSİ** | Teknik Rapor teslimi (KYS) — şablona uymayan veya geç rapor doğrudan eleme |
 | 2 Eyl 2026 | Teknik rapor sonuçları |
-| 2–7 Eyl 2026 | Mentörlük |
+| ~~2–7 Eyl 2026~~ **12 Eyl 2026, 13:00 TSİ** | Mentörlük — ilk görüşme (bkz. `docs/MENTORLUK.md`) |
 | **14 Eyl 2026, 17:00 TSİ** | Final sunumu + çalışan prototip teslimi |
 | 20 Eyl 2026 | Jüri ve katılımcılara canlı sunum |
 | 30 Eyl – 4 Eki 2026 | TEKNOFEST Şanlıurfa |
@@ -25,6 +25,11 @@ Tarihler şartnamenin **V3** sürümünden (17.08.2026). V2'ye göre iki değiş
 canlı sunum "Eylül 2026" iken **20 Eylül** olarak kesinleşti, ve bir takım artık
 yarışma kapsamında yalnızca **tek başvuru** yapabilir (çok temalı başvuru hakkı
 kalktı; N-Emek zaten tek başvuru, İçerik Ekonomisi).
+
+**Mentörlük tarihi kaydı (11 Eyl 2026 güncellemesi):** yarışma iletişiminden gelen
+e-posta ilk mentör görüşmesini şartnamenin "2–7 Eylül" penceresi yerine **12 Eylül
+13:00**'e aldı — final tesliminden (14 Eylül) yalnızca 36 saat önce. Görüşme hazırlığı,
+sorulacak sorular ve geri bildirim kaydı `docs/MENTORLUK.md`'de.
 
 Puan ağırlıkları: Yenilikçilik %20 · Teknik Yeterlilik %20 · Problem Çözme %20 · **UI/UX %20** · Sunum ve Prototip Kalitesi %10 · İş Modeli %10. Arayüz, AI motoruyla eşit ağırlıkta — "geliştirici demosu" görünümü puanın beşte birini götürür.
 
@@ -64,7 +69,7 @@ cd frontend && npm test                                      # yerleşim + bile�
 cd frontend && npm run dev                                                   # :5173
 ```
 
-Backend 128 test, arayüz 114 test. <!-- sayim: backend, arayuz --> Bu sayılar elle
+Backend 130 test, arayüz 124 test. <!-- sayim: backend, arayuz --> Bu sayılar elle
 tutulmuyor: `python scripts/dokuman_denetimi.py` dokümanlardaki her sayısal iddiayı
 ölçümle karşılaştırır ve CI'da koşar.
 
@@ -160,7 +165,7 @@ React 19'da da hata sınırı yazmanın tek yolu sınıf bileşeni;
 
 | İş | Ne koşar |
 |---|---|
-| backend | torch **önce** ve CPU indeksinden → `requirements.txt` → C2PA sertifikaları → 8 görsellik test korpusu → `pytest -m "not slow" -rs` (125 test) <!-- sayim: backend-hizli --> → doküman denetimi |
+| backend | torch **önce** ve CPU indeksinden → `requirements.txt` → C2PA sertifikaları → 8 görsellik test korpusu → `pytest -m "not slow" -rs` (127 test) <!-- sayim: backend-hizli --> → doküman denetimi |
 | arayüz | `npm ci` → `tsc --noEmit` → `vitest run` → `npm run build` → doküman denetimi |
 
 **Yeşil rozet gerçekten bir şey söylemeli.** İlk CI koşusu korpussuz çalıştı ve yeşil
@@ -408,8 +413,9 @@ renklerinin tema anlam renkleriyle (altın=para, yeşil=doğrulanmış, mavi=zin
 **Yedek:** `arayuz-v1` etiketi ve masaüstünde `N-Emek-arayuz-yedek-20260810.zip`.
 Geri dönmek için: `git checkout arayuz-v1 -- frontend/src`
 
-**Açık kalan:** Akışta `image.jpeg` başlıklı bir artık test yüklemesi duruyor
-(başlığı dosya adı, geliri sıfır, remix kapalı). Jüri demosundan önce silinmeli.
+**Kapatıldı (11 Eyl 2026):** Akıştaki `image.jpeg` başlıklı artık test yüklemesi bu not
+yazıldığında zaten yoktu — `scripts/seed_demo.py --reset` ile doğrulandı, veritabanında
+yalnızca altın senaryonun üç içeriği duruyor.
 
 ## Bilinen tuzaklar
 
