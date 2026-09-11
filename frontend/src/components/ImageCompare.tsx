@@ -113,7 +113,7 @@ export function ImageCompare({
           label={derivativeLabel}
           caption={
             hasMask && showMask
-              ? "yeşil alan: ölçümle bu kaynaktan geldiği doğrulanan bölge"
+              ? `parlak alan: ${sourceLabel}'dan geldiği ölçümle doğrulanan bölge`
               : "türev içerik"
           }
         >
@@ -138,24 +138,50 @@ export function ImageCompare({
       </div>
 
       {hasMask && (
-        <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-          <label className="flex cursor-pointer items-center gap-2 text-[12px] text-[var(--color-ink-2)]">
-            <input
-              type="checkbox"
-              checked={showMask}
-              onChange={(e) => setShowMask(e.target.checked)}
-              className="h-3.5 w-3.5 accent-[var(--color-verify)]"
-            />
-            Eşleşen bölgeyi vurgula
-          </label>
-          {coverage != null && (
-            <span className="num text-[12px] text-[var(--color-ink-2)]">
-              ölçülen kullanılan alan:{" "}
-              <span className="font-semibold text-[var(--color-verify)]">
-                {pct(coverage)}
+        <div className="mt-3 space-y-2.5">
+          {/* Bulgu B3: iki katilimci parlak alani "degistirilen bolge"
+              sandi, halbuki tam tersi - kaynaktan geldigi olculen bolge.
+              Renkle degil kontrastla kuruyoruz (CLAUDE.md renk
+              disiplini); gosterge de ayni iki ornegi aciktan yaziyor,
+              kaynagin adini da soyleyerek soyut "kaynak" kelimesinden
+              kacinir. */}
+          {showMask && (
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11.5px] text-[var(--color-ink-3)]">
+              <span className="flex items-center gap-1.5">
+                <span
+                  aria-hidden
+                  className="h-3 w-3 rounded-sm border border-[var(--color-verify)]/50 bg-[var(--color-verify-dim)]"
+                />
+                parlak: {sourceLabel}'dan gelen piksel
               </span>
-            </span>
+              <span className="flex items-center gap-1.5">
+                <span
+                  aria-hidden
+                  className="h-3 w-3 rounded-sm border border-[var(--color-line)] bg-[var(--color-surface-2)]"
+                />
+                gri: {derivativeLabel} üreticisinin eklediği
+              </span>
+            </div>
           )}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <label className="flex cursor-pointer items-center gap-2 text-[12px] text-[var(--color-ink-2)]">
+              <input
+                type="checkbox"
+                checked={showMask}
+                onChange={(e) => setShowMask(e.target.checked)}
+                className="h-3.5 w-3.5 accent-[var(--color-verify)]"
+              />
+              Kaynaktan gelen bölgeyi vurgula
+            </label>
+            {coverage != null && (
+              <span className="num text-[12px] text-[var(--color-ink-2)]">
+                ölçülen kullanılan alan:{" "}
+                <span className="font-semibold text-[var(--color-verify)]">
+                  {pct(coverage)}
+                </span>
+              </span>
+            )}
+          </div>
         </div>
       )}
     </div>
