@@ -1,0 +1,125 @@
+/* @theme n-emek */
+
+/**
+ * Marp temasi - frontend/src/theme.css'teki renk disiplininden turetildi.
+ * Sunumun kendisi de urunle ayni dili konussun diye: altin = para/pay,
+ * yesil = dogrulanmis, mavi = zincir/baglanti. Degerler token'larla
+ * birebir ayni; iki dosya birbirinden bagimsiz surumlenir, tutarliligi
+ * elle korumak gerekir - theme.css degisirse burasi da elle guncellenmeli.
+ */
+
+section {
+  background: #0a0c0f;
+  color: #e8ecf3;
+  font-family:
+    "Inter",
+    "Segoe UI",
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Helvetica Neue",
+    sans-serif;
+  font-size: 26px;
+  padding: 56px 68px;
+  line-height: 1.45;
+}
+
+h1,
+h2 {
+  color: #f2b134;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: 1.7em;
+}
+
+h2 {
+  font-size: 1.25em;
+  border-bottom: 1px solid #242932;
+  padding-bottom: 0.25em;
+}
+
+h3 {
+  color: #e8ecf3;
+  font-size: 1.05em;
+}
+
+a {
+  color: #5b8def;
+}
+
+strong {
+  color: #f2b134;
+  font-weight: 700;
+}
+
+em {
+  color: #a8b1c0;
+}
+
+blockquote {
+  border-left: 4px solid #3fbf7f;
+  background: #1a4433;
+  padding: 0.6em 1em;
+  color: #e8ecf3;
+  border-radius: 0 8px 8px 0;
+  font-style: normal;
+}
+
+blockquote > p {
+  margin: 0;
+}
+
+table {
+  border-collapse: collapse;
+  font-size: 0.85em;
+}
+
+th,
+td {
+  border: 1px solid #242932;
+  padding: 6px 12px;
+}
+
+th {
+  background: #181c23;
+  color: #a8b1c0;
+  text-transform: none;
+}
+
+code {
+  background: #181c23;
+  color: #e8ecf3;
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  font-family: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+  font-size: 0.85em;
+}
+
+pre {
+  background: #12151a;
+  border: 1px solid #242932;
+  border-radius: 8px;
+  padding: 1em;
+}
+
+pre > code {
+  background: transparent;
+  padding: 0;
+}
+
+img {
+  border-radius: 8px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #242932;
+}
+
+section::after {
+  color: #7a8494;
+  font-size: 0.6em;
+}

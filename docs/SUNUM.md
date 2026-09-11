@@ -26,7 +26,13 @@ Görseller `gorseller/` klasöründen. Her sayı ölçüm çıktısıdır.
 
 TEKNOFEST 2026 · NSosyal İnovasyon Yarışması · İçerik Ekonomisi
 
-*[takım adı ve üyeler]*
+**Takım ZENITH N**
+<!-- Üye isimleri bilinçli olarak yok: teknik raporun 8. bölümü
+     ("Takım Yapısı"), değerlendirme esasları gereği isim/fotoğraf gibi
+     kişisel bilgilerin rapora girmediğini söylüyor. Slaytta da aynı
+     kural izlendi; sunumu yapan kişi kendini sözlü olarak tanıtır. -->
+
+*[sunumu yapacak kişi(ler) kendini sözlü olarak tanıtabilir]*
 
 ---
 
@@ -43,7 +49,7 @@ paylaşılıyor.
 > Sorun kötü niyet değil: zincir **teknik olarak** kopuyor.
 > Ekran görüntüsü, içeriğin kimliğini tek tıkla siliyor.
 
-**Görsel:** `gorseller/01-akis.jpg`
+![bg right:38%](gorseller/01-akis.jpg)
 
 ---
 
@@ -109,7 +115,7 @@ dayanıyor.
 Yüklenen dosyada kimlik **yoktu**. Sistem iki kaynağı da buldu:
 Burak'ı **ve** onun üzerinden Ayşe'yi. Güven **0,98**.
 
-**Görsel:** `gorseller/02-emek-karti-koken.jpg`
+![bg right:42%](gorseller/02-emek-karti-koken.jpg)
 
 ---
 
@@ -128,7 +134,7 @@ pay = kapsama %85,2 × güven 0,95 × sönümleme 0,85 = 0,692
 | Burak (kaynak) | %11,9 | Kendi kattığı alan %12,2 |
 | N'Sosyal | %10,0 | Komisyon |
 
-**Görsel:** `gorseller/03-pay-gerekcesi.jpg`
+![bg right:32%](gorseller/03-pay-gerekcesi.jpg)
 
 ---
 
@@ -141,7 +147,7 @@ Kararan yerler o kaynaktan gelmiyor.
 
 **Ölçülen kullanılan alan: %12,2**
 
-**Görsel:** `gorseller/05-olculen-bolge-oran.jpg`
+![bg right:42%](gorseller/05-olculen-bolge-oran.jpg)
 
 ---
 
@@ -229,7 +235,7 @@ Saklamıyoruz — jüri karşısında güvenilirliği bu sağlar.
 | Sentetik yeniden çizim | Ölçülemez — "ölçülemedi" denir |
 | Ödemesi olan içerik silinemez | Silme hakkı bu durumda tam karşılanmıyor; çözümü ödeme kayıtlarının anonimleştirilmesi |
 | Kullanıcı silme yok | Yalnızca içerik silinebiliyor — ürünleşmede eklenecek |
-| Kullanılabilirlik testi | Protokol hazır, 5 katılımcıyla henüz koşulmadı — `KULLANILABILIRLIK-PROTOKOL.md` |
+| Kullanılabilirlik testi | 5 katılımcıyla koşuldu, SUS **60,0** — hedef 68'in altında, yedi bulgu kaydedildi — `KULLANILABILIRLIK-SONUCLARI.md` |
 
 ---
 

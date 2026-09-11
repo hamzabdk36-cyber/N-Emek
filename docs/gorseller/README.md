@@ -1,8 +1,9 @@
 # Ekran Görüntüleri
 
-Teknik rapor ve sunum için. **11 Ağustos 2026**, `docker compose up --build` ile ayağa
-kalkan yığından, demo verisiyle (altın senaryo) çekildi. Masaüstü kareleri 1568×745,
-mobil kare 390×844, hepsi JPEG.
+Teknik rapor ve sunum için. İlk çekim 11 Ağustos 2026; **11 Eylül 2026**'da UI/UX
+bulgularının kapatılmasından sonra (`KULLANILABILIRLIK-SONUCLARI.md` bulgu B1-B6)
+yeniden üretildi. Yerel geliştirme sunucusundan (`uvicorn` + `vite`), demo verisiyle
+(altın senaryo) çekildi. Masaüstü kareleri 1568×745, mobil kare 390×844, hepsi JPEG.
 
 Bu klasördeki her görüntü **çalışan sistemden** alındı; hiçbiri maket veya çizim değil.
 
@@ -31,14 +32,14 @@ Betik o döngüyü kapatıyor ve iki şeyi kendisi doğruluyor: Inter yüklenmem
 |---|---|---|
 | `01-akis.jpg` | Akış | Üç gönderi, kökeni tek satır düz metinle: "2 kaynaktan türedi", "özgün içerik · 2 türev üretildi" |
 | `02-emek-karti-koken.jpg` | Emek Kartı — üst | Köken anlatısı ve pay dağılımının başı. "Yüklenen dosyada kimlik: yoktu / Yayınlanan sürüm: imzalandı" — kimliğin silinip yeniden kurulduğu durum |
-| `03-pay-gerekcesi.jpg` | Emek Kartı — pay satırı açık | **Raporun ana görseli.** Kapsama %85,2 · güven 0,95 · sönümleme 0,85 · ham ağırlık 0,692 ve bunları birleştiren formül satırı: `pay = kapsama × güven × sönümleme`. Altında kanıt satırları |
+| `03-pay-gerekcesi.jpg` | Emek Kartı — pay satırı açık | **Raporun ana görseli.** Formülden önce düz Türkçe gerekçe cümlesi (bulgu B4): "…ölçülen alan oranıyla %87,2; bu yüzden havuzun %68,2 kendisine gidiyor." Altında kapsama %87,2 · güven 0,95 · sönümleme 0,85 · ham ağırlık 0,706 ve formül satırı: `pay = kapsama × güven × sönümleme`, sonra kanıt satırları |
 | `04-olculen-bolge.jpg` | Ölçülen bölge | Kaynak ve türev yan yana; türevde **yeşil alan** ölçümle o kaynaktan geldiği doğrulanan bölge |
-| `05-olculen-bolge-oran.jpg` | Ölçülen bölge — oran | Aynı karşılaştırma, "ölçülen kullanılan alan: %12,2" ve kanıt satırlarıyla. Geometri satırı sayıyı açıkça yazıyor: 620 noktada eşleşme, oran %97,5 |
+| `05-olculen-bolge-oran.jpg` | Ölçülen bölge — oran | Aynı karşılaştırma, kaynağın adını söyleyen lejant (bulgu B3) ve "ölçülen kullanılan alan: %12,5" ile. Geometri satırı sayıyı açıkça yazıyor: 599 noktada eşleşme, oran %99,7 |
 | `06-atif-zinciri.jpg` | Atıf zinciri | Üç halkalı DAG, kenarlarda ölçülmüş kapsama rozetleri (%87, %97). Seçili düğüm altın çerçeveli |
 | `07-remix-studyosu.jpg` | Remix Stüdyosu | Tuval ve dört araç (kırp, yazı, çizim, filtre); her işlem bir C2PA eylemine karşılık geliyor |
 | `08-kampanya-paneli.jpg` | Kampanyalar | Marka kampanyası: ödül havuzu ₺50.000,00, kaynak tabanı %15, komisyon %10 |
 | `09-inceleme-kuyrugu.jpg` | İnceleme kuyruğu | Boş durum — aşağıdaki nota bakın |
-| `10-kaynak-bul.jpg` | Kaynak bul | **Gerçek bir sorgunun sonucu.** Burak'ın remixinin kırpılmış kopyası soruluyor: içerik kimliği yok, birebir eşleşme yok, filigran okunamıyor — sonra algısal parmak izi, görsel benzerlik ve geometrik doğrulama sırayla buluyor. Aşamaların süreleri ve "bulunan kaynaklar (3)" ekranda |
+| `10-kaynak-bul.jpg` | Kaynak bul | **Gerçek bir sorgunun sonucu.** Burak'ın remixinin kırpılmış kopyası soruluyor: içerik kimliği yok, birebir eşleşme yok, filigran okunamıyor — sonra görüntü parmak izi, görsel benzerlik ve geometrik doğrulama sırayla buluyor. Aşamaların süreleri ve "bulunan kaynaklar (3)" ekranda |
 | `11-mobil.jpg` | Mobil — Emek Kartı | 390×844'te aynı ekran: iki satırlık üst çubuk, pay dağılımı, açık gerekçe ve formül satırı. Yatay kayma yok |
 | `12-takvim.png` | — | Ekran görüntüsü değil: iş paketleri ve zaman çizelgesi. `scripts/rapor_takvim.py` üretiyor, kaynağı oradaki `PAKETLER` listesi |
 
@@ -58,7 +59,7 @@ indirgemeyle düşürülmüş (aynı pikseller Burak üzerinden zaten sayılıyo
 satırda maske yok. `04` ve `05` bu yüzden Burak seçiliyken çekildi.
 
 **Kadraj neyi kesiyor.** `03`, formül satırını merkeze alacak şekilde kadrajlandı;
-"Bu paya itiraz et" düğmesi hemen altında ama kadrajın dışında kalıyor. İtiraz akışının
+"Yeniden ölçüm iste" düğmesi hemen altında ama kadrajın dışında kalıyor. İtiraz akışının
 kendisi `docs/KULLANICI-AKISLARI.md` §2 sahne 5'te ve `DEMO-SENARYOSU.md`'de anlatılıyor.
 
 ## Mobil kare hakkında
@@ -72,7 +73,7 @@ O turda ayrıca şöyle bir cümle yazılmıştı: *"Mobil yerleşim `ERISILEBIL
 kapsamında zaten değerlendirildi ve çalışıyor; eksik olan yalnızca görüntüsü."* **Bu
 doğru değildi.** O belge mobil düzeni "Yapılmayanlar" altında tutuyordu, ve 11 Ağustos'ta
 390 pikselde ilk kez ölçüldüğünde üst çubuğun ekranın beşte birini yediği görüldü
-(163 piksel, yapışkan). Düzeltildi — çubuk şimdi 109 piksel — ve ölçümün tamamı
+(163 piksel, yapışkan). Düzeltildi — çubuk şimdi 101 piksel — ve ölçümün tamamı
 `ERISILEBILIRLIK.md` 11 numaralı bulguda.
 
 Kare artık gerçek: Playwright'ın görüntü alanı pencereden bağımsız kurulduğu için ölçü
