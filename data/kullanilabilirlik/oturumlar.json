@@ -130,12 +130,12 @@
   ],
 
   "bulgular": [
-    { "bulgu": "Kaynak Bul ekranı yardımsız bulunamıyor: beş katılımcının yalnızca biri görevi kendi başına tamamladı", "kac_katilimci": 4, "agirlik": "Yüksek", "durum": "Açık" },
-    { "bulgu": "İtiraz bir şikâyet kutusu sanılıyor; yeniden ölçüm başlattığı ekrandan anlaşılmıyor", "kac_katilimci": 2, "agirlik": "Yüksek", "durum": "Açık" },
-    { "bulgu": "Ölçülen bölge maskesi ters okunuyor: parlak alan kaynaktan gelen bölge değil, değiştirilen bölge sanılıyor", "kac_katilimci": 2, "agirlik": "Yüksek", "durum": "Açık" },
-    { "bulgu": "Pay oranlarının hangi ölçüme göre değiştiği anlaşılmıyor; kullanıcı sayıyı görüyor, gerekçeyi bağlayamıyor", "kac_katilimci": 3, "agirlik": "Yüksek", "durum": "Açık" },
-    { "bulgu": "Kanıt satırlarındaki teknik terimler ağır geliyor (\"algı\", \"hash\"); bir katılımcı kanıt satırını sonuç sandı", "kac_katilimci": 3, "agirlik": "Orta", "durum": "Açık" },
-    { "bulgu": "Mobilde metinler küçük okunuyor; iki katılımcı ekranı yakınlaştırma ihtiyacı duydu", "kac_katilimci": 2, "agirlik": "Orta", "durum": "Açık" },
-    { "bulgu": "Marka profili toplu işlem, raporlama ve dışa aktarma bekliyor; bunlar prototipte yok", "kac_katilimci": 1, "agirlik": "Düşük", "durum": "Açık" }
+    { "bulgu": "Kaynak Bul ekranı yardımsız bulunamıyor: beş katılımcının yalnızca biri görevi kendi başına tamamladı", "kac_katilimci": 4, "agirlik": "Yüksek", "durum": "Düzeltildi (11 Eyl 2026) — akışın başına sabit giriş eklendi, yeniden ölçülmedi" },
+    { "bulgu": "İtiraz bir şikâyet kutusu sanılıyor; yeniden ölçüm başlattığı ekrandan anlaşılmıyor", "kac_katilimci": 2, "agirlik": "Yüksek", "durum": "Düzeltildi (11 Eyl 2026) — düğme metni ve üç adımlık önizleme eklendi, yeniden ölçülmedi" },
+    { "bulgu": "Ölçülen bölge maskesi ters okunuyor: parlak alan kaynaktan gelen bölge değil, değiştirilen bölge sanılıyor", "kac_katilimci": 2, "agirlik": "Yüksek", "durum": "Düzeltildi (11 Eyl 2026) — kaynak adını söyleyen lejant eklendi, yeniden ölçülmedi" },
+    { "bulgu": "Pay oranlarının hangi ölçüme göre değiştiği anlaşılmıyor; kullanıcı sayıyı görüyor, gerekçeyi bağlayamıyor", "kac_katilimci": 3, "agirlik": "Yüksek", "durum": "Düzeltildi (11 Eyl 2026) — düz Türkçe gerekçe cümlesi eklendi, ilk kaynak satırı varsayılan açık, yeniden ölçülmedi" },
+    { "bulgu": "Kanıt satırlarındaki teknik terimler ağır geliyor (\"algı\", \"hash\"); bir katılımcı kanıt satırını sonuç sandı", "kac_katilimci": 3, "agirlik": "Orta", "durum": "Düzeltildi (11 Eyl 2026) — terimler sadeleştirildi, ayrı sonuç kutusu eklendi, yeniden ölçülmedi" },
+    { "bulgu": "Mobilde metinler küçük okunuyor; iki katılımcı ekranı yakınlaştırma ihtiyacı duydu", "kac_katilimci": 2, "agirlik": "Orta", "durum": "Düzeltildi (11 Eyl 2026) — küçük punto mobilde büyütüldü, yeniden ölçülmedi" },
+    { "bulgu": "Marka profili toplu işlem, raporlama ve dışa aktarma bekliyor; bunlar prototipte yok", "kac_katilimci": 1, "agirlik": "Düşük", "durum": "Kapsam dışı — 36 saatlik pencerede yüksek ağırlıklı bulgular önceliklendirildi, sonraki sürüm maddesi (IS-MODELI.md)" }
   ]
 }

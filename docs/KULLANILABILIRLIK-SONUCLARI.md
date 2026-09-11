@@ -194,13 +194,13 @@ Ağırlık sırasına göre. Düzeltilenler `ERISILEBILIRLIK.md`'deki
 
 | # | Bulgu | Kaç katılımcı | Ağırlık | Durum |
 |--:|---|--:|---|---|
-| 1 | Kaynak Bul ekranı yardımsız bulunamıyor: beş katılımcının yalnızca biri görevi kendi başına tamamladı | 4 | Yüksek | Açık |
-| 2 | İtiraz bir şikâyet kutusu sanılıyor; yeniden ölçüm başlattığı ekrandan anlaşılmıyor | 2 | Yüksek | Açık |
-| 3 | Ölçülen bölge maskesi ters okunuyor: parlak alan kaynaktan gelen bölge değil, değiştirilen bölge sanılıyor | 2 | Yüksek | Açık |
-| 4 | Pay oranlarının hangi ölçüme göre değiştiği anlaşılmıyor; kullanıcı sayıyı görüyor, gerekçeyi bağlayamıyor | 3 | Yüksek | Açık |
-| 5 | Kanıt satırlarındaki teknik terimler ağır geliyor ("algı", "hash"); bir katılımcı kanıt satırını sonuç sandı | 3 | Orta | Açık |
-| 6 | Mobilde metinler küçük okunuyor; iki katılımcı ekranı yakınlaştırma ihtiyacı duydu | 2 | Orta | Açık |
-| 7 | Marka profili toplu işlem, raporlama ve dışa aktarma bekliyor; bunlar prototipte yok | 1 | Düşük | Açık |
+| 1 | Kaynak Bul ekranı yardımsız bulunamıyor: beş katılımcının yalnızca biri görevi kendi başına tamamladı | 4 | Yüksek | Düzeltildi (11 Eyl 2026) — akışın başına sabit giriş eklendi, yeniden ölçülmedi |
+| 2 | İtiraz bir şikâyet kutusu sanılıyor; yeniden ölçüm başlattığı ekrandan anlaşılmıyor | 2 | Yüksek | Düzeltildi (11 Eyl 2026) — düğme metni ve üç adımlık önizleme eklendi, yeniden ölçülmedi |
+| 3 | Ölçülen bölge maskesi ters okunuyor: parlak alan kaynaktan gelen bölge değil, değiştirilen bölge sanılıyor | 2 | Yüksek | Düzeltildi (11 Eyl 2026) — kaynak adını söyleyen lejant eklendi, yeniden ölçülmedi |
+| 4 | Pay oranlarının hangi ölçüme göre değiştiği anlaşılmıyor; kullanıcı sayıyı görüyor, gerekçeyi bağlayamıyor | 3 | Yüksek | Düzeltildi (11 Eyl 2026) — düz Türkçe gerekçe cümlesi eklendi, ilk kaynak satırı varsayılan açık, yeniden ölçülmedi |
+| 5 | Kanıt satırlarındaki teknik terimler ağır geliyor ("algı", "hash"); bir katılımcı kanıt satırını sonuç sandı | 3 | Orta | Düzeltildi (11 Eyl 2026) — terimler sadeleştirildi, ayrı sonuç kutusu eklendi, yeniden ölçülmedi |
+| 6 | Mobilde metinler küçük okunuyor; iki katılımcı ekranı yakınlaştırma ihtiyacı duydu | 2 | Orta | Düzeltildi (11 Eyl 2026) — küçük punto mobilde büyütüldü, yeniden ölçülmedi |
+| 7 | Marka profili toplu işlem, raporlama ve dışa aktarma bekliyor; bunlar prototipte yok | 1 | Düşük | Kapsam dışı — 36 saatlik pencerede yüksek ağırlıklı bulgular önceliklendirildi, sonraki sürüm maddesi (IS-MODELI.md) |
 
 ## Bu sonuçların sınırları
 
