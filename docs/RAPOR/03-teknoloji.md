@@ -8,7 +8,7 @@ saklanmaktadır:
 > **https://github.com/hamzabdk36-cyber/N-Emek**
 
 Geliştirme adımları commit geçmişinden takip edilebilir. Depo 8 Ağustos 2026'da açıldı;
-raporun yazıldığı tarih itibarıyla 58 commit <!-- sayim: commit --> içeriyor. Commit mesajları Türkçe ve her
+raporun yazıldığı tarih itibarıyla 58 commit <!-- sayim: tarihsel --> içeriyor (rapor 23 Ağustos'ta teslim edildi ve dondurulmuştur; bu sayı o ana ait bir kayıttır, sonraki commit'lerle artmaz). Commit mesajları Türkçe ve her
 biri *neyin neden değiştiğini* söyler — ölçüm sonucu ortaya çıkan tasarım kararları
 mesajlarda kayıtlıdır. Sürekli tümleştirme (GitHub Actions) her itmede backend ve arayüz
 testlerini, tip denetimini, üretim derlemesini ve doküman tutarlılık denetimini koşar.
@@ -60,9 +60,9 @@ sayısını ölçer, dokümanlardaki işaretli iddialarla karşılaştırır ve 
 dosya:satır vererek sıfırdan farklı çıkar. Bu raporun kaynak metni de aynı denetimden
 geçmektedir.
 
-Testler: backend 128 test, arayüz 114 test. <!-- sayim: backend, arayuz -->
+Testler: backend 130 test, arayüz 124 test. <!-- sayim: backend, arayuz -->
 Sürekli tümleştirme, uzun süren işaretlenmiş testler hariç
-125 test <!-- sayim: backend-hizli --> koşar.
+127 test <!-- sayim: backend-hizli --> koşar.
 
 ## 3.2. Model ve Veri Doğrulama
 
