@@ -143,6 +143,31 @@
     }
   }
 
+  /*
+   * Bulgu B6 (kullanilabilirlik testi, KULLANILABILIRLIK-SONUCLARI.md):
+   * iki katilimci mobilde metinleri okumak icin yakinlastirma ihtiyaci
+   * duydu. En kucuk punto sinifi 10-11.5px araligi, uc dokunmatik
+   * cihazda calisildigi icin en cok bu genislikte goruluyor.
+   *
+   * Tek tek her kullanimda `text-[11px] sm:text-[11px]` gibi bir cift
+   * yazmak yerine (27 kullanim, ~10 dosya - hepsini tek tek elle
+   * degistirmek gozden kacan bir yer birakma riski tasir), Tailwind'in
+   * urettigi sinif adlarini `sm:` kirilimin (640px) altinda dogrudan
+   * eziyoruz. Boylece tek nokta: yeni bir kucuk-punto kullanimi
+   * eklendiginde otomatik kapsaniyor, masaustu yogunluk (mevcut kucuk
+   * degerler) degismiyor.
+   */
+  @media (max-width: 639.98px) {
+    .text-\[10px\],
+    .text-\[10\.5px\] {
+      font-size: 12px;
+    }
+    .text-\[11px\],
+    .text-\[11\.5px\] {
+      font-size: 12.5px;
+    }
+  }
+
   /* Hareket azaltma tercihine saygi (erisilebilirlik degerlendirmesi) */
   @media (prefers-reduced-motion: reduce) {
     .pulse-soft,
