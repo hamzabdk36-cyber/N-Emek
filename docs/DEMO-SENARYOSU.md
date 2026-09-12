@@ -6,6 +6,21 @@
 Replikler olduğu gibi okunabilir. Ekranda görülecek her sayı gerçek demo verisinden;
 hiçbiri montajla değiştirilmemeli.
 
+## Bu video jüri gününde ne için kullanılıyor (12 Eylül güncellemesi)
+
+12 Eylül toplantısında organizasyon açıkça belirtti: **jüri günü ana gösterim canlı
+prototiptir** (kendi bilgisayarımızdan, 2–3 dk) — video arkada oynatılarak sunum
+yapılamaz, bu talep reddedildi. Dolayısıyla bu senaryo videosu üç farklı işe yarıyor,
+ana gösterimin yerine geçmiyor:
+
+1. **Sunum dosyasına gömülü kısa klip** (≤60 sn) — toplam 15 dakikalık süreyi aşmadan,
+   şablon içine yerleştirilir.
+2. **Yedek**: canlı demo salon içinde (ağ, GPU, donanım) arızalanırsa gösterilecek.
+3. **Şartnamenin teslimat listesindeki "demo videosu" kalemi.**
+
+Bu yüzden burada iki çıktı üretilir: tam **4:30** sürüm (madde 2 ve 3 için) ve aşağıdaki
+"Süre daraltma" bölümünden türetilen **≤60 sn'lik kısa kesit** (madde 1 için).
+
 ---
 
 ## Çekim öncesi kontrol listesi
@@ -190,6 +205,19 @@ kapatıp açın — farkı izleyici görsün.
 
 **Asla kısaltmayın:** Sahne 4 (payın gerekçesi) ve Sahne 5 (ölçüm görünür). Projenin
 ayırt edici iddiası bu iki sahnede.
+
+## Sunuma gömülecek ≤60 saniyelik kesit
+
+Yukarıdaki 3 dakikalık daraltmadan farklı, daha sert bir kesim: sunum dosyasına
+gömülecek klip yalnızca projenin ayırt edici anını göstermeli, tüm akışı değil.
+
+Kullanılacak sahneler, olduğu gibi (toplam ~55 sn):
+- **Sahne 3** (kritik an: kimliği silinmiş içerik) — kısaltılmadan, tam 55 sn.
+
+Süre 60 sn'yi aşarsa, Sahne 3'ün yalnızca "kritik an" cümlesinden sonrasını (kaynağın
+bulunduğu ve güven skorunun göründüğü an) alın; giriş kısmını (ekran görüntüsü alma
+adımı) atlayabilirsiniz. Sahne 4/5 (payın gerekçesi, ölçüm görünür) bu kesite girmez —
+onlar canlı prototip gösteriminde anlatılır, videoda tekrar edilmez.
 
 ## Videoda söylenmemesi gerekenler
 

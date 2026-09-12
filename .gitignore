@@ -66,3 +66,7 @@ docs/RAPOR/N-Emek-Teknik-Rapor.pdf
 
 # Word'un acik belge icin biraktigi kilit dosyalari.
 ~$*
+
+# Demo videosu cekimleri (docs/DEMO-SENARYOSU.md). Buyuk ikili dosyalar,
+# surum kontrolunde tutulmaz; teslim platformuna ayrica yuklenir.
+docs/video/

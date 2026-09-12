@@ -6,13 +6,19 @@ paginate: true
 
 # Sunum İçeriği — Jüri Sunumu
 
-**Bu dosya slayt içeriğidir**, tasarlanmış sunum değil. Marp uyumlu yazıldı: istersen
-`marp SUNUM.md --pdf` ile doğrudan slayta çevirebilirsin, istersen içeriği kendi
-şablonuna taşırsın.
+**Bu dosya slayt içeriğidir**, tasarlanmış sunum değil. Marp uyumlu yazıldı ve
+`marp SUNUM.md --pdf` ile doğrudan slayta çevrilebilir (`docs/gorseller/SUNUM.pdf`
+bu şekilde üretildi). **12 Eylül'de organizasyon jüri günü için zorunlu bir sunum
+şablonu duyurdu** (henüz paylaşılmadı) — şablon geldiğinde bu içerik ona taşınacak.
 
-**Hedef süre:** 8–10 dakika + soru. Puan ağırlıklarının altısını da karşılayacak şekilde
-sıralandı: Yenilikçilik %20 · Teknik Yeterlilik %20 · Problem Çözme %20 · UI/UX %20 ·
-Sunum ve Prototip %10 · İş Modeli %10.
+**Hedef süre (güncellendi, 12 Eylül):** Jüri günü **15 dakika sunum + 2–3 dakika canlı
+prototip gösterimi**, ardından jüri soruları. Aşağıdaki içerik ve zamanlama tablosu
+eski "8–10 dakika" hedefine göre kuruldu (≈10:00 toplam) — kalan ~5 dakika, zorunlu
+şablon geldiğinde şu eksenlerden biri veya birkaçı derinleştirilerek doldurulacak:
+ölçüm yönteminin daha ayrıntılı anlatımı, ürün yol haritası, benzer çözümlerle
+karşılaştırma. Puan ağırlıklarının altısını da karşılayacak şekilde sıralandı:
+Yenilikçilik %20 · Teknik Yeterlilik %20 · Problem Çözme %20 · UI/UX %20 · Sunum ve
+Prototip %10 · İş Modeli %10.
 
 Görseller `gorseller/` klasöründen. Her sayı ölçüm çıktısıdır.
 
@@ -215,7 +221,7 @@ docker compose up --build     # tek komut
 
 | | |
 |---|---|
-| Test | **102** backend + **87** arayüz |
+| Test | **130 test** backend + **124 test** arayüz <!-- sayim: backend, arayuz --> |
 | CI | GitHub Actions, her gönderimde yeşil |
 | Açılış (280 içerik) | 11,5 sn → **16 ms** |
 | Ekranlar | 6 · mobil uyumlu · erişilebilirlik değerlendirmesi yapıldı |
@@ -275,7 +281,11 @@ Saklamıyoruz — jüri karşısında güvenilirliği bu sağlar.
 | Etki ve kapanış | 16–17 | 0:30 |
 | **Toplam** | | **≈ 10:00** |
 
-Süre 8 dakikaya inerse: slayt 3, 13 ve 16 kısaltılır. Slayt 8 ve 9 **asla** kısaltılmaz.
+**15 dakikalık oturumda dağılım (12 Eylül'den, güncel):** Yukarıdaki tablo eski 8–10
+dakikalık hedefe göredir. Jüri günü toplam süre 15 dk sunum + 2–3 dk canlı prototip;
+mevcut ≈10:00'lık içerik korunur, kalan ~5 dakika zorunlu şablon geldiğinde eklenecek
+derinleştirmeye ayrılır (bkz. dosya başındaki not). Şablon kısıtı süreyi daraltırsa:
+slayt 3, 13 ve 16 kısaltılır. Slayt 8 ve 9 **asla** kısaltılmaz.
 
 ## Beklenen sorular ve kısa cevaplar
 

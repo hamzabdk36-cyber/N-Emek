@@ -23,6 +23,18 @@ iki tür güncelleme yapıldı, ikisi de raporun anlatısını veya iddiaların�
 Basılan/yüklenen PDF dosyası bu güncellemelerden etkilenmez; yalnızca kaynak `.md`
 metinleri, deponun geri kalanıyla aynı doğruluk kuralına tabi tutuldu.
 
+## İkinci takvim düzeltmesi (12 Eyl 2026 notu)
+
+12 Eylül'de tüm takımların katıldığı genel bilgilendirme toplantısı, şartnamedeki
+"final sunumu ve prototip teslimi 14 Eylül" maddesini geçersiz kıldı: gerçek son
+tarih, sunum dosyasının **18 Eylül gecesi** teslim edilmesi (bkz. `CLAUDE.md` takvim
+notu, `docs/MENTORLUK.md`). `07-proje-takvimi.md`'deki **KT-9** satırı bu yüzden
+KT-8'de kurulan aynı yöntemle (gerçekleşme kaydı olarak) güncellendi; iş paketi
+tablosu (İP-8/İP-9/İP-10) ve bunlara dayanan anlatı metni ise teslim edildiği hâliyle
+bırakıldı — bu yüzden aynı sayfada KT-9 "18 Eyl" derken İP-9 satırı hâlâ eski "8-14
+Eyl" penceresini anlatır. Bu, dondurma kuralının bilinçli bir sonucudur, gözden
+kaçmış bir tutarsızlık değil. Güncel plan `docs/PLAN.md` Faz 4c'dedir.
+
 ## Üretim
 
 ```bash

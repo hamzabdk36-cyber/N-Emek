@@ -1,10 +1,18 @@
 # Mentörlük — Görüşme Hazırlığı ve Kayıt
 
 Şartname takvimi mentörlük sürecini "2–7 Eylül" olarak duyurmuştu; ilk mentör görüşmesi
-resmî e-postayla **12 Eylül Cumartesi 13:00–15:00**'e taşındı. Bu, final teslim
-tarihinden (14 Eylül 17:00) yalnızca **36 saat önce**. Bu belge o pencerede azami değer
-çıkarmak için var: görüşme öncesi anlatım + demo sırası, görüşme sırasında doldurulacak
-kayıt tablosu, görüşme sonrası bu kaydın iş listesine dönüştürülme kuralı.
+resmî e-postayla **12 Eylül Cumartesi 13:00–15:00**'e taşındı. Bu belge o görüşme için
+hazırlandı: görüşme öncesi anlatım + demo sırası, görüşme sırasında doldurulacak kayıt
+tablosu, görüşme sonrası bu kaydın iş listesine dönüştürülme kuralı.
+
+**Güncelleme (12 Eylül, görüşme sonrası):** Görüşme, projeye özel bire bir bir mentörlük
+değil, **22 takımın tamamının katıldığı genel bir tanışma ve idari soru-cevap turuydu**
+(transkript: proje kökü dışında `../transkript-2026-09-12.md`). Bu yüzden §4'teki tablo
+proje geri bildirimiyle değil, toplantıdan çıkan **bağlayıcı idari/biçimsel kararlarla**
+dolduruldu. En önemli çıktı: final teslim tarihi şartnamedeki "14 Eylül 17:00" değil,
+**sunum dosyasının 18 Eylül gecesi teslimi** — bkz. `CLAUDE.md` takvim notu,
+`docs/PLAN.md` Faz 4c. İkinci ve son genel toplantı **~16 Eylül**'de; açık kalan sorular
+§6'da.
 
 ## Toplantı bilgileri
 
@@ -49,8 +57,11 @@ bir jüri sunumu değil, hızlı geri bildirim turu; bu yüzden slaytsız, doğr
 >
 > Dürüst olmak gerekirse iki açığımız var: kullanılabilirlik testinde SUS puanımız
 > 60 çıktı, hedefin (68) altında — yedi bulgu belirledik ve bugün-yarın kapatıyoruz.
-> İkincisi, demo videosu ve tasarlanmış sunum dosyası henüz üretilmedi; içerik hazır,
-> üretim bu hafta sonu."
+> İkincisi, demo videosu henüz üretilmedi; içerik hazır, üretim bu hafta sonu."
+
+*(Bu metin 12 Eylül görüşmesi için yazıldı ve o gün kullanıldı. Görüşme sonrası durum:
+tasarlanmış sunum dosyası üretildi — `docs/gorseller/SUNUM.pdf` — yalnızca demo videosu
+açık kaldı.)*
 
 **Süre kontrolü:** yüksek sesle okunduğunda ~90 saniye; geri kalan zaman mentörün
 sorularına ayrılır.
@@ -86,9 +97,9 @@ Genel "ne düşünüyorsunuz" sorusu değil — her biri doğrudan bir iş madde
 1. **Kullanılabilirlik.** "SUS 60,0 çıktı; en ağır bulgu, beş kişiden dördünün Kaynak
    Bul ekranını yardımsız bulamaması. İki gün içinde hangi tek değişiklik bu skoru en
    çok yukarı çeker — bilgi mimarisi mi, yoksa metin/etiket dili mi?"
-2. **Anlatım önceliği.** "Jüri 8–10 dakikada tek bir şey hatırlayacaksa bu 'ölçüm'
-   iddiası mı olmalı, yoksa 'adil gelir paylaşımı' vaadi mi? Hangisi bu yarışmada daha
-   çok karşılık buluyor?"
+2. **Anlatım önceliği.** "Jüri 15 dakikalık sunumdan tek bir şey hatırlayacaksa bu
+   'ölçüm' iddiası mı olmalı, yoksa 'adil gelir paylaşımı' vaadi mi? Hangisi bu
+   yarışmada daha çok karşılık buluyor?"
 3. **İş modeli.** "Gelir modeli N'Sosyal komisyonu üzerine kurulu. Jüri
    sürdürülebilirlikte hangi soruyu soruyor — birim ekonomi mi, platform bağımlılığı mı?"
 4. **Dürüst sınırlar.** "Bilinen sınırları (filigran kırpmaya dayanmaz, ödemesi olan
@@ -102,33 +113,51 @@ Genel "ne düşünüyorsunuz" sorusu değil — her biri doğrudan bir iş madde
 
 ---
 
-## 4 · Geri bildirim kayıt tablosu
+## 4 · Toplantı kararları kayıt tablosu
 
-Görüşme *sırasında* doldurulur — not tutan kişi ekran paylaşımını yapan kişiden farklı
-olsun.
+Görüşme proje bazlı bir mentörlük değil, genel bir idari soru-cevap turu olduğu için
+bu tablo "mentör geri bildirimi" değil, **toplantıdan çıkan bağlayıcı kararları**
+tutuyor (kaynak: `../transkript-2026-09-12.md`).
 
-| # | Mentör ne dedi | Kim söyledi | Etkilediği kalem | Aksiyon | Süre | Karar |
-|---|---|---|---|---|---|---|
-| | | | | | | |
-| | | | | | | |
-| | | | | | | |
-| | | | | | | |
-| | | | | | | |
+| # | Karar | Etkilediği kalem | Aksiyon | Karar |
+|---|---|---|---|---|
+| 1 | Sunum dosyası son teslim **18 Eylül gecesi**, şartnamedeki "14 Eylül" değil | Takvim | `CLAUDE.md`, `docs/PLAN.md` güncellendi | Uygulandı |
+| 2 | Sunum süresi **15 dk + 2–3 dk canlı prototip** + jüri soruları | `docs/SUNUM.md` | Hedef süre notu güncellendi; içerik genişletmesi şablon sonrasına ertelendi | Uygulandı (kısmi) |
+| 3 | Prototip **video olarak gösterilemez**, canlı çalıştırma zorunlu | `docs/DEMO-SENARYOSU.md` | Videonun rolü "ana gösterim"den "gömülü klip + yedek"e çekildi | Uygulandı |
+| 4 | Sunum dosyası **zorunlu şablonla** hazırlanacak, henüz paylaşılmadı | `docs/SUNUM.md` | İçerik şablona taşınması ayrı işe alındı (Faz 4c) | Bekliyor — şablon gelmedi |
+| 5 | Ulaşım/konaklama formu son gün **14 Eylül**, doldurmayan alana giremez | İdari | `docs/PLAN.md` Faz 4c'ye eklendi | Uygulandı (belge); form takımın kendi işi |
+| 6 | 20 Eylül İstanbul'da, 09:00 kura, ~60-80 kişi, izleyici yok | Takvim, lojistik | `CLAUDE.md`, `docs/PLAN.md` Faz 6 güncellendi | Uygulandı |
+| 7 | Şanlıurfa yalnızca **dereceye giren 3 takım** için (30 Eyl–4 Eki) | Takvim | Koşul belgelere eklendi | Uygulandı |
+| 8 | AI kategorisinde lokalde çalışan model sonucu yeterli, deploy zorunlu değil | Ürün kararı | Değişiklik gerekmiyor — sistem zaten lokalde çalışıyor | Bilgi alındı |
+| 9 | Kendi veri seti oluşturmak serbest | Ürün kararı | Değişiklik gerekmiyor | Bilgi alındı |
+| 10 | İkinci (son) genel toplantı **~16 Eylül**, şablon sonrası | Takvim | §6'ya açık sorular eklendi | Uygulandı |
 
-**Görüşme biter bitmez (15:00–16:00 bloğunda), her satır için:**
-- Ya bu planın **§4 UI/UX bulguları** veya **§5/§6 final paketi** bölümüne bir iş
-  maddesi olarak eklenir,
-- Ya da burada **gerekçesiyle reddedilir** ("mentör X dedi, ama Y nedeniyle 36 saatlik
-  pencerede yapmıyoruz") — sütunun boş kalması kabul edilmez; her geri bildirim ya
-  ürüne girer ya da neden girmediği yazılı kalır.
-
-Yeni maddeler eklenirse `docs/PLAN.md`'deki Faz 4b iş listesi bu tablodan güncellenir.
+**Not:** Bu turda proje-özel bir teknik geri bildirim alınmadı (§3'teki hedefli sorular
+bire bir bir mentöre değil, genel soru-cevap ortamına soruldu; görüşme kaydında
+projeye özel bir yanıt yoktur). §6, bunun yerine 16 Eylül toplantısına taşınacak açık
+soruları listeliyor.
 
 ---
 
 ## 5 · Görüşme sonrası kontrol
 
-- [ ] Tablo tamamen dolduruldu (boş satır kalmadı)
-- [ ] Her satır bir iş maddesine bağlandı veya reddedildi
-- [ ] `docs/PLAN.md` Faz 4b güncellendi
-- [ ] Ekip içi 5 dakikalık senkron: kim hangi maddeyi alıyor (§4 UI/UX vs. §5 video vs. §6 sunum)
+- [x] Tablo tamamen dolduruldu (boş satır kalmadı)
+- [x] Her karar bir iş maddesine bağlandı
+- [x] `docs/PLAN.md` Faz 4c güncellendi
+- [ ] Ekip içi senkron: kim hangi maddeyi alıyor (sunum şablonu vs. demo videosu vs. form)
+
+---
+
+## 6 · 16 Eylül toplantısına taşınacak açık sorular
+
+Bu görüşmede yanıtlanmayan, ikinci genel toplantıda sorulacak sorular:
+
+- Zorunlu sunum şablonunun başlık yapısı `docs/SUNUM.md`'deki 17 slaytla ne kadar
+  örtüşüyor — mevcut içerik şablona doğrudan mı taşınır, yeniden mi kurgulanır?
+- 15 dakikalık süre jüri sorularını içeriyor mu, yoksa sorular bu sürenin dışında mı?
+- Canlı prototip gösterimi için salon tarafında internet erişimi sağlanacak mı, yoksa
+  ekip kendi bağlantısını (mobil hotspot vb.) mı getirmeli?
+- Ekranın çözünürlüğü ve bağlantı tipi (HDMI/USB-C) önceden bilinebilir mi — prova için
+  gerekli.
+- Bire bir proje geri bildirimi için ayrı bir kanal (mail, form) olacak mı, yoksa tüm
+  geri bildirim 16 Eylül toplantısında mı toplu verilecek?

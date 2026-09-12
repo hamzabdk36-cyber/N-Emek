@@ -16,20 +16,34 @@ Ayırt edici iddia: kaynağı *bulmak* değil, kullanılan içerik oranını **�
 |---|---|
 | **24 Ağu 2026, 17:00 TSİ** | Teknik Rapor teslimi (KYS) — şablona uymayan veya geç rapor doğrudan eleme |
 | 2 Eyl 2026 | Teknik rapor sonuçları |
-| ~~2–7 Eyl 2026~~ **12 Eyl 2026, 13:00 TSİ** | Mentörlük — ilk görüşme (bkz. `docs/MENTORLUK.md`) |
-| **14 Eyl 2026, 17:00 TSİ** | Final sunumu + çalışan prototip teslimi |
-| 20 Eyl 2026 | Jüri ve katılımcılara canlı sunum |
-| 30 Eyl – 4 Eki 2026 | TEKNOFEST Şanlıurfa |
+| ~~2–7 Eyl 2026~~ **12 Eyl 2026, 13:00 TSİ** | Mentörlük — ilk (genel) görüşme, yapıldı (bkz. `docs/MENTORLUK.md`) |
+| **14 Eyl 2026 Pzt** | Ulaşım/konaklama formu son gün — finale katılım ön şartı, doldurmayan alana giremez |
+| ~16 Eyl 2026 | Mentörlük — ikinci (son) genel toplantı, şablon sonrası soru-cevap |
+| ~~14 Eyl 2026, 17:00 TSİ~~ **18 Eyl 2026 gece** | Sunum dosyası teslimi — bu tarihten sonra düzenlenemez |
+| **20 Eyl 2026, 09:00** | İstanbul — kura çekimi, jüri ve katılımcılara canlı sunum |
+| 30 Eyl – 4 Eki 2026 | TEKNOFEST Şanlıurfa — yalnızca dereceye giren üç takım |
 
 Tarihler şartnamenin **V3** sürümünden (17.08.2026). V2'ye göre iki değişiklik var:
 canlı sunum "Eylül 2026" iken **20 Eylül** olarak kesinleşti, ve bir takım artık
 yarışma kapsamında yalnızca **tek başvuru** yapabilir (çok temalı başvuru hakkı
 kalktı; N-Emek zaten tek başvuru, İçerik Ekonomisi).
 
-**Mentörlük tarihi kaydı (11 Eyl 2026 güncellemesi):** yarışma iletişiminden gelen
-e-posta ilk mentör görüşmesini şartnamenin "2–7 Eylül" penceresi yerine **12 Eylül
-13:00**'e aldı — final tesliminden (14 Eylül) yalnızca 36 saat önce. Görüşme hazırlığı,
-sorulacak sorular ve geri bildirim kaydı `docs/MENTORLUK.md`'de.
+**Takvim kaydı (12 Eyl 2026 güncellemesi):** 12 Eylül'de tüm takımların katıldığı
+genel bilgilendirme/soru-cevap toplantısı yapıldı (transkript: proje kökü dışında,
+`../transkript-2026-09-12.md`). Bu toplantı iki şeyi netleştirdi: (1) final sunum
+dosyasının teslim tarihi şartnamedeki "14 Eylül 17:00" değil, **18 Eylül gecesi**;
+(2) mentörlük bire bir/proje bazlı değil, genel bir soru-cevap turu — ikinci ve son
+tur ~16 Eylül'de. Eski "14 Eylül" varsayımına dayanan ayrıntılar `docs/MENTORLUK.md`
+ve `docs/PLAN.md`'de güncellendi.
+
+**Jüri günü biçim kısıtları (12 Eylül toplantısından):**
+- Sunum **15 dakika + 2–3 dakika canlı prototip gösterimi**, ardından jüri soruları.
+- Prototip **video olarak arkada oynatılamaz** — canlı çalıştırma zorunlu, kendi
+  bilgisayarımızdan. İnternetsiz/GPU'suz ortamda çalışması bu yüzden kritik (bkz.
+  `README.md`'deki CPU-PyTorch kararı).
+- Sunum dosyası **zorunlu şablonla** hazırlanır (henüz paylaşılmadı), 18'inde
+  toplanıp organizasyon tarafından açılır; ekip yalnızca kumandayla ilerletir.
+- Sunumu öğrenci yapar, birden fazla üye paylaşabilir; danışman/mentör konuşmaz.
 
 Puan ağırlıkları: Yenilikçilik %20 · Teknik Yeterlilik %20 · Problem Çözme %20 · **UI/UX %20** · Sunum ve Prototip Kalitesi %10 · İş Modeli %10. Arayüz, AI motoruyla eşit ağırlıkta — "geliştirici demosu" görünümü puanın beşte birini götürür.
 
