@@ -164,6 +164,12 @@ export default function ContentDetail() {
             <p className="num mt-2 text-[11px] text-[var(--color-ink-3)]">
               {content.width}×{content.height} · {provenance.content_hash}
             </p>
+            <Link
+              to="/kaynak-bul"
+              className="mt-3 inline-block text-[12px] text-[var(--color-link)] hover:underline"
+            >
+              Bu görselin başka kopyalarını ara →
+            </Link>
           </Panel>
 
           <Panel
@@ -346,7 +352,12 @@ function PartyRow({
   canDispute: boolean;
   onDisputed: () => void;
 }) {
-  const [expanded, setExpanded] = useState(false);
+  // Ilk kaynak satiri varsayilan acik gelir (bulgu B4): kullanicilarin
+  // ucte biri pay gerekcesini bulamadi, cunku formul satiri satir
+  // tiklanip acilmadan hic gorunmuyordu. `selected` yalnizca ilk
+  // render'da okunuyor - kullanici baska bir satira tiklarsa oradaki
+  // acilip kapanma zaten kendi tiklamasiyla yonetiliyor.
+  const [expanded, setExpanded] = useState(selected);
   const isSource = party.role === "source";
   const f = party.factors;
 
@@ -400,6 +411,16 @@ function PartyRow({
 
       {expanded && (
         <div className="fade-in space-y-3 border-t border-[var(--color-line-soft)] px-3.5 py-3">
+          {/* Duz Turkce gerekce en once (bulgu B4): kullanicilarin
+              ucte biri sayi satirina bakarak gerekceyi kuramadi. Ayni
+              cumle backend'de tek yerden uretiliyor (contribution.py),
+              simgesel formul altta hala duruyor - ondan vazgecmedik,
+              yalnizca sirasini degistirdik. */}
+          {f.aciklama && (
+            <p className="text-[12.5px] leading-relaxed text-[var(--color-ink)]">
+              {f.aciklama}
+            </p>
+          )}
           {isSource && (
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               <MiniStat label="kapsama" value={pctRaw((f.kapsama ?? 0) * 100)} />
@@ -429,9 +450,6 @@ function PartyRow({
                 </li>
               ))}
             </ul>
-          )}
-          {f.aciklama && (
-            <p className="text-[12px] text-[var(--color-ink-2)]">{f.aciklama}</p>
           )}
           {party.evidence.length > 0 && (
             <EvidenceList rows={party.evidence} compact />
@@ -501,15 +519,27 @@ function DisputeBox({ edgeId, onDone }: { edgeId: string; onDone: () => void }) 
   return (
     <div className="border-t border-[var(--color-line-soft)] pt-3">
       {!open ? (
-        <Button variant="danger" onClick={() => setOpen(true)}>
-          Bu paya itiraz et
-        </Button>
+        <div>
+          {/* Bulgu B2: "itiraz" kelimesi tek basina bir sikayet kutusu
+              cagristiriyordu; iki katilimci mekanizmayi (yeniden olcum)
+              degil bir mesaj gonderme eylemi sandi. Duzenin buton +
+              alt metin. Kaydin turu (itiraz) hala aciktan yaziliyor,
+              yalnizca one cikan sey mekanizma oldu. */}
+          <Button variant="danger" onClick={() => setOpen(true)}>
+            Yeniden ölçüm iste
+          </Button>
+          <p className="mt-1.5 text-[11px] text-[var(--color-ink-3)]">
+            İtiraz kaydı açılır
+          </p>
+        </div>
       ) : (
         <div className="space-y-2.5">
-          <Field
-            label="İtiraz gerekçesi"
-            hint="İtiraz, bağı daha hassas bir dedektörle (SIFT) yeniden ölçtürür. Sonuç değişirse tüm zincirin payları güncellenir."
-          >
+          <ol className="space-y-1 text-[12px] leading-relaxed text-[var(--color-ink-2)]">
+            <li>1 · Bağ daha hassas bir dedektörle (SIFT) yeniden ölçülür.</li>
+            <li>2 · Pay değişirse zincirin tüm dağıtımı güncellenir.</li>
+            <li>3 · Ölçüm sonuç veremezse karar insan incelemesine düşer.</li>
+          </ol>
+          <Field label="İtiraz gerekçesi">
             <textarea
               className={`${inputClass} min-h-20 resize-y`}
               value={reason}

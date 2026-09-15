@@ -108,10 +108,16 @@ def yazi_tipi_bekle(page: Page) -> None:
 
 
 def pay_satirini_ac(page: Page, ad: str) -> None:
-    """Emek Karti'nda verilen kisinin pay satirini acar."""
+    """Emek Karti'nda verilen kisinin pay satirini acar.
+
+    11 Eylul: ilk kaynak satiri artik varsayilan acik geliyor (bulgu
+    B4, KULLANILABILIRLIK-SONUCLARI.md) - kortlemesine tiklamak o
+    satirda *kapatma* etkisi yapabiliyordu. Once mevcut durumu okuyoruz.
+    """
     dugme = page.locator("button[aria-expanded]").filter(has_text=ad).first
-    dugme.click()
-    page.wait_for_timeout(700)
+    if dugme.get_attribute("aria-expanded") != "true":
+        dugme.click()
+        page.wait_for_timeout(700)
 
 
 def cek(page: Page, dosya: str, tam_sayfa: bool = False) -> None:

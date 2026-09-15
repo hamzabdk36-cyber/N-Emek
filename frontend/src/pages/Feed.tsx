@@ -61,6 +61,8 @@ export default function Feed() {
         />
       )}
 
+      <VerifyEntry />
+
       {error && <ErrorNote error={error} />}
 
       {items && items.length === 0 && (
@@ -185,6 +187,45 @@ function ContentCard({ content, sira = 0 }: { content: Content; sira?: number })
         </div>
       </div>
     </article>
+  );
+}
+
+/**
+ * Akisa girisi olan "Kaynak bul" cagrisi.
+ *
+ * Kullanilabilirlik testinde bes katilimcidan dordu bu ekrani yardimsiz
+ * bulamadi (bulgu B1, KULLANILABILIRLIK-SONUCLARI.md): ust cubuktaki
+ * metin baglantisi tek giris noktasiydi ve gorev "elimdeki goruntunun
+ * kaynagini bul" olunca kimse akista bir baslangic noktasi aramadi.
+ * Akisin en ustune, kacirilmasi zor sabit bir giris bloğu eklendi.
+ */
+function VerifyEntry() {
+  return (
+    <Link
+      to="/kaynak-bul"
+      className="panel group flex items-center gap-3.5 px-4 py-3.5 transition-colors hover:border-[var(--color-link)]"
+    >
+      <span
+        aria-hidden
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--color-link-dim)]/50 text-[var(--color-link)]"
+      >
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+          <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-[13.5px] font-medium text-[var(--color-ink)]">
+          Elindeki bir görselin kaynağını mı arıyorsunuz?
+        </span>
+        <span className="mt-0.5 block text-[12px] text-[var(--color-ink-3)]">
+          Kaydetmeden hattan geçirin — sisteme yüklemeden, tek seferlik sorgular.
+        </span>
+      </span>
+      <span className="shrink-0 text-[13px] font-medium text-[var(--color-link)] group-hover:underline">
+        Kaynak bul →
+      </span>
+    </Link>
   );
 }
 

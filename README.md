@@ -27,9 +27,9 @@ Yapay zekâ mimarisi: [`docs/YZ-MIMARISI.md`](docs/YZ-MIMARISI.md)
 Veri, model, etik ve performans: [`docs/VERI-MODEL-ETIK.md`](docs/VERI-MODEL-ETIK.md)
 Mimari ve diyagramlar: [`docs/MIMARI.md`](docs/MIMARI.md)
 Erişilebilirlik değerlendirmesi: [`docs/ERISILEBILIRLIK.md`](docs/ERISILEBILIRLIK.md)
-Kullanıcı araştırması: [`docs/KULLANICI-ARASTIRMASI.md`](docs/KULLANICI-ARASTIRMASI.md) · Kullanılabilirlik testi: [`docs/KULLANILABILIRLIK-PROTOKOL.md`](docs/KULLANILABILIRLIK-PROTOKOL.md) → [sonuçlar](docs/KULLANILABILIRLIK-SONUCLARI.md) *(henüz koşulmadı)*
+Kullanıcı araştırması: [`docs/KULLANICI-ARASTIRMASI.md`](docs/KULLANICI-ARASTIRMASI.md) · Kullanılabilirlik testi: [`docs/KULLANILABILIRLIK-PROTOKOL.md`](docs/KULLANILABILIRLIK-PROTOKOL.md) → [sonuçlar](docs/KULLANILABILIRLIK-SONUCLARI.md) *(beş katılımcı, SUS 60,0, yedi bulgu)*
 Ekran görüntüleri: [`docs/gorseller/`](docs/gorseller/) — çalışan sistemden, `scripts/ekran_goruntuleri.py` ile yeniden üretilebilir
-Demo çekim senaryosu: [`docs/DEMO-SENARYOSU.md`](docs/DEMO-SENARYOSU.md) · Sunum içeriği: [`docs/SUNUM.md`](docs/SUNUM.md)
+Demo çekim senaryosu: [`docs/DEMO-SENARYOSU.md`](docs/DEMO-SENARYOSU.md) · Jüri sunumu (zorunlu şablon, betikle üretiliyor): [`docs/SUNUM/`](docs/SUNUM/_PLAN.md)
 
 ---
 
@@ -130,10 +130,11 @@ cd backend && ../.venv/Scripts/python.exe -m pytest tests/
 cd frontend && npm test
 ```
 
-Backend — 128 test, <!-- sayim: backend --> altı katman:
+Backend — 130 test, <!-- sayim: backend --> altı katman:
 
-- **22** — pay motorunun değişmez kuralları (paylar 1,0'a toplanır, derin kaynak daha az
-  alır, taban/tavan ihlal edilmez)
+- **24** — pay motorunun değişmez kuralları (paylar 1,0'a toplanır, derin kaynak daha az
+  alır, taban/tavan ihlal edilmez, kaynak gerekçesi düz Türkçe cümle taşır, isme
+  hatalı ünlü uyumuyla ek eklenmez)
 - **13** — uçtan uca altın senaryo (servis katmanı)
 - **68** — API uç noktalarının sözleşmesi: döndürülen alanlar, durum kodları, hatalı
   girdiye tepki, oturum/yetki kuralları (jetonsuz **401**, başkasının payına **403**,
@@ -150,7 +151,7 @@ Backend — 128 test, <!-- sayim: backend --> altı katman:
 sessizce kırılıyordu — bu mutasyonla doğrulandı. Testler kendi geçici veritabanını
 kullanır, demo verisini bozmaz.
 
-Arayüz — 114 test <!-- sayim: arayuz --> (Vitest + Testing Library). Ağırlık merkezi zincir
+Arayüz — 124 test <!-- sayim: arayuz --> (Vitest + Testing Library). Ağırlık merkezi zincir
 yerleşiminin saf fonksiyonu: *hiçbir kapsama rozeti hiçbir düğüm kutusuyla kesişmez*.
 Ayrıntı: [`CLAUDE.md`](CLAUDE.md#arayüz-testleri-vitest--testing-library-jsdom).
 

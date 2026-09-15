@@ -13,12 +13,23 @@ Bu proje, takımın elektronik harp (Zenith EH) çalışmasından **tamamen bağ
 | 20 Ağu 2026 | Son başvuru (tamamlandı) | — |
 | **24 Ağu 2026, 17:00 TSİ** | **Teknik Rapor teslimi (KYS)** | **16 gün** |
 | 2 Eyl 2026 | Teknik rapor sonuçları | |
-| 2–7 Eyl 2026 | Mentörlük ve geliştirme | |
-| **14 Eyl 2026, 17:00 TSİ** | **Final sunumu + prototip teslimi** | **37 gün** |
-| **20 Eyl 2026** | Jüri ve katılımcılara canlı sunum | |
-| 30 Eyl – 4 Eki 2026 | TEKNOFEST Şanlıurfa | |
+| ~~2–7 Eyl 2026~~ **12 Eyl 2026, 13:00** | Mentörlük — ilk (genel) görüşme, yapıldı (kaydı: bkz. `docs/MENTORLUK.md`) | |
+| **14 Eyl 2026 Pzt** | Ulaşım/konaklama formu son gün — finale katılım ön şartı | |
+| ~16 Eyl 2026 | Mentörlük — ikinci (son) genel toplantı | |
+| ~~14 Eyl 2026, 17:00 TSİ~~ **18 Eyl 2026 gece** | **Sunum dosyası teslimi** (son düzenleme tarihi) | **41 gün** |
+| **20 Eyl 2026, 09:00** | İstanbul — kura, jüri ve katılımcılara canlı sunum | |
+| 30 Eyl – 4 Eki 2026 | TEKNOFEST Şanlıurfa — yalnızca dereceye giren üç takım | |
 
 Rapor şablona uygun değilse veya geç yüklenirse **doğrudan eleme**. Şablon KYS'de yayımlanıyor — takım kaptanı indirmeli.
+
+**Takvim düzeltmesi (12 Eylül 2026):** 12 Eylül'de tüm takımların katıldığı genel
+soru-cevap toplantısı, şartnamedeki "final sunumu + prototip teslimi 14 Eylül"
+maddesini **geçersiz kıldı** — gerçek son tarih sunum dosyasının **18 Eylül gecesi**
+teslim edilmesi; canlı prototip gösterimi zaten 20 Eylül'deki İstanbul sunum gününde
+yapılıyor, ayrı bir "prototip teslimi" yok. Ayrıntı: `CLAUDE.md` takvim notu,
+`docs/MENTORLUK.md`. Bu tabloda üstü çizili "14 Eylül 17:00" satırı, teslim edilmiş
+teknik raporun (`docs/RAPOR/`) o tarihi hâlâ anlatması nedeniyle bilinçli olarak
+korunuyor — donmuş raporla bu plan arasındaki fark `docs/RAPOR/_OKUBENI.md`'de not.
 
 ### İçerik Ekonomisi puan ağırlıkları (planın önceliklerini bu belirledi)
 
@@ -33,7 +44,7 @@ Rapor şablona uygun değilse veya geç yüklenirse **doğrudan eleme**. Şablon
 
 UI/UX, AI motoruyla eşit ağırlıkta. Arayüz "geliştirici demosu" gibi görünürse puanın beşte biri gider.
 
-### Şartnamenin istediği teslimat listesi (14 Eylül'e kadar hepsi)
+### Şartnamenin istediği teslimat listesi (18 Eylül'e kadar hepsi)
 
 Teknik rapor · sunum dosyası · kullanıcı senaryoları · çalışan prototip · kaynak kod · demo videosu · iş ve gelir modeli dokümanı · YZ mimarisi dokümanı · veri-model-etik-performans dokümanı · UI/UX tasarımları · kullanıcı akışları · kullanıcı araştırması özeti · kullanılabilirlik testi sonuçları · erişilebilirlik değerlendirmesi.
 
@@ -188,22 +199,63 @@ Marka ödül havuzu tanımlar, remix kuralları ve süre belirler; kampanya sonu
 - 23 Ağustos: rapor son okuma, şablon uygunluk kontrolü, ekler
 - **24 Ağustos 17:00'dan en az 6 saat önce KYS'ye yükleme.** Son gün son saate bırakılmayacak.
 
-### Faz 4 — 25 Ağustos – 7 Eylül: Ürünleştirme ve mentörlük
-- İtiraz akışı, moderatör inceleme kuyruğu, kampanya paneli
-- **UI/UX cilası** (puanın %20'si): tasarım sistemi, boş/yükleniyor/hata durumları, mikro animasyonlar, mobil görünüm
-- Erişilebilirlik değerlendirmesi (WCAG 2.1 AA kontrol listesi, klavye navigasyonu, kontrast)
-- 5 kullanıcıyla kullanılabilirlik testi + sonuç raporu
-- İş/gelir modeli, YZ mimarisi, veri-model-etik-performans dokümanları
-- Mentör geri bildirimlerinin uygulanması
+### Faz 4 — 12–23 Ağustos: Ürünleştirme (gerçekleşen)
+- İtiraz akışı, moderatör inceleme kuyruğu, kampanya paneli — tamamlandı
+- Erişilebilirlik değerlendirmesi (WCAG 2.1 AA) — tamamlandı, on bir kusurun onu düzeltildi
+- 5 kullanıcıyla kullanılabilirlik testi (20-22 Ağu) — koşuldu, SUS 60,0, yedi bulgu
+- 10 görüşmeyle kullanıcı araştırması (22 Ağu) — koşuldu
+- İş/gelir modeli, YZ mimarisi, veri-model-etik-performans dokümanları — tamamlandı
 
-### Faz 5 — 8–14 Eylül: Final paketi
-- Demo videosu (3–5 dk, altın senaryo, Türkçe anlatım)
-- Sunum dosyası, kullanıcı akışları ve senaryo dokümanı
-- Kaynak kod temizliği, README, tek komutla çalışan Docker kurulumu
-- **14 Eylül 17:00'dan önce teslim**
+**Not (11 Eylül):** Bu fazdan sonra 23 Ağustos'tan 11 Eylül'e kadar **19 gün depoda
+ilerleme olmadı**. Mentörlük tarihi de şartnamenin "2–7 Eylül" penceresinden **12 Eylül
+13:00**'e kaydı (bkz. `CLAUDE.md` takvim notu, `docs/MENTORLUK.md`).
 
-### Faz 6 — 15–20 Eylül: Canlı sunum
-- Prova, jüri soru-cevap hazırlığı, yedek plan (internet/GPU olmayan ortam için önceden kaydedilmiş demo)
+### Faz 4b — 11–12 Eylül: Mentör hazırlığı ve kullanılabilirlik bulguları (gerçekleşen)
+- 11 Eyl gece: duman testi (backend 130 test, arayüz 124 test <!-- sayim: backend, arayuz -->, `dokuman_denetimi.py`), mentör hazırlık paketi
+  (`docs/MENTORLUK.md`), belge hizalaması
+- 12 Eyl 13:00–15:00: genel mentörlük toplantısı (tüm takımlar, tanışma + soru-cevap;
+  proje bazlı bire bir görüşme yapılmadı) — kayıt: `docs/MENTORLUK.md` §4
+- kullanılabilirlik testinin yedi bulgusundan altısı kapatıldı
+  (`docs/KULLANILABILIRLIK-SONUCLARI.md`), B7 kapsam dışı bırakıldı
+- sunum dosyası üretildi (`docs/SUNUM.md` → `docs/gorseller/SUNUM.pdf`)
+
+**Not (12 Eylül):** Toplantı, şartnamedeki "final sunumu + prototip teslimi 14 Eylül"
+maddesini geçersiz kıldı: gerçek teslim **18 Eylül gecesi** (sunum dosyası, zorunlu
+şablonla), canlı prototip gösterimi ise ayrı bir teslim değil, 20 Eylül'deki İstanbul
+sunum gününün kendisi. Aşağıdaki Faz 4c bu gerçeği yansıtıyor.
+
+### Faz 4c — 13–17 Eylül: Sunum ve demo hazırlığı
+- ~~Zorunlu sunum şablonu geldiğinde içerik şablona taşınır~~ → **yapıldı (14–15 Eyl):**
+  şablon 14 Eyl 22:27'de geldi; 14 sayfalık sunum `docs/SUNUM/` md dosyalarından
+  `scripts/sunum_pptx.py` ile üretiliyor (bölüm sınırları, tekrar yasağı ve taşma
+  denetimli). Kalan: okunabilirlik revizyonu, notların 15 dakikaya genişletilmesi, PDF ve
+  KYS yüklemesi — devir notu `docs/SUNUM/_PLAN.md`
+- **Görev dağılımı (15 Eyl):** sunum Berra Özer; sistem ve canlı demo Hamza Budak
+- canlı 2–3 dk demo (sunumun sonunda, jürinin çağrısıyla) — **biçim seçildi (15 Eyl):
+  "canlı kanıt"**, akış ve arıza planı `docs/DEMO-SENARYOSU.md`; hazırlık betiği
+  `scripts/demo_hazirla.py`. Açık: Wi-Fi kapalı prova, masaüstündeki veritabanı yedeğinin USB'ye aktarılması
+- **Jüri günü veritabanı seçildi (15 Eyl): yerel `data/nemek.db`.** Aynı gün
+  `scripts/demo_zenginlestir.py` ile kampanya dışı 20 içerik eklendi; altın senaryo
+  sayıları değişmedi, `demo_hazirla.py` "Hazır" — `docs/DEMO-SENARYOSU.md` "Demo verisi
+  zenginleştirildi"
+- 14 Eyl: ulaşım/konaklama formu doldurulur (idari, finale katılım ön şartı)
+- demo videosu çekilir (`docs/DEMO-SENARYOSU.md`, düzeltilmiş arayüzle) — tam 4:30
+  sürüm + sunuma gömülecek ≤60 sn'lik kısa kesit
+- ~16 Eyl: ikinci (son) genel mentörlük toplantısı — açık sorular sorulur
+  (`docs/MENTORLUK.md` §6)
+- jüri makinesi tatbikatı (`docker compose down -v && up --build` sıfırdan; **evde,
+  internetle** — ilk açılış korpus ve CLIP modeli indiriyor, salonda asla çalıştırılmaz) +
+  internetsiz/GPU'suz ortamda canlı demo provası — jüri günü prototip video olarak
+  gösterilemiyor, yalnızca canlı çalıştırma kabul ediliyor
+- **17 Eylül akşamı: sunum dosyası teslim** (18 Eylül gecesi sınırına marj)
+
+### Faz 5 — 18–19 Eylül: Son prova
+- Jüri soru-cevap hazırlığı, sunumun 15 dakikaya göre son kez zamanlanması
+- Yedek plan: internet/GPU olmayan ortam için önceden kaydedilmiş demo videosu kullanılır
+
+### Faz 6 — 20 Eylül, İstanbul: Canlı sunum
+- 09:00 kura çekimi (22 takım), sırayla 15 dk sunum + 2–3 dk canlı prototip + jüri
+  soruları; izleyici yok, yalnızca yarışmacı takımlar
 
 ---
 

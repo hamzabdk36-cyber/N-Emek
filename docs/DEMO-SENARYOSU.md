@@ -6,6 +6,182 @@
 Replikler olduğu gibi okunabilir. Ekranda görülecek her sayı gerçek demo verisinden;
 hiçbiri montajla değiştirilmemeli.
 
+## Bu video jüri gününde ne için kullanılıyor (12 Eylül güncellemesi)
+
+12 Eylül toplantısında organizasyon açıkça belirtti: **jüri günü ana gösterim canlı
+prototiptir** (kendi bilgisayarımızdan, 2–3 dk) — video arkada oynatılarak sunum
+yapılamaz, bu talep reddedildi. Dolayısıyla bu senaryo videosu üç farklı işe yarıyor,
+ana gösterimin yerine geçmiyor:
+
+1. **Sunum dosyasına gömülü kısa klip** (≤60 sn) — toplam 15 dakikalık süreyi aşmadan,
+   şablon içine yerleştirilir.
+2. **Yedek**: canlı demo salon içinde (ağ, GPU, donanım) arızalanırsa gösterilecek.
+3. **Şartnamenin teslimat listesindeki "demo videosu" kalemi.**
+
+Bu yüzden burada iki çıktı üretilir: tam **4:30** sürüm (madde 2 ve 3 için) ve aşağıdaki
+"Süre daraltma" bölümünden türetilen **≤60 sn'lik kısa kesit** (madde 1 için).
+
+## Durum notu (15 Eylül)
+
+**Sıra.** Transkripte göre jüri günü akışı *15 dk sunum → kısa soru-cevap → jüri
+"prototipi gösterebilirsiniz" deyince 2–3 dk canlı gösterim*, kendi bilgisayarımızdan.
+Gösterim sunumun sonunda; süre "15 artı 2 gibi" ve değişebilir. Sunum PDF olarak teslim
+edildiği için ≤60 sn'lik klibin sunuma gömülmesi pratikte mümkün değil (PDF video
+oynatmaz); video yalnızca yedek ve teslimat kalemi olarak kalıyor.
+
+**Görev.** Sunumu Berra Özer, sistemi ve canlı demoyu Hamza Budak üstleniyor. Canlı
+demonun biçimi seçildi: **"canlı kanıt"** — bir sonraki bölüm. Ondan sonraki sahneler
+4:30'luk video içindir.
+
+**Bu belgedeki sayılar eski.** Ekrandakiyle karşılaştırma (yerel `data/nemek.db`,
+15 Eylül okuması):
+
+| Sahne | Bu belgede | Yerel demo veritabanı | Sunum sayfası |
+|---|---|---|---|
+| 4 · Ayşe kapsama | %85,2 | %87,1 | %87,2 (5. sayfa) |
+| 4 · Ayşe payı | %68,1 | %68,1 · ₺2.574,63 | %68,2 · ₺2.576,30 |
+| 5 · Burak ölçülen alan | %12,2 | %12,5 | %12,5 |
+| 6 · Burak → Ceyda bağı | %97 | 0,9965 | — |
+| 6 · Ayşe → Burak bağı | %87 | 0,8743 | — |
+| 8 · Ayşe kampanya toplamı | "34.500" | ₺34.541,45 | ₺34.548,96 (10. sayfa) |
+
+Güven 0,98 her üçünde aynı. Farkın sebebi, demo verisinin her `seed_demo.py --reset`
+koşusunda yeniden ölçülmesi; ekran görüntüleri büyük olasılıkla Docker birimindeki
+veritabanından çekildi (15 Eylül'de Docker kapalıydı, doğrulanmadı).
+
+**Jüri günü veritabanı: yerel `data/nemek.db` (15 Eylül kararı).** Sebep: bütün demo
+ölçümleri ve `demo_hazirla.py` bu kurulumda yapıldı; Docker bu hazırlıkta hiç denenmedi,
+konteynerde GPU kapalı ve korpusu 24 görsel. Aynı gün ilgisiz içerikle zenginleştirildi
+(aşağıda). Replikler ve slayt sayıları bu veritabanından okunur. Bundan sonra
+`seed_demo.py --reset` çalıştırılmaz: demo verisini yeniden ölçer, sayılar yine kayar ve
+eklenen içerikler gider.
+
+---
+
+## Canlı demo — "canlı kanıt" (jüri günü, 2:00 / 3:00)
+
+**Neden bu biçim.** Slaytlar Emek Kartı ekranlarını zaten gösteriyor; demonun katacağı
+şey jürinin gözü önünde **hattın gerçekten çalışması**. Kısa bir Emek Kartı turu, ardından
+Kaynak Bul'da iki canlı sorgu: sisteme hiç girmemiş bir türevde kaynak bulunur, ilgisiz
+bir fotoğrafta bağ önerilmez. Kaynak Bul kayıt yapmaz (`POST /api/verify`), yani demo
+verisi değişmez ve sonraki sorularda ekran aynı kalır.
+
+**Yürüten:** Hamza Budak (bilgisayar ve anlatım). Sunumu yapan Berra Özer, jüri
+"prototipi gösterebilirsiniz" deyince sözü devreder.
+
+### Sahneye çıkmadan (salon sırası gelmeden ~15 dk önce)
+
+Tek seferlik hazırlık **yapıldı (15 Eyl):** `scripts/demo_zenginlestir.py` yerel veritabanına
+kampanya dışı 20 içerik ekledi. Tekrar gerekmez; iki kez çalıştırmak bir şey değiştirmez.
+
+```bash
+.venv/Scripts/python.exe -m uvicorn app.main:app --app-dir backend   # :8000, --reload YOK
+cd frontend && npm run dev                                           # :5173
+.venv/Scripts/python.exe scripts/demo_hazirla.py                     # "Hazır" yazmalı
+```
+
+- [ ] `demo_hazirla.py` **"Hazır"** yazdı. Betik iki dosyayı `data/demo/` altına üretir,
+      ikisini sunucuya gönderip modeli ısıtır ve sonucu denetler. "HAZIR DEĞİL" yazarsa
+      canlı sorgu adımı atlanır, akışın geri kalanı yapılır.
+- [ ] Neden şart: süreçteki **ilk** sorgu model yüklendiği için ölçümde ~9,5 sn sürdü,
+      ısındıktan sonra 0,3–0,4 sn. Isıtılmamış bir sistemde jüri önünde 10 sn boş ekran olur.
+- [ ] Tarayıcıda üç sekme hazır: Akış · "Bulduğum kare" Emek Kartı · Kaynak bul.
+      Kullanıcı seçici **Ayşe Yılmaz**'da. F11 tam ekran, yakınlaştırma %100.
+- [ ] Dosya seçme penceresi bir kez `data/demo/` klasöründe açılıp kapatıldı; sahnede
+      o klasörden açılır.
+- [ ] Windows: ekran **Çoğalt** (Win+P), uyku kapalı, bildirimler susturulmuş, şarj
+      kablosu takılı.
+- [ ] Wi-Fi kapalıyken en az bir tam prova yapıldı (salonda internet garantisi yok).
+
+### Akış (2:00)
+
+| Süre | Ekran ve hareket | Söylenecek |
+|---|---|---|
+| 0:00–0:10 | **Akış** | "En üstteki üç gönderi tek zincir: Ayşe'nin fotoğrafı, Burak'ın remixi, Ceyda'nın ekran görüntüsü." |
+| 0:10–0:35 | "Bulduğum kare" → **Emek Kartı**, Köken paneli | "Ceyda'nın dosyasında içerik kimliği yoktu. Sistem kaynağı yine de buldu; güveni ekranda." |
+| 0:35–1:00 | Pay dağılımında **Ayşe** satırını aç | "Ayşe iki adım geride ama en büyük pay onun. Satırda kapsama, güven ve sönümleme; altındaki satır üçünün çarpımı." Sayıları **ekrandan okuyun**. |
+| 1:00–1:20 | **Burak** satırı → ölçülen bölge, "Kaynaktan gelen bölgeyi vurgula" kutusunu kapat/aç | "Parlak kalan pikseller ölçümle Burak'tan geldiği doğrulanan bölge. Burak'a yalnızca kendi kattığı alan yazılıyor." |
+| 1:20–1:45 | **Kaynak bul** → `kaynak-bul-turev.jpg` → Kökeni çöz | "Bu dosyayı sistem hiç görmedi: Ayşe'nin fotoğrafından kırpılıp üstüne yazı eklendi. Şimdi hattı çalıştırıyorum." Sonuç gelince: "Kaynak bulundu, kullanılan alan ölçüldü." |
+| 1:45–1:55 | Aynı ekranda `kaynak-bul-ilgisiz.jpg` → Kökeni çöz | "Bu fotoğrafın sistemde hiçbir kaynağı yok." Sonuç: **"Kaynak bulunamadı."** "Bulamadığında uydurmuyor." |
+| 1:55–2:00 | — | "Emek görünür olsun diye: tahminle değil, ölçümle." |
+
+15 Eylül yerel ölçümünde türev dosyası iki kaynak verdi: Sabah ışığı %93,0 ve
+Bulduğum kare %67,9 kullanılan alan. Zenginleştirmeden sonra, indekste 23 içerikle, sonuç aynı. Bulduğum kare de Ayşe'nin piksellerini taşıdığı için
+çıkıyor. Sayılar veritabanına göre değişir; sahneden önce `demo_hazirla.py` çıktısından
+okunur.
+
+### 3 dakika verilirse (+1:00)
+
+- **1:55'ten sonra, +20 sn — itiraz.** Emek Kartı'na dönülür, Ayşe satırındaki "Yeniden
+  ölçüm iste" düğmesi **gösterilir, tıklanmaz**. "İtirazı yalnızca payın sahibi açabilir;
+  bağ daha hassas bir dedektörle yeniden ölçülür, çözülmezse insana gider."
+- **+20 sn — zincir.** Atıf zinciri grafiği: "Ok yönü türetme yönü; onaylanmamış bağ
+  kesikli çizilir."
+- **+20 sn — pay.** Tampon süre; jüri bir şey sorarsa buraya harcanır.
+
+### Jüri sorarsa
+
+| Soru | Cevap |
+|---|---|
+| "Türevde neden iki kaynak çıktı?" | Kaynak bul bir sorgu, pay hesabı değil. Pikseller iki gönderide de var; hangi bağın paya gireceğine yayında geçişli indirgeme karar veriyor. |
+| "Slayttaki sayıyla ekrandaki biraz farklı" | Demo verisi her kurulumda yeniden ölçülüyor ve koşumlar arasında binde birkaç fark çıkıyor. Sayılar elle yazılmıyor, o koşumun ölçümü. |
+| "Akıştaki diğer gönderiler ne?" | Demo verisi: lisanslı test korpusundan, kampanya dışı, geliri yok. Kaynak bul türevin kaynağını bunların da bulunduğu indekste arıyor; ilgisiz fotoğraf hiçbiriyle eşleşmiyor. |
+| "Kendi görselimizle deneyelim" | Kaynak bul'a jürinin görselini yükle; kayıt yapmaz. Sistemde olmayan bir görselse beklenen sonuç "kaynak bulunamadı". |
+| "Yükleme / remix de gösterin" | Remix Stüdyo çalışır ama demo verisini değiştirir. Yapılırsa demo sonrasında `data/` yedeği geri yüklenir. |
+
+### Bir şey ters giderse
+
+| Belirti | Hamle |
+|---|---|
+| "Hat çalışıyor…" 5 sn'den uzun sürüyor | Beklemeyi bırak, Emek Kartı sekmesine dön: "Bu adımı az önce denetledik; asıl ölçüm burada görünüyor." |
+| Bir ekran hata veriyor | Başka bir ekrana geç. Hata sınırı başlığı ve gezinmeyi ayakta tutuyor. |
+| Sayfalar hiç yüklenmiyor | Yedek terminalde backend'i yeniden başlat. 30 sn içinde gelmezse `docs/gorseller/` kareleri (02 → 03 → 04 → 06) üzerinden anlat ve durumu açıkça söyle. |
+| Projeksiyon düşük çözünürlükte, mobil düzen açıldı | Devam et; düzen bilerek duyarlı. Gerekirse tarayıcı yakınlaştırmasını düşür. |
+
+### Sahnede yapılmayacaklar
+
+- Akışa içerik yüklemek, itiraz göndermek, kampanya dağıtmak, içerik silmek
+- `seed_demo.py --reset`, `docker compose down -v`, backend'i `--reload` ile çalıştırmak
+- API'yi `localhost` ile çağırmak: Windows'ta istek başına ~2 sn ekliyor, `127.0.0.1` kullanılır
+
+### Henüz açık
+
+- Veritabanı seçildi (yerel) ve zenginleştirildi. USB yedeği masaüstünde hazır
+  (`N-Emek-USB-yedek-20260915`, geri yükleme notu içinde); USB belleğe aktarılmadı.
+- Slayt sayıları (5. ve 10. sayfa) yerel veritabanındaki değerlere çekilmedi; karar
+  Berra'nın (`docs/SUNUM/_PLAN.md`).
+- Wi-Fi kapalı prova yapılmadı. CLIP ağırlıkları önbellekte olsa da model yüklenirken
+  ağa çıkma denemesi olabilir; `HF_HUB_OFFLINE=1` ile sınanmalı.
+- Yedek terminaldeki yeniden başlatmanın süresi ölçülmedi.
+
+### Demo verisi zenginleştirildi (15 Eylül)
+
+**Neden.** İndekste yalnızca altın senaryonun 3 içeriği vardı. Canlı Kaynak Bul sorgusu bu
+yüzden zayıf bir kanıttı ("üç görselin içinden bulmak kolay"), akış da üç gönderiyle
+geliştirici demosu gibi duruyordu.
+
+**Ne yapıldı.** `scripts/demo_zenginlestir.py` yerel veritabanına üç kullanıcı (Deniz Kaya,
+Emre Şahin, Selin Arslan) ve kampanya dışı, gelirsiz 20 içerik ekledi. İndekste artık
+23 içerik var. Betik sıfırlama yapmıyor:
+- Her aday yüklemeden önce kurtarma hattından geçiriliyor, bağ çıkan atlanıyor.
+- Sahnedeki ilgisiz görsel (korpus sırası 10) ve altın senaryonun kaynağı (sıra 3) hariç.
+- Yeni içerikler Ayşe'nin gönderisinden eskiye tarihleniyor; altın üçlü akışın üstünde kalıyor.
+
+**Nasıl doğrulandı.**
+- Betik altın senaryonun izini önce ve sonra karşılaştırıyor: bağlar, ödemeler, kazançlar,
+  üç Emek Kartı'nın dağılımı ve zinciri, kampanyadaki içerik sayısı. Ayrıca `demo_hazirla`
+  beklentisini süreç içinde sınıyor. Biri tutmazsa yedeği geri yüklüyor.
+- Önce veritabanı kopyasında denendi: ikinci çalıştırma "zaten eklenmiş" dedi. Sahte bir
+  fark verilince yedeği geri yükledi.
+- Gerçek veritabanında `demo_hazirla.py` "Hazır" verdi: türev Sabah ışığı %93,0 ·
+  Bulduğum kare %67,9, ilgisiz 0 kaynak, ısınmış sorgu 281–432 ms.
+- Akışın ilk üçü altın senaryo, kampanyada 3 içerik, Ceyda'nın Emek Kartı'nda Ayşe %68,1 ·
+  ₺2.574,63.
+- `pytest -m "not slow"` 127 geçti.
+
+**Geri dönmek gerekirse** (backend kapalıyken): `data/yedek/20260915-115019/` altındaki
+`nemek.db`, `uploads/` ve `index/` `data/` altına geri kopyalanır.
+
 ---
 
 ## Çekim öncesi kontrol listesi
@@ -17,7 +193,7 @@ docker compose up --build -d          # iki kapsayıcı da "healthy" olana kadar
 curl -s http://localhost:8000/api/health
 ```
 
-- [ ] `indexed_contents: 3` ve `c2pa_signing: true` dönüyor mu
+- [ ] `indexed_contents: 3` ve `c2pa_signing: true` dönüyor mu (Docker'daki altın senaryo verisi; zenginleştirilmiş yerel veritabanında 23)
 - [ ] `http://localhost:5173` açılıyor, akışta **üç** gönderi var
 - [ ] Üstteki kullanıcı seçici **Ayşe Yılmaz**'da (itiraz sahnesi buna bağlı)
 - [ ] "Bulduğum kare" gönderisinin geliri **₺4.200** — değiştiyse Gelir kutusundan geri alın
@@ -71,7 +247,7 @@ curl -s http://localhost:8000/api/health
 > de buldu — üstelik iki tanesini.
 >
 > Nasıl? Sırayla denedi: içerik kimliği yok, dosya özeti tutmuyor. Sonra piksellere
-> gömülü görünmez filigranı okudu, algısal parmak izi ve görsel benzerlikle adayları
+> gömülü görünmez filigranı okudu, görüntü parmak izi ve görsel benzerlikle adayları
 > daraltı, ve son adımda geometrik olarak doğruladı.
 >
 > Güven: **sıfır virgül doksan sekiz.**"
@@ -117,7 +293,7 @@ alanlarını fareyle işaret edin. Güven rozetinde bir saniye durun.
 > Ayşe'den geliyor. Her tarafa yalnızca **kendi kattığı** pikseller yazılıyor, yoksa
 > aynı emek iki kez ödüllendirilirdi."
 
-**Yönerge:** Maskeli görsele yakınlaşın. "Eşleşen bölgeyi vurgula" onay kutusunu bir kez
+**Yönerge:** Maskeli görsele yakınlaşın. "Kaynaktan gelen bölgeyi vurgula" onay kutusunu bir kez
 kapatıp açın — farkı izleyici görsün.
 
 ---
@@ -135,7 +311,7 @@ kapatıp açın — farkı izleyici görsün.
 
 ## Sahne 7 — İtiraz · 3:40–4:05 (25 sn)
 
-**Ekran:** Ayşe'nin satırına dönün, "Bu paya itiraz et" düğmesini gösterin. **Tıklamayın.**
+**Ekran:** Ayşe'nin satırına dönün, "Yeniden ölçüm iste" düğmesini gösterin. **Tıklamayın.**
 
 > "Katılmıyorsanız itiraz edebilirsiniz. İtiraz, bağı daha hassas bir dedektörle yeniden
 > ölçtürüyor. Sonuç değişirse zincirin **tüm payları** güncelleniyor.
@@ -190,6 +366,19 @@ kapatıp açın — farkı izleyici görsün.
 
 **Asla kısaltmayın:** Sahne 4 (payın gerekçesi) ve Sahne 5 (ölçüm görünür). Projenin
 ayırt edici iddiası bu iki sahnede.
+
+## Sunuma gömülecek ≤60 saniyelik kesit
+
+Yukarıdaki 3 dakikalık daraltmadan farklı, daha sert bir kesim: sunum dosyasına
+gömülecek klip yalnızca projenin ayırt edici anını göstermeli, tüm akışı değil.
+
+Kullanılacak sahneler, olduğu gibi (toplam ~55 sn):
+- **Sahne 3** (kritik an: kimliği silinmiş içerik) — kısaltılmadan, tam 55 sn.
+
+Süre 60 sn'yi aşarsa, Sahne 3'ün yalnızca "kritik an" cümlesinden sonrasını (kaynağın
+bulunduğu ve güven skorunun göründüğü an) alın; giriş kısmını (ekran görüntüsü alma
+adımı) atlayabilirsiniz. Sahne 4/5 (payın gerekçesi, ölçüm görünür) bu kesite girmez —
+onlar canlı prototip gösteriminde anlatılır, videoda tekrar edilmez.
 
 ## Videoda söylenmemesi gerekenler
 

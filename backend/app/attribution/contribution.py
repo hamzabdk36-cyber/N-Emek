@@ -324,6 +324,22 @@ def compute_shares(
     by_id = {n.content_id: n for n in chain}
     for content_id, weight in sorted(weights.items(), key=lambda kv: -kv[1]):
         node = by_id[content_id]
+        # Bulgu B4 (kullanilabilirlik testi): pay satiri acilmadan
+        # gerekce hic gorunmuyordu, acilinca da yalnizca sembolik formul
+        # vardi ("kapsama x guven x sonumleme"). Duz Turkce tek cumle,
+        # ayni sayilardan uretiliyor - iki yerde farkli metin cikmasin
+        # diye backend'de tek kaynaktan yazilir, her istemci ayni cumleyi
+        # alir.
+        #
+        # Isme dogrudan iyelik eki eklenmiyor ("Yilmaz'in" gibi hatali
+        # unlu uyumu riski): kullanici adi rastgele oldugu icin dogru
+        # eki (-in/-in/-un/-un) sececek bir kural yazmak gerekirdi.
+        # "kendisine" bu ekten bagimsiz, degismeyen bir sozcuk.
+        factors[content_id]["aciklama"] = (
+            f"{node.owner_name} — bu içerikteki katkısı ölçülen alan oranıyla "
+            f"{_pct(factors[content_id]['kapsama'])}; bu yüzden havuzun "
+            f"{_pct(weight)} kendisine gidiyor."
+        )
         parties.append(
             Party(
                 role="source",

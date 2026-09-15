@@ -17,8 +17,8 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import { EvidenceList } from "./Pipeline";
-import type { EvidenceRow } from "../api";
+import { EvidenceList, StageTimeline } from "./Pipeline";
+import type { EvidenceRow, StageLog } from "../api";
 
 /** Geometri aşamasının gerçek çıktısı (backend `geometry.as_evidence`). */
 const GEOMETRI: EvidenceRow = {
@@ -41,9 +41,9 @@ const GEOMETRI: EvidenceRow = {
 
 const PHASH: EvidenceRow = {
   stage: "phash",
-  label: "Algısal parmak izi",
+  label: "Görüntü parmak izi",
   found: true,
-  aciklama: "'tam' bölgesinin algısal özeti kaynakla örtüşüyor.",
+  aciklama: "'tam' bölgesinin görüntü parmak izi kaynakla örtüşüyor.",
   detay: { region: "tam", hamming: 6, esik: 12 },
 };
 
@@ -86,9 +86,9 @@ describe("EvidenceList — ham ölçümler", () => {
 
   it("eşik ve uzaklığı birimiyle yazıyor", async () => {
     render(<EvidenceList rows={[PHASH]} />);
-    const satir = await olcumleriAc(/Algısal parmak izi/);
+    const satir = await olcumleriAc(/Görüntü parmak izi/);
 
-    expect(within(satir).getByText("Hamming uzaklığı")).toBeInTheDocument();
+    expect(within(satir).getByText("Fark biti sayısı")).toBeInTheDocument();
     expect(within(satir).getByText("6 bit")).toBeInTheDocument();
     expect(within(satir).getByText("12 bit")).toBeInTheDocument();
   });
@@ -133,7 +133,7 @@ describe("EvidenceList — ham ölçümler", () => {
         rows={[
           {
             stage: "phash_blok",
-            label: "Blok bazlı algısal parmak izi",
+            label: "Blok bazlı görüntü parmak izi",
             found: true,
             aciklama: "",
             detay: { hamming: 4 },
@@ -142,7 +142,7 @@ describe("EvidenceList — ham ölçümler", () => {
       />,
     );
     expect(
-      screen.getByText("Blok bazlı algısal parmak izi"),
+      screen.getByText("Blok bazlı görüntü parmak izi"),
     ).toBeInTheDocument();
     expect(screen.queryByText("phash_blok")).not.toBeInTheDocument();
   });
@@ -162,5 +162,37 @@ describe("EvidenceList — ham ölçümler", () => {
       />,
     );
     expect(screen.queryByText("ölçümler")).not.toBeInTheDocument();
+  });
+});
+
+/**
+ * StageTimeline - Kaynak Bul ekranindaki asama zaman cizelgesi.
+ *
+ * Bulgu B5 (Gorev 5, K1): "Üstteki eşleşmeyi buldu ama kanıt satırlarını
+ * sonuç sandı." `sonucOzeti` bu yuzden var - asama listesinden once,
+ * duz Turkce, kac kaynak bulundugunu soyleyen tek cumle.
+ */
+const STAGES: StageLog[] = [
+  { stage: "c2pa", found: false, detail: "", aciklama: "" },
+  { stage: "phash", found: true, detail: "1 isabet", aciklama: "" },
+];
+
+describe("StageTimeline", () => {
+  it("sonucOzeti verilmezse ozet kutusu gorunmuyor", () => {
+    render(<StageTimeline stages={STAGES} />);
+    expect(screen.queryByText(/^Sonuç:/)).not.toBeInTheDocument();
+  });
+
+  it("sonucOzeti asama listesinden once, ayrı bir kutuda goruniyor", () => {
+    render(
+      <StageTimeline stages={STAGES} sonucOzeti="Sonuç: 2 kaynak bulundu." />,
+    );
+    expect(screen.getByText("Sonuç: 2 kaynak bulundu.")).toBeInTheDocument();
+  });
+
+  it("phash asamasi 'algısal' degil 'görüntü parmak izi' diyor (bulgu B5)", () => {
+    render(<StageTimeline stages={STAGES} />);
+    expect(screen.getByText("Görüntü parmak izi")).toBeInTheDocument();
+    expect(screen.queryByText(/algısal/i)).not.toBeInTheDocument();
   });
 });

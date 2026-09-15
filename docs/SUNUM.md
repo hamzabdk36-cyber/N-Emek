@@ -6,13 +6,25 @@ paginate: true
 
 # Sunum İçeriği — Jüri Sunumu
 
-**Bu dosya slayt içeriğidir**, tasarlanmış sunum değil. Marp uyumlu yazıldı: istersen
-`marp SUNUM.md --pdf` ile doğrudan slayta çevirebilirsin, istersen içeriği kendi
-şablonuna taşırsın.
+> **Eski taslak (15 Eylül).** Zorunlu şablon 14 Eylül'de geldi; jüri sunumunun kaynağı
+> artık `docs/SUNUM/` (sayfa başına bir md, `scripts/sunum_pptx.py` ile şablona
+> üretiliyor, devir notu `docs/SUNUM/_PLAN.md`). Bu dosyadaki slaytlar ve bazı sayılar
+> eskidi (ör. %85,2 kapsama, ₺34.545,80); **sayı için buraya bakılmaz.** Dosya, sondaki
+> "Beklenen sorular ve kısa cevaplar" bölümü için tutuluyor.
 
-**Hedef süre:** 8–10 dakika + soru. Puan ağırlıklarının altısını da karşılayacak şekilde
-sıralandı: Yenilikçilik %20 · Teknik Yeterlilik %20 · Problem Çözme %20 · UI/UX %20 ·
-Sunum ve Prototip %10 · İş Modeli %10.
+**Bu dosya slayt içeriğidir**, tasarlanmış sunum değil. Marp uyumlu yazıldı ve
+`marp SUNUM.md --pdf` ile doğrudan slayta çevrilebilir (`docs/gorseller/SUNUM.pdf`
+bu şekilde üretildi). **12 Eylül'de organizasyon jüri günü için zorunlu bir sunum
+şablonu duyurdu** (henüz paylaşılmadı) — şablon geldiğinde bu içerik ona taşınacak.
+
+**Hedef süre (güncellendi, 12 Eylül):** Jüri günü **15 dakika sunum + 2–3 dakika canlı
+prototip gösterimi**, ardından jüri soruları. Aşağıdaki içerik ve zamanlama tablosu
+eski "8–10 dakika" hedefine göre kuruldu (≈10:00 toplam) — kalan ~5 dakika, zorunlu
+şablon geldiğinde şu eksenlerden biri veya birkaçı derinleştirilerek doldurulacak:
+ölçüm yönteminin daha ayrıntılı anlatımı, ürün yol haritası, benzer çözümlerle
+karşılaştırma. Puan ağırlıklarının altısını da karşılayacak şekilde sıralandı:
+Yenilikçilik %20 · Teknik Yeterlilik %20 · Problem Çözme %20 · UI/UX %20 · Sunum ve
+Prototip %10 · İş Modeli %10.
 
 Görseller `gorseller/` klasöründen. Her sayı ölçüm çıktısıdır.
 
@@ -26,7 +38,13 @@ Görseller `gorseller/` klasöründen. Her sayı ölçüm çıktısıdır.
 
 TEKNOFEST 2026 · NSosyal İnovasyon Yarışması · İçerik Ekonomisi
 
-*[takım adı ve üyeler]*
+**Takım ZENITH N**
+<!-- Üye isimleri bilinçli olarak yok: teknik raporun 8. bölümü
+     ("Takım Yapısı"), değerlendirme esasları gereği isim/fotoğraf gibi
+     kişisel bilgilerin rapora girmediğini söylüyor. Slaytta da aynı
+     kural izlendi; sunumu yapan kişi kendini sözlü olarak tanıtır. -->
+
+*[sunumu yapacak kişi(ler) kendini sözlü olarak tanıtabilir]*
 
 ---
 
@@ -43,7 +61,7 @@ paylaşılıyor.
 > Sorun kötü niyet değil: zincir **teknik olarak** kopuyor.
 > Ekran görüntüsü, içeriğin kimliğini tek tıkla siliyor.
 
-**Görsel:** `gorseller/01-akis.jpg`
+![bg right:38%](gorseller/01-akis.jpg)
 
 ---
 
@@ -109,7 +127,7 @@ dayanıyor.
 Yüklenen dosyada kimlik **yoktu**. Sistem iki kaynağı da buldu:
 Burak'ı **ve** onun üzerinden Ayşe'yi. Güven **0,98**.
 
-**Görsel:** `gorseller/02-emek-karti-koken.jpg`
+![bg right:42%](gorseller/02-emek-karti-koken.jpg)
 
 ---
 
@@ -128,7 +146,7 @@ pay = kapsama %85,2 × güven 0,95 × sönümleme 0,85 = 0,692
 | Burak (kaynak) | %11,9 | Kendi kattığı alan %12,2 |
 | N'Sosyal | %10,0 | Komisyon |
 
-**Görsel:** `gorseller/03-pay-gerekcesi.jpg`
+![bg right:32%](gorseller/03-pay-gerekcesi.jpg)
 
 ---
 
@@ -141,7 +159,7 @@ Kararan yerler o kaynaktan gelmiyor.
 
 **Ölçülen kullanılan alan: %12,2**
 
-**Görsel:** `gorseller/05-olculen-bolge-oran.jpg`
+![bg right:42%](gorseller/05-olculen-bolge-oran.jpg)
 
 ---
 
@@ -209,7 +227,7 @@ docker compose up --build     # tek komut
 
 | | |
 |---|---|
-| Test | **102** backend + **87** arayüz |
+| Test | **130 test** backend + **124 test** arayüz <!-- sayim: backend, arayuz --> |
 | CI | GitHub Actions, her gönderimde yeşil |
 | Açılış (280 içerik) | 11,5 sn → **16 ms** |
 | Ekranlar | 6 · mobil uyumlu · erişilebilirlik değerlendirmesi yapıldı |
@@ -229,7 +247,7 @@ Saklamıyoruz — jüri karşısında güvenilirliği bu sağlar.
 | Sentetik yeniden çizim | Ölçülemez — "ölçülemedi" denir |
 | Ödemesi olan içerik silinemez | Silme hakkı bu durumda tam karşılanmıyor; çözümü ödeme kayıtlarının anonimleştirilmesi |
 | Kullanıcı silme yok | Yalnızca içerik silinebiliyor — ürünleşmede eklenecek |
-| Kullanılabilirlik testi | Protokol hazır, 5 katılımcıyla henüz koşulmadı — `KULLANILABILIRLIK-PROTOKOL.md` |
+| Kullanılabilirlik testi | 5 katılımcıyla koşuldu, SUS **60,0** — hedef 68'in altında, yedi bulgu kaydedildi — `KULLANILABILIRLIK-SONUCLARI.md` |
 
 ---
 
@@ -269,7 +287,11 @@ Saklamıyoruz — jüri karşısında güvenilirliği bu sağlar.
 | Etki ve kapanış | 16–17 | 0:30 |
 | **Toplam** | | **≈ 10:00** |
 
-Süre 8 dakikaya inerse: slayt 3, 13 ve 16 kısaltılır. Slayt 8 ve 9 **asla** kısaltılmaz.
+**15 dakikalık oturumda dağılım (12 Eylül'den, güncel):** Yukarıdaki tablo eski 8–10
+dakikalık hedefe göredir. Jüri günü toplam süre 15 dk sunum + 2–3 dk canlı prototip;
+mevcut ≈10:00'lık içerik korunur, kalan ~5 dakika zorunlu şablon geldiğinde eklenecek
+derinleştirmeye ayrılır (bkz. dosya başındaki not). Şablon kısıtı süreyi daraltırsa:
+slayt 3, 13 ve 16 kısaltılır. Slayt 8 ve 9 **asla** kısaltılmaz.
 
 ## Beklenen sorular ve kısa cevaplar
 

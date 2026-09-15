@@ -931,15 +931,22 @@ def test_dogrula_ucu_bozuk_gorselde_400(client):
 
 
 @pytest.mark.slow
-def test_yukleme_icerik_ve_kurtarma_ciktisini_birlikte_doner(client, veri):
-    """Tam hat: yukleme cevabi hem icerigi hem hattin ne yaptigini tasir."""
+def test_yukleme_icerik_ve_kurtarma_ciktisini_birlikte_doner(client, veri, basliklar):
+    """Tam hat: yukleme cevabi hem icerigi hem hattin ne yaptigini tasir.
+
+    Onceden Authorization basligi gondermiyordu ve uc `POST /contents`
+    jeton istedigi icin her zaman 401 donuyordu - `slow` isaretli
+    oldugu ve CI'da kosmadigi icin bu fark edilmemisti (bkz. CLAUDE.md
+    "Sürekli tümleştirme": CI yalnizca `-m "not slow"` kosuyor).
+    """
     bgr = cv2.imread(str(veri["foto"]))
     r = client.post(
         "/api/contents",
         files={"file": ("yeni.jpg", _jpeg(bgr), "image/jpeg")},
         data={"owner_id": veri["ayse_id"], "title": "API'den yüklendi"},
+        headers=basliklar(veri["ayse_id"]),
     )
-    assert r.status_code == 200
+    assert r.status_code == 200, r.text
     govde = r.json()
     alanlar(govde, "content", "recovery")
     alanlar(govde["content"], "id", "title", "owner")

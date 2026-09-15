@@ -11,11 +11,18 @@ cozumu ayni: kaynak veri burada, sema uretiliyor.
 Is paketleri asagidaki `PAKETLER` listesinde tanimli. Tarih degisirse
 tek yer degisiyor ve hem tablo hem sema ondan cikiyor.
 
-Yarisma takvimindeki dort sert tarih (teknik rapor 24 Agustos, mentorluk
-2-7 Eylul, final 14 Eylul, canli sunum 20 Eylul) semaya kilometre tasi
-olarak ciziliyor;
-boylece "takvim yarisma takvimiyle celismiyor" iddiasi gozle
-dogrulanabiliyor.
+Yarisma takvimindeki sert tarihler (teknik rapor 24 Agustos, mentorluk
+12 Eylul, sunum dosyasi teslimi 18 Eylul, canli sunum 20 Eylul) semaya
+kilometre tasi olarak ciziliyor; boylece "takvim yarisma takvimiyle
+celismiyor" iddiasi gozle dogrulanabiliyor.
+
+12 Eylul'de tum takimlarin katildigi genel toplantida, sartnamedeki
+"final sunumu + prototip teslimi 14 Eylul" maddesi "sunum dosyasi
+teslimi 18 Eylul gecesi"ne kaydi (bkz. CLAUDE.md takvim notu,
+docs/MENTORLUK.md); asagidaki KILOMETRE ve PAKETLER bu gerceklesmeyi
+yansitir, donmus teknik rapordaki (docs/RAPOR/07-proje-takvimi.md) is
+paketi tablosuyla kasitli olarak farklidir - fark docs/RAPOR/_OKUBENI.md
+icinde belgelenmistir.
 
 Cikti: docs/gorseller/12-takvim.png
 
@@ -71,21 +78,25 @@ PAKETLER = [
     ("İP-6b", "Kullanıcı araştırması: dört profilden on kişiyle görüşmeler",
      date(2026, 8, 22), date(2026, 8, 22), "bitti"),
     ("İP-7", "Teknik raporun yazımı, denetimi ve teslimi",
-     date(2026, 8, 14), date(2026, 8, 23), "suruyor"),
-    ("İP-8", "Ürünleştirme ve mentörlük geri bildirimlerinin uygulanması",
-     date(2026, 8, 25), date(2026, 9, 7), "planli"),
-    ("İP-9", "Final paketi: demo videosu, sunum dosyası, prototip teslimi",
-     date(2026, 9, 8), date(2026, 9, 14), "planli"),
+     date(2026, 8, 14), date(2026, 8, 23), "bitti"),
+    ("İP-8", "Mentör görüşmesi (12 Eyl) ve kullanılabilirlik bulgularının kapatılması",
+     date(2026, 9, 11), date(2026, 9, 13), "bitti"),
+    ("İP-9", "Final paketi: sunum dosyası, demo videosu, canlı demo provası",
+     date(2026, 9, 13), date(2026, 9, 18), "planli"),
     ("İP-10", "Canlı sunum: prova, jüri soru-cevap ve yedek demo hazırlığı",
-     date(2026, 9, 15), date(2026, 9, 20), "planli"),
+     date(2026, 9, 18), date(2026, 9, 20), "planli"),
 ]
 
-# Sartnamenin sert tarihleri.
+# Sartnamenin sert tarihleri. Mentorluk basvurusu "2-7 Eylul" idi;
+# yarisma iletisiminden gelen e-posta ilk gorusmeyi 12 Eylul 13:00'e aldi;
+# 12 Eylul'deki genel toplantida final teslimi de "14 Eylul" yerine
+# "sunum dosyasi 18 Eylul gecesi"ne kaydi (bkz. CLAUDE.md takvim notu,
+# docs/MENTORLUK.md) - kilometre tasi gerceklesen tarihi gosteriyor.
 KILOMETRE = [
     (date(2026, 8, 24), "Teknik rapor teslimi"),
-    (date(2026, 9, 2), "Mentörlük başlangıcı"),
-    (date(2026, 9, 14), "Final sunumu ve prototip"),
-    (date(2026, 9, 20), "Jüriye canlı sunum"),
+    (date(2026, 9, 12), "Mentörlük — ilk görüşme"),
+    (date(2026, 9, 18), "Sunum dosyası teslimi"),
+    (date(2026, 9, 20), "İstanbul'da canlı sunum"),
 ]
 
 RENK = {
@@ -145,9 +156,9 @@ def html_uret() -> str:
         # yoksa sema iki gun yanlis gosterir.
         kaydir = "translateX(-50%)" if konum < 92 else "translateX(-88%)"
 
-        # Birbirine yakin iki tas, etiketleri ust uste bindiriyor: 14 ve
-        # 20 Eylul yalnizca %14 arayla duruyor ve "Final sunumu ve
-        # prototip" etiketi "Juriye canli sunum"un uzerine biniyordu.
+        # Birbirine yakin iki tas, etiketleri ust uste bindiriyor: 18 ve
+        # 20 Eylul yalnizca birkac gun arayla duruyor ve "Sunum dosyasi
+        # teslimi" etiketi "Istanbul'da canli sunum"un uzerine biniyordu.
         # Cozum yatay degil **dikey**: gec kalan etiket alt siraya inip
         # kendi noktasina noktali bir cizgiyle baglaniyor. Olcut konum
         # farki oldugu icin yazi tipi genisligi tahmin edilmiyor ve yeni

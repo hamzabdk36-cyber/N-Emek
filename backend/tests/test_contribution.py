@@ -246,3 +246,38 @@ def test_gelir_sifirsa_paylar_yine_hesaplanir():
     dist = compute_shares(LEAF, [node(coverage=0.4)], 0.0, rules())
     assert_sums_to_one(dist)
     assert all(p.amount == 0.0 for p in dist.parties)
+
+
+# ---------------------------------------------------------------------------
+# Aciklama (bulgu B4 - KULLANILABILIRLIK-SONUCLARI.md)
+# ---------------------------------------------------------------------------
+def test_kaynagin_aciklamasi_duz_turkce_gerekce_tasir():
+    """Pay satiri acilinca sembolik formulden once duz bir cumle olmali;
+    kullanicilarin ucte biri gerekceyi sayilara bakarak kuramadi."""
+    dist = compute_shares(
+        LEAF, [node("ayse", coverage=0.84, confidence=0.95, depth=1)], 1000.0, rules()
+    )
+    kaynak = dist.sources[0]
+    aciklama = kaynak.factors["aciklama"]
+    assert "Ayse" in aciklama
+    # Kapsama ve nihai pay ayni cumlede, sayisal ayraç Turkce.
+    assert "%84,0" in aciklama
+    assert f"%{round(kaynak.share * 100, 1)}".replace(".", ",") in aciklama
+    # Formulun ayni kalmasi gerekiyor; aciklama onu tekrar etmiyor.
+    assert "×" not in aciklama
+
+
+def test_aciklama_isme_iyelik_eki_eklemiyor():
+    """Kullanici adi rastgele oldugu icin ismin sonuna dogrudan ek
+    eklemek unlu uyumunu bozabilir ("Yılmaz'in" hatali, "Yılmaz'ın"
+    dogru - hangisinin dogru oldugu son harfe gore degisir ve genel bir
+    kuralla tahmin edilemez). Cumle bu riski hic tasimamali: isimden
+    hemen sonra apostrof olmamali."""
+    node_yilmaz = ChainNode(
+        content_id="src", owner_id="u1", owner_name="Ayşe Yılmaz",
+        depth=1, coverage=0.5, confidence=0.9,
+    )
+    dist = compute_shares(LEAF, [node_yilmaz], 1000.0, rules())
+    aciklama = dist.sources[0].factors["aciklama"]
+    assert "Yılmaz'" not in aciklama
+    assert aciklama.startswith("Ayşe Yılmaz")

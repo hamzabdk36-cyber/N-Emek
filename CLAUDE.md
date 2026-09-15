@@ -16,15 +16,38 @@ Ayırt edici iddia: kaynağı *bulmak* değil, kullanılan içerik oranını **�
 |---|---|
 | **24 Ağu 2026, 17:00 TSİ** | Teknik Rapor teslimi (KYS) — şablona uymayan veya geç rapor doğrudan eleme |
 | 2 Eyl 2026 | Teknik rapor sonuçları |
-| 2–7 Eyl 2026 | Mentörlük |
-| **14 Eyl 2026, 17:00 TSİ** | Final sunumu + çalışan prototip teslimi |
-| 20 Eyl 2026 | Jüri ve katılımcılara canlı sunum |
-| 30 Eyl – 4 Eki 2026 | TEKNOFEST Şanlıurfa |
+| ~~2–7 Eyl 2026~~ **12 Eyl 2026, 13:00 TSİ** | Mentörlük — ilk (genel) görüşme, yapıldı (bkz. `docs/MENTORLUK.md`) |
+| **14 Eyl 2026 Pzt** | Ulaşım/konaklama formu son gün — finale katılım ön şartı, doldurmayan alana giremez |
+| ~16 Eyl 2026 | Mentörlük — ikinci (son) genel toplantı, şablon sonrası soru-cevap |
+| ~~14 Eyl 2026, 17:00 TSİ~~ **18 Eyl 2026 gece** | Sunum dosyası teslimi — bu tarihten sonra düzenlenemez |
+| **20 Eyl 2026, 09:00** | İstanbul — kura çekimi, jüri ve katılımcılara canlı sunum |
+| 30 Eyl – 4 Eki 2026 | TEKNOFEST Şanlıurfa — yalnızca dereceye giren üç takım |
 
 Tarihler şartnamenin **V3** sürümünden (17.08.2026). V2'ye göre iki değişiklik var:
 canlı sunum "Eylül 2026" iken **20 Eylül** olarak kesinleşti, ve bir takım artık
 yarışma kapsamında yalnızca **tek başvuru** yapabilir (çok temalı başvuru hakkı
 kalktı; N-Emek zaten tek başvuru, İçerik Ekonomisi).
+
+**Takvim kaydı (12 Eyl 2026 güncellemesi):** 12 Eylül'de tüm takımların katıldığı
+genel bilgilendirme/soru-cevap toplantısı yapıldı (transkript: proje kökü dışında,
+`../transkript-2026-09-12.md`). Bu toplantı iki şeyi netleştirdi: (1) final sunum
+dosyasının teslim tarihi şartnamedeki "14 Eylül 17:00" değil, **18 Eylül gecesi**;
+(2) mentörlük bire bir/proje bazlı değil, genel bir soru-cevap turu — ikinci ve son
+tur ~16 Eylül'de. Eski "14 Eylül" varsayımına dayanan ayrıntılar `docs/MENTORLUK.md`
+ve `docs/PLAN.md`'de güncellendi.
+
+**Jüri günü biçim kısıtları (12 Eylül toplantısından):**
+- Sunum **15 dakika + 2–3 dakika canlı prototip gösterimi**, ardından jüri soruları.
+- Prototip **video olarak arkada oynatılamaz** — canlı çalıştırma zorunlu, kendi
+  bilgisayarımızdan. İnternetsiz/GPU'suz ortamda çalışması bu yüzden kritik (bkz.
+  `README.md`'deki CPU-PyTorch kararı).
+- Sunum dosyası **zorunlu şablonla** hazırlanır (şablon 14 Eylül'de geldi,
+  `docs/NSosyal_Inovasyon_Yarısması_Sunum_Sablonu_1_2_2_TTN8G.pptx`), 18'inde
+  toplanıp organizasyon tarafından açılır; ekip yalnızca kumandayla ilerletir.
+- Sıra: sunum → kısa soru-cevap → jüri çağırınca **sunumun sonunda** 2–3 dk canlı
+  prototip. Gösterim sunumun ortasına alınmaz.
+- Sunumu öğrenci yapar, birden fazla üye paylaşabilir; danışman/mentör konuşmaz.
+  **Görev dağılımı (15 Eyl):** sunum Berra Özer, sistem ve canlı demo Hamza Budak.
 
 Puan ağırlıkları: Yenilikçilik %20 · Teknik Yeterlilik %20 · Problem Çözme %20 · **UI/UX %20** · Sunum ve Prototip Kalitesi %10 · İş Modeli %10. Arayüz, AI motoruyla eşit ağırlıkta — "geliştirici demosu" görünümü puanın beşte birini götürür.
 
@@ -37,7 +60,8 @@ Kullanıcı tarafı ölçüm: `docs/ERISILEBILIRLIK.md` (denetim + bulgular) · 
 altında, yedi bulgu), kullanıcı araştırması dört profilden on görüşmeyle. Ham kayıtlar
 `data/kullanilabilirlik/` ve `data/kullanici-arastirmasi/` altında; sonuç belgelerini
 betikler üretiyor, elle düzenlenmez.
-Demo ve sunum: `docs/DEMO-SENARYOSU.md` (replikli çekim senaryosu) · `docs/SUNUM.md` (slayt içeriği, Marp uyumlu)
+Jüri sunumu: `docs/SUNUM/` — sayfa başına bir md, `scripts/sunum_pptx.py` şablona üretir, `scripts/sunum_powerpoint.ps1` taşmayı denetleyip önizleme/PDF çıkarır; devir notu ve açık revizyon kararları `docs/SUNUM/_PLAN.md`. Üretilen `.pptx`/`.pdf` depoda değil, elle düzenlenmez.
+Demo: `docs/DEMO-SENARYOSU.md` — canlı 2–3 dk demo "canlı kanıt" biçiminde (Emek Kartı turu + Kaynak Bul'da canlı türev ve ilgisiz görsel sorgusu), sahneden önce `scripts/demo_hazirla.py` modeli ısıtır ve sonucu denetler; jüri günü veritabanı yerel `data/nemek.db`, `scripts/demo_zenginlestir.py` ile kampanya dışı içerik eklendi (üstünde `seed_demo.py --reset` çalıştırılmaz); 4:30 video sahnelerindeki sayılar eski (başındaki durum notu) · `docs/SUNUM.md` eski Marp taslağı, yalnızca "Beklenen sorular" için tutuluyor
 Ölçümler: `docs/FAZ0-SONUCLARI.md` (risk kapatma) · `docs/DEGERLENDIRME.md` (tam korpus) · `docs/GECIKME.md` (uçtan uca) · `docs/ACILIS-SURESI.md` (indeks kalıcılığı)
 
 ## Kurulum
@@ -64,7 +88,7 @@ cd frontend && npm test                                      # yerleşim + bile�
 cd frontend && npm run dev                                                   # :5173
 ```
 
-Backend 128 test, arayüz 114 test. <!-- sayim: backend, arayuz --> Bu sayılar elle
+Backend 130 test, arayüz 124 test. <!-- sayim: backend, arayuz --> Bu sayılar elle
 tutulmuyor: `python scripts/dokuman_denetimi.py` dokümanlardaki her sayısal iddiayı
 ölçümle karşılaştırır ve CI'da koşar.
 
@@ -160,7 +184,7 @@ React 19'da da hata sınırı yazmanın tek yolu sınıf bileşeni;
 
 | İş | Ne koşar |
 |---|---|
-| backend | torch **önce** ve CPU indeksinden → `requirements.txt` → C2PA sertifikaları → 8 görsellik test korpusu → `pytest -m "not slow" -rs` (125 test) <!-- sayim: backend-hizli --> → doküman denetimi |
+| backend | torch **önce** ve CPU indeksinden → `requirements.txt` → C2PA sertifikaları → 8 görsellik test korpusu → `pytest -m "not slow" -rs` (127 test) <!-- sayim: backend-hizli --> → doküman denetimi |
 | arayüz | `npm ci` → `tsc --noEmit` → `vitest run` → `npm run build` → doküman denetimi |
 
 **Yeşil rozet gerçekten bir şey söylemeli.** İlk CI koşusu korpussuz çalıştı ve yeşil
@@ -205,6 +229,8 @@ backend/eval/run_benchmark.py  kapsamlı değerlendirme (üretim hattı + negati
 backend/eval/run_latency.py    altın senaryonun adım adım gecikmesi
 backend/poc/              Faz 0 doğrulama betikleri
 scripts/seed_demo.py      altın senaryoyu kurup anlatır (demo provası)
+scripts/demo_hazirla.py   canlı demo dosyalarını üretir, modeli ısıtır, beklentiyi denetler
+scripts/demo_zenginlestir.py  demo verisine ilgisiz içerik ekler; altın senaryo izini önce/sonra karşılaştırır
 
 frontend/src/
   theme.css               koyu tema belirteçleri; renk disiplini burada tanımlı
@@ -408,8 +434,9 @@ renklerinin tema anlam renkleriyle (altın=para, yeşil=doğrulanmış, mavi=zin
 **Yedek:** `arayuz-v1` etiketi ve masaüstünde `N-Emek-arayuz-yedek-20260810.zip`.
 Geri dönmek için: `git checkout arayuz-v1 -- frontend/src`
 
-**Açık kalan:** Akışta `image.jpeg` başlıklı bir artık test yüklemesi duruyor
-(başlığı dosya adı, geliri sıfır, remix kapalı). Jüri demosundan önce silinmeli.
+**Kapatıldı (11 Eyl 2026):** Akıştaki `image.jpeg` başlıklı artık test yüklemesi bu not
+yazıldığında zaten yoktu — `scripts/seed_demo.py --reset` ile doğrulandı, veritabanında
+yalnızca altın senaryonun üç içeriği duruyor.
 
 ## Bilinen tuzaklar
 

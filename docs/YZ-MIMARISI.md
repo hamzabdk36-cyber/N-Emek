@@ -23,7 +23,7 @@ denetlenebilir.
 | 0 · İçerik kimliği | C2PA manifest doğrulama | Hayır | Evet (kanıt) |
 | 1 · Tam eşleşme | SHA-256 | Hayır | Evet (kanıt) |
 | 2 · Filigran | DCT katsayı çifti + CRC-16 | Hayır | Evet (kanıt) |
-| 3 · Algısal parmak izi | pHash / dHash / wHash / blok | Hayır | Hayır — aday |
+| 3 · Görüntü parmak izi | pHash / dHash / wHash / blok | Hayır | Hayır — aday |
 | 4 · Görsel benzerlik | **CLIP ViT-B/32** | **Evet** | **Hayır — yalnızca aday** |
 | 5 · Alan ölçümü | Homografi + RANSAC + ZNCC | Hayır | **Evet — pay bu sayıdan çıkar** |
 
