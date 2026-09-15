@@ -47,10 +47,14 @@ demonun biçimi seçildi: **"canlı kanıt"** — bir sonraki bölüm. Ondan son
 
 Güven 0,98 her üçünde aynı. Farkın sebebi, demo verisinin her `seed_demo.py --reset`
 koşusunda yeniden ölçülmesi; ekran görüntüleri büyük olasılıkla Docker birimindeki
-veritabanından çekildi (15 Eylül'de Docker kapalıydı, doğrulanmadı). Replikler, jüri
-günü kullanılacak veritabanı seçilip dondurulduktan sonra ondan okunarak güncellenecek.
-O veritabanı seçildikten sonra salonda `--reset` ya da `docker compose down -v`
-çalıştırılmaz: ikisi de demo verisini yeniden ölçer ve sayılar yine kayar.
+veritabanından çekildi (15 Eylül'de Docker kapalıydı, doğrulanmadı).
+
+**Jüri günü veritabanı: yerel `data/nemek.db` (15 Eylül kararı).** Sebep: bütün demo
+ölçümleri ve `demo_hazirla.py` bu kurulumda yapıldı; Docker bu hazırlıkta hiç denenmedi,
+konteynerde GPU kapalı ve korpusu 24 görsel. Aynı gün ilgisiz içerikle zenginleştirildi
+(aşağıda). Replikler ve slayt sayıları bu veritabanından okunur. Bundan sonra
+`seed_demo.py --reset` çalıştırılmaz: demo verisini yeniden ölçer, sayılar yine kayar ve
+eklenen içerikler gider.
 
 ---
 
@@ -66,6 +70,9 @@ verisi değişmez ve sonraki sorularda ekran aynı kalır.
 "prototipi gösterebilirsiniz" deyince sözü devreder.
 
 ### Sahneye çıkmadan (salon sırası gelmeden ~15 dk önce)
+
+Tek seferlik hazırlık **yapıldı (15 Eyl):** `scripts/demo_zenginlestir.py` yerel veritabanına
+kampanya dışı 20 içerik ekledi. Tekrar gerekmez; iki kez çalıştırmak bir şey değiştirmez.
 
 ```bash
 .venv/Scripts/python.exe -m uvicorn app.main:app --app-dir backend   # :8000, --reload YOK
@@ -90,7 +97,7 @@ cd frontend && npm run dev                                           # :5173
 
 | Süre | Ekran ve hareket | Söylenecek |
 |---|---|---|
-| 0:00–0:10 | **Akış** | "Üç gönderi, tek zincir: Ayşe'nin fotoğrafı, Burak'ın remixi, Ceyda'nın ekran görüntüsü." |
+| 0:00–0:10 | **Akış** | "En üstteki üç gönderi tek zincir: Ayşe'nin fotoğrafı, Burak'ın remixi, Ceyda'nın ekran görüntüsü." |
 | 0:10–0:35 | "Bulduğum kare" → **Emek Kartı**, Köken paneli | "Ceyda'nın dosyasında içerik kimliği yoktu. Sistem kaynağı yine de buldu; güveni ekranda." |
 | 0:35–1:00 | Pay dağılımında **Ayşe** satırını aç | "Ayşe iki adım geride ama en büyük pay onun. Satırda kapsama, güven ve sönümleme; altındaki satır üçünün çarpımı." Sayıları **ekrandan okuyun**. |
 | 1:00–1:20 | **Burak** satırı → ölçülen bölge, "Kaynaktan gelen bölgeyi vurgula" kutusunu kapat/aç | "Parlak kalan pikseller ölçümle Burak'tan geldiği doğrulanan bölge. Burak'a yalnızca kendi kattığı alan yazılıyor." |
@@ -99,7 +106,7 @@ cd frontend && npm run dev                                           # :5173
 | 1:55–2:00 | — | "Emek görünür olsun diye: tahminle değil, ölçümle." |
 
 15 Eylül yerel ölçümünde türev dosyası iki kaynak verdi: Sabah ışığı %93,0 ve
-Bulduğum kare %67,9 kullanılan alan. Bulduğum kare de Ayşe'nin piksellerini taşıdığı için
+Bulduğum kare %67,9 kullanılan alan. Zenginleştirmeden sonra, indekste 23 içerikle, sonuç aynı. Bulduğum kare de Ayşe'nin piksellerini taşıdığı için
 çıkıyor. Sayılar veritabanına göre değişir; sahneden önce `demo_hazirla.py` çıktısından
 okunur.
 
@@ -118,6 +125,7 @@ okunur.
 |---|---|
 | "Türevde neden iki kaynak çıktı?" | Kaynak bul bir sorgu, pay hesabı değil. Pikseller iki gönderide de var; hangi bağın paya gireceğine yayında geçişli indirgeme karar veriyor. |
 | "Slayttaki sayıyla ekrandaki biraz farklı" | Demo verisi her kurulumda yeniden ölçülüyor ve koşumlar arasında binde birkaç fark çıkıyor. Sayılar elle yazılmıyor, o koşumun ölçümü. |
+| "Akıştaki diğer gönderiler ne?" | Demo verisi: lisanslı test korpusundan, kampanya dışı, geliri yok. Kaynak bul türevin kaynağını bunların da bulunduğu indekste arıyor; ilgisiz fotoğraf hiçbiriyle eşleşmiyor. |
 | "Kendi görselimizle deneyelim" | Kaynak bul'a jürinin görselini yükle; kayıt yapmaz. Sistemde olmayan bir görselse beklenen sonuç "kaynak bulunamadı". |
 | "Yükleme / remix de gösterin" | Remix Stüdyo çalışır ama demo verisini değiştirir. Yapılırsa demo sonrasında `data/` yedeği geri yüklenir. |
 
@@ -138,76 +146,40 @@ okunur.
 
 ### Henüz açık
 
-- Jüri günü veritabanı seçilip dondurulmadı (yukarıdaki durum notu).
+- Veritabanı seçildi (yerel) ve zenginleştirildi, ama kopyası USB'ye alınmadı.
+- Slayt sayıları (5. ve 10. sayfa) yerel veritabanındaki değerlere çekilmedi; karar
+  Berra'nın (`docs/SUNUM/_PLAN.md`).
 - Wi-Fi kapalı prova yapılmadı. CLIP ağırlıkları önbellekte olsa da model yüklenirken
   ağa çıkma denemesi olabilir; `HF_HUB_OFFLINE=1` ile sınanmalı.
 - Yedek terminaldeki yeniden başlatmanın süresi ölçülmedi.
 
-### Kalan iş: demo verisini zenginleştirme (onaylandı, uygulanmadı — 15 Eylül)
+### Demo verisi zenginleştirildi (15 Eylül)
 
-**Neden.** İndekste yalnızca altın senaryonun 3 içeriği var. Canlı Kaynak Bul sorgusu bu
-yüzden zayıf bir kanıt ("üç görselin içinden bulmak kolay"); akış da üç gönderiyle
-geliştirici demosu gibi duruyor. **Ön koşul:** önce jüri günü veritabanı (yerel ya da
-Docker) seçilir; betik o veritabanında çalıştırılır.
+**Neden.** İndekste yalnızca altın senaryonun 3 içeriği vardı. Canlı Kaynak Bul sorgusu bu
+yüzden zayıf bir kanıttı ("üç görselin içinden bulmak kolay"), akış da üç gönderiyle
+geliştirici demosu gibi duruyordu.
 
-**Değişmemesi gerekenler:**
-- altın senaryonun Emek Kartı sayıları
-- kampanya dağıtımı (sunumun 10. sayfası ₺34.548,96)
-- `demo_hazirla.py`'nin "ilgisiz görselde bağ yok" sonucu
+**Ne yapıldı.** `scripts/demo_zenginlestir.py` yerel veritabanına üç kullanıcı (Deniz Kaya,
+Emre Şahin, Selin Arslan) ve kampanya dışı, gelirsiz 20 içerik ekledi. İndekste artık
+23 içerik var. Betik sıfırlama yapmıyor:
+- Her aday yüklemeden önce kurtarma hattından geçiriliyor, bağ çıkan atlanıyor.
+- Sahnedeki ilgisiz görsel (korpus sırası 10) ve altın senaryonun kaynağı (sıra 3) hariç.
+- Yeni içerikler Ayşe'nin gönderisinden eskiye tarihleniyor; altın üçlü akışın üstünde kalıyor.
 
-Uygulama koduna, `seed_demo.py`'ye ve testlere dokunulmaz.
+**Nasıl doğrulandı.**
+- Betik altın senaryonun izini önce ve sonra karşılaştırıyor: bağlar, ödemeler, kazançlar,
+  üç Emek Kartı'nın dağılımı ve zinciri, kampanyadaki içerik sayısı. Ayrıca `demo_hazirla`
+  beklentisini süreç içinde sınıyor. Biri tutmazsa yedeği geri yüklüyor.
+- Önce veritabanı kopyasında denendi: ikinci çalıştırma "zaten eklenmiş" dedi. Sahte bir
+  fark verilince yedeği geri yükledi.
+- Gerçek veritabanında `demo_hazirla.py` "Hazır" verdi: türev Sabah ışığı %93,0 ·
+  Bulduğum kare %67,9, ilgisiz 0 kaynak, ısınmış sorgu 281–432 ms.
+- Akışın ilk üçü altın senaryo, kampanyada 3 içerik, Ceyda'nın Emek Kartı'nda Ayşe %68,1 ·
+  ₺2.574,63.
+- `pytest -m "not slow"` 127 geçti.
 
-**Plan: yeni betik `scripts/demo_zenginlestir.py`.** `seed_demo.py` kalıbında, süreç içinde
-çalışır; `--reset` ve `drop_all` yok.
-
-1. **Ön koşullar.** Biri tutmazsa betik durur.
-   - Backend kapalı olmalı: `127.0.0.1:8000/api/health` yanıt veriyorsa betik çalışmaz.
-   - Altın senaryonun üç başlığı veritabanında bulunmalı.
-   - Eklenecek kullanıcı kimlikleri zaten varsa "zaten eklenmiş" deyip çıkar; iki kez çalıştırmak bir şey değiştirmez.
-   - Korpusta yeterli görsel olmalı.
-2. **Yedek.** `data/nemek.db`, `data/uploads/` ve `data/index/` klasörleri
-   `data/yedek/<zaman>/` altına kopyalanır; `.gitignore`'a `data/yedek/` eklenir.
-3. **Karşılaştırma için önceden kaydedilenler.**
-   - bağ sayısı
-   - her bağın kapsama ve güven değeri
-   - `Payout` sayısı ve toplam tutar
-   - Ceyda'nın Emek Kartı'ndaki pay satırları (`build_labour_card`)
-4. **Kullanıcılar.** 2–3 kurgusal kullanıcı, rolleri `user`; moderatör yalnızca Ceyda kalır.
-   Kimlik renkleri temanın anlam renklerinden ve mevcut mor/turkuaz/pembeden ayrık seçilir.
-5. **Aday görseller.** `sorted(data/raw/*.jpg)` sırasından alınır; iki sıra hariç tutulur:
-   - sıra 3: altın senaryonun kaynağı
-   - sıra 10: `demo_hazirla.ILGISIZ_SIRA`, sahnedeki ilgisiz görsel
-
-   Her aday yüklemeden önce `recovery.recover` ile sorgulanır. Bağ çıkan aday atlanır;
-   böylece yeni içerik ne altın zincire ne de birbirine bağlanır. Varsayılan hedef 20 içerik
-   (`--adet`).
-6. **Yükleme.** `ingest(..., campaign_id=None)` ile yapılır. Gelir 0 kalır, dağıtım
-   çağrılmaz. Başlıklar nötr ve tam imlalı Türkçe ("Günün karesi", "Arşivden" gibi).
-7. **Akış sırası.** Akış `created_at` alanına göre en yeniden eskiye sıralı. Yeni içeriklerin
-   tarihi Ayşe'nin gönderisinden `i+1` saat önceye çekilir, böylece altın üçlü en üstte kalır.
-8. **Sonra doğrulama.** Biri tutmazsa betik yedeği geri yükleyip durur.
-   - 3. adımdaki değerler birebir aynı olmalı.
-   - Yeni içeriklerde hiç bağ olmamalı.
-   - İndeks anlık görüntüsü güncellenir.
-   - Özet basılır.
-
-**Doğrulama sırası:**
-1. Önce veritabanı kopyasında, sonra gerçek veritabanında çalıştırılır.
-2. Backend başlatılır, `demo_hazirla.py` yeniden çalıştırılır; "Hazır" yazmalı.
-3. `/api/feed` sonucunun ilk üçü altın senaryo olmalı; `indexed_contents` = 3 + eklenen.
-4. Betik ikinci kez çalıştırılır; "zaten eklenmiş" deyip çıkmalı.
-5. `pytest -m "not slow"` ve `dokuman_denetimi.py` çalıştırılır.
-6. Arayüzde gözle bakılır: akış, kullanıcı seçici, Emek Kartı ve Kampanyalar.
-
-**Sonrasında güncellenecek belgeler:**
-- `CLAUDE.md`: betik listesi.
-- Bu belge: tek seferlik hazırlık adımı, "indekste N içerik" repliği, jüri sorusu "bu
-  içerikler ne?" ve video kontrol listesindeki `indexed_contents: 3`.
-- `docs/SUNUM/_PLAN.md`: 9. sayfadaki akış görüntüsü üç gönderi gösteriyor; yenilenip
-  yenilenmeyeceği Berra'nın kararı.
-
-**Docker notu.** Docker 24 görsel indiriyor; 20 ilgisiz içerik için yetmez.
-`NEMEK_CORPUS_COUNT` artırılır ya da hedef adet düşürülür.
+**Geri dönmek gerekirse** (backend kapalıyken): `data/yedek/20260915-115019/` altındaki
+`nemek.db`, `uploads/` ve `index/` `data/` altına geri kopyalanır.
 
 ---
 
@@ -220,7 +192,7 @@ docker compose up --build -d          # iki kapsayıcı da "healthy" olana kadar
 curl -s http://localhost:8000/api/health
 ```
 
-- [ ] `indexed_contents: 3` ve `c2pa_signing: true` dönüyor mu
+- [ ] `indexed_contents: 3` ve `c2pa_signing: true` dönüyor mu (Docker'daki altın senaryo verisi; zenginleştirilmiş yerel veritabanında 23)
 - [ ] `http://localhost:5173` açılıyor, akışta **üç** gönderi var
 - [ ] Üstteki kullanıcı seçici **Ayşe Yılmaz**'da (itiraz sahnesi buna bağlı)
 - [ ] "Bulduğum kare" gönderisinin geliri **₺4.200** — değiştiyse Gelir kutusundan geri alın

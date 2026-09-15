@@ -20,6 +20,7 @@ data/uploads/
 data/poc/
 # Canli demo dosyalari: scripts/demo_hazirla.py calisan sistemden uretir.
 data/demo/
+data/yedek/
 data/index/
 # Degerlendirme ara ciktilari: yayinlanmis korpus, FAISS indeksi, sorgu tamponu.
 # Sonuc ozetleri (data/eval/*.json) depoya girer; bunlar girmez.
