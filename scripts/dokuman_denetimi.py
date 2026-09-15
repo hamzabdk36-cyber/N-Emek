@@ -83,6 +83,8 @@ def taranan_dosyalar() -> list[Path]:
     # Teknik raporun kaynak metni. Jurinin okuyacagi tek belge burasi;
     # sayilarin dogrulanmadigi tek yer olmasi anlamsiz olurdu.
     dosyalar += sorted((ROOT / "docs" / "RAPOR").glob("*.md"))
+    # Jüri sunumunun kaynak metni; ayni gerekce.
+    dosyalar += sorted((ROOT / "docs" / "SUNUM").glob("*.md"))
     akis = ROOT / ".github" / "workflows" / "ci.yml"
     if akis.exists():
         dosyalar.append(akis)

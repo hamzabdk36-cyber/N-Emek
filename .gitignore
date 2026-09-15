@@ -18,6 +18,8 @@ data/raw/
 data/derived/
 data/uploads/
 data/poc/
+# Canli demo dosyalari: scripts/demo_hazirla.py calisan sistemden uretir.
+data/demo/
 data/index/
 # Degerlendirme ara ciktilari: yayinlanmis korpus, FAISS indeksi, sorgu tamponu.
 # Sonuc ozetleri (data/eval/*.json) depoya girer; bunlar girmez.
@@ -63,6 +65,14 @@ N-Emek-Plani.md
 # ve olmadan `rapor_docx.py` duruyor. Bu yuzden depoda tutuluyor.
 docs/RAPOR/N-Emek-Teknik-Rapor.docx
 docs/RAPOR/N-Emek-Teknik-Rapor.pdf
+
+# Jüri sunumunun uretilen hali ve PowerPoint onizlemeleri. Tek kaynak
+# `docs/SUNUM/*.md`; `sunum_pptx.py` + `sunum_powerpoint.ps1` ile yeniden
+# uretiliyor. Sunum sablonu (docs/*Sunum_Sablonu*.pptx) rapor sablonu gibi
+# bir *girdi*, depoda tutuluyor.
+docs/SUNUM/N-Emek-Sunum.pptx
+docs/SUNUM/N-Emek-Sunum.pdf
+docs/SUNUM/onizleme/
 
 # Word'un acik belge icin biraktigi kilit dosyalari.
 ~$*

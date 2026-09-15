@@ -6,6 +6,12 @@ paginate: true
 
 # Sunum İçeriği — Jüri Sunumu
 
+> **Eski taslak (15 Eylül).** Zorunlu şablon 14 Eylül'de geldi; jüri sunumunun kaynağı
+> artık `docs/SUNUM/` (sayfa başına bir md, `scripts/sunum_pptx.py` ile şablona
+> üretiliyor, devir notu `docs/SUNUM/_PLAN.md`). Bu dosyadaki slaytlar ve bazı sayılar
+> eskidi (ör. %85,2 kapsama, ₺34.545,80); **sayı için buraya bakılmaz.** Dosya, sondaki
+> "Beklenen sorular ve kısa cevaplar" bölümü için tutuluyor.
+
 **Bu dosya slayt içeriğidir**, tasarlanmış sunum değil. Marp uyumlu yazıldı ve
 `marp SUNUM.md --pdf` ile doğrudan slayta çevrilebilir (`docs/gorseller/SUNUM.pdf`
 bu şekilde üretildi). **12 Eylül'de organizasyon jüri günü için zorunlu bir sunum
