@@ -124,7 +124,7 @@ tutuyor (kaynak: `../transkript-2026-09-12.md`).
 | 1 | Sunum dosyası son teslim **18 Eylül gecesi**, şartnamedeki "14 Eylül" değil | Takvim | `CLAUDE.md`, `docs/PLAN.md` güncellendi | Uygulandı |
 | 2 | Sunum süresi **15 dk + 2–3 dk canlı prototip** + jüri soruları | `docs/SUNUM.md` | Hedef süre notu güncellendi; içerik genişletmesi şablon sonrasına ertelendi | Uygulandı (kısmi) |
 | 3 | Prototip **video olarak gösterilemez**, canlı çalıştırma zorunlu | `docs/DEMO-SENARYOSU.md` | Videonun rolü "ana gösterim"den "gömülü klip + yedek"e çekildi | Uygulandı |
-| 4 | Sunum dosyası **zorunlu şablonla** hazırlanacak, henüz paylaşılmadı | `docs/SUNUM.md` | İçerik şablona taşınması ayrı işe alındı (Faz 4c) | Bekliyor — şablon gelmedi |
+| 4 | Sunum dosyası **zorunlu şablonla** hazırlanacak | `docs/SUNUM/` | Şablon 14 Eyl'de geldi; içerik 14 sayfaya taşındı, betikle üretiliyor (`docs/SUNUM/_PLAN.md`) | Uygulandı (15 Eyl); revizyon ve PDF sürüyor |
 | 5 | Ulaşım/konaklama formu son gün **14 Eylül**, doldurmayan alana giremez | İdari | `docs/PLAN.md` Faz 4c'ye eklendi | Uygulandı (belge); form takımın kendi işi |
 | 6 | 20 Eylül İstanbul'da, 09:00 kura, ~60-80 kişi, izleyici yok | Takvim, lojistik | `CLAUDE.md`, `docs/PLAN.md` Faz 6 güncellendi | Uygulandı |
 | 7 | Şanlıurfa yalnızca **dereceye giren 3 takım** için (30 Eyl–4 Eki) | Takvim | Koşul belgelere eklendi | Uygulandı |
@@ -144,7 +144,7 @@ soruları listeliyor.
 - [x] Tablo tamamen dolduruldu (boş satır kalmadı)
 - [x] Her karar bir iş maddesine bağlandı
 - [x] `docs/PLAN.md` Faz 4c güncellendi
-- [ ] Ekip içi senkron: kim hangi maddeyi alıyor (sunum şablonu vs. demo videosu vs. form)
+- [x] Ekip içi senkron (15 Eyl): sunum Berra Özer, sistem ve canlı demo Hamza Budak
 
 ---
 
@@ -152,8 +152,13 @@ soruları listeliyor.
 
 Bu görüşmede yanıtlanmayan, ikinci genel toplantıda sorulacak sorular:
 
-- Zorunlu sunum şablonunun başlık yapısı `docs/SUNUM.md`'deki 17 slaytla ne kadar
-  örtüşüyor — mevcut içerik şablona doğrudan mı taşınır, yeniden mi kurgulanır?
+- ~~Şablonun başlık yapısı eski 17 slaytla örtüşüyor mu~~ → şablon geldi, içerik
+  yeniden kurgulandı (`docs/SUNUM/_PLAN.md`).
+- Canlı prototip süresi kesin olarak 2 dk mı, 3 dk mı? Jüri gösterimin içeriğini
+  yönlendirecek mi (ör. "bir görsel yükleyin"), yoksa akışı takım mı belirliyor?
+- Kendi bilgisayarımıza geçiş için kurulum süresi tanınıyor mu; HDMI kablo/anahtarlayıcı
+  salonda mı?
+- Jüriye sunumun basılı ya da ekrandan kopyası veriliyor mu?
 - 15 dakikalık süre jüri sorularını içeriyor mu, yoksa sorular bu sürenin dışında mı?
 - Canlı prototip gösterimi için salon tarafında internet erişimi sağlanacak mı, yoksa
   ekip kendi bağlantısını (mobil hotspot vb.) mı getirmeli?

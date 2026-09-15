@@ -225,14 +225,23 @@ maddesini geçersiz kıldı: gerçek teslim **18 Eylül gecesi** (sunum dosyası
 sunum gününün kendisi. Aşağıdaki Faz 4c bu gerçeği yansıtıyor.
 
 ### Faz 4c — 13–17 Eylül: Sunum ve demo hazırlığı
-- Zorunlu sunum şablonu geldiğinde (`docs/SUNUM.md` içeriği şablona taşınır ve
-  8–10 dakikadan **15 dakikaya** genişletilir — ayrı tur, bu belgenin kapsamı dışında)
+- ~~Zorunlu sunum şablonu geldiğinde içerik şablona taşınır~~ → **yapıldı (14–15 Eyl):**
+  şablon 14 Eyl 22:27'de geldi; 14 sayfalık sunum `docs/SUNUM/` md dosyalarından
+  `scripts/sunum_pptx.py` ile üretiliyor (bölüm sınırları, tekrar yasağı ve taşma
+  denetimli). Kalan: okunabilirlik revizyonu, notların 15 dakikaya genişletilmesi, PDF ve
+  KYS yüklemesi — devir notu `docs/SUNUM/_PLAN.md`
+- **Görev dağılımı (15 Eyl):** sunum Berra Özer; sistem ve canlı demo Hamza Budak
+- canlı 2–3 dk demo (sunumun sonunda, jürinin çağrısıyla) — **biçim seçildi (15 Eyl):
+  "canlı kanıt"**, akış ve arıza planı `docs/DEMO-SENARYOSU.md`; hazırlık betiği
+  `scripts/demo_hazirla.py`. Açık: jüri günü veritabanının seçilip dondurulması, Wi-Fi
+  kapalı prova
 - 14 Eyl: ulaşım/konaklama formu doldurulur (idari, finale katılım ön şartı)
 - demo videosu çekilir (`docs/DEMO-SENARYOSU.md`, düzeltilmiş arayüzle) — tam 4:30
   sürüm + sunuma gömülecek ≤60 sn'lik kısa kesit
 - ~16 Eyl: ikinci (son) genel mentörlük toplantısı — açık sorular sorulur
   (`docs/MENTORLUK.md` §6)
-- jüri makinesi tatbikatı (`docker compose down -v && up --build` sıfırdan) +
+- jüri makinesi tatbikatı (`docker compose down -v && up --build` sıfırdan; **evde,
+  internetle** — ilk açılış korpus ve CLIP modeli indiriyor, salonda asla çalıştırılmaz) +
   internetsiz/GPU'suz ortamda canlı demo provası — jüri günü prototip video olarak
   gösterilemiyor, yalnızca canlı çalıştırma kabul ediliyor
 - **17 Eylül akşamı: sunum dosyası teslim** (18 Eylül gecesi sınırına marj)

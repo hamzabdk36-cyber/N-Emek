@@ -41,9 +41,13 @@ ve `docs/PLAN.md`'de güncellendi.
 - Prototip **video olarak arkada oynatılamaz** — canlı çalıştırma zorunlu, kendi
   bilgisayarımızdan. İnternetsiz/GPU'suz ortamda çalışması bu yüzden kritik (bkz.
   `README.md`'deki CPU-PyTorch kararı).
-- Sunum dosyası **zorunlu şablonla** hazırlanır (henüz paylaşılmadı), 18'inde
+- Sunum dosyası **zorunlu şablonla** hazırlanır (şablon 14 Eylül'de geldi,
+  `docs/NSosyal_Inovasyon_Yarısması_Sunum_Sablonu_1_2_2_TTN8G.pptx`), 18'inde
   toplanıp organizasyon tarafından açılır; ekip yalnızca kumandayla ilerletir.
+- Sıra: sunum → kısa soru-cevap → jüri çağırınca **sunumun sonunda** 2–3 dk canlı
+  prototip. Gösterim sunumun ortasına alınmaz.
 - Sunumu öğrenci yapar, birden fazla üye paylaşabilir; danışman/mentör konuşmaz.
+  **Görev dağılımı (15 Eyl):** sunum Berra Özer, sistem ve canlı demo Hamza Budak.
 
 Puan ağırlıkları: Yenilikçilik %20 · Teknik Yeterlilik %20 · Problem Çözme %20 · **UI/UX %20** · Sunum ve Prototip Kalitesi %10 · İş Modeli %10. Arayüz, AI motoruyla eşit ağırlıkta — "geliştirici demosu" görünümü puanın beşte birini götürür.
 
@@ -56,7 +60,8 @@ Kullanıcı tarafı ölçüm: `docs/ERISILEBILIRLIK.md` (denetim + bulgular) · 
 altında, yedi bulgu), kullanıcı araştırması dört profilden on görüşmeyle. Ham kayıtlar
 `data/kullanilabilirlik/` ve `data/kullanici-arastirmasi/` altında; sonuç belgelerini
 betikler üretiyor, elle düzenlenmez.
-Demo ve sunum: `docs/DEMO-SENARYOSU.md` (replikli çekim senaryosu) · `docs/SUNUM.md` (slayt içeriği, Marp uyumlu)
+Jüri sunumu: `docs/SUNUM/` — sayfa başına bir md, `scripts/sunum_pptx.py` şablona üretir, `scripts/sunum_powerpoint.ps1` taşmayı denetleyip önizleme/PDF çıkarır; devir notu ve açık revizyon kararları `docs/SUNUM/_PLAN.md`. Üretilen `.pptx`/`.pdf` depoda değil, elle düzenlenmez.
+Demo: `docs/DEMO-SENARYOSU.md` — canlı 2–3 dk demo "canlı kanıt" biçiminde (Emek Kartı turu + Kaynak Bul'da canlı türev ve ilgisiz görsel sorgusu), sahneden önce `scripts/demo_hazirla.py` modeli ısıtır ve sonucu denetler; 4:30 video sahnelerindeki sayılar eski (başındaki durum notu) · `docs/SUNUM.md` eski Marp taslağı, yalnızca "Beklenen sorular" için tutuluyor
 Ölçümler: `docs/FAZ0-SONUCLARI.md` (risk kapatma) · `docs/DEGERLENDIRME.md` (tam korpus) · `docs/GECIKME.md` (uçtan uca) · `docs/ACILIS-SURESI.md` (indeks kalıcılığı)
 
 ## Kurulum
@@ -224,6 +229,7 @@ backend/eval/run_benchmark.py  kapsamlı değerlendirme (üretim hattı + negati
 backend/eval/run_latency.py    altın senaryonun adım adım gecikmesi
 backend/poc/              Faz 0 doğrulama betikleri
 scripts/seed_demo.py      altın senaryoyu kurup anlatır (demo provası)
+scripts/demo_hazirla.py   canlı demo dosyalarını üretir, modeli ısıtır, beklentiyi denetler
 
 frontend/src/
   theme.css               koyu tema belirteçleri; renk disiplini burada tanımlı

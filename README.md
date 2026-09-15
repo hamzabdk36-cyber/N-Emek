@@ -29,7 +29,7 @@ Mimari ve diyagramlar: [`docs/MIMARI.md`](docs/MIMARI.md)
 Erişilebilirlik değerlendirmesi: [`docs/ERISILEBILIRLIK.md`](docs/ERISILEBILIRLIK.md)
 Kullanıcı araştırması: [`docs/KULLANICI-ARASTIRMASI.md`](docs/KULLANICI-ARASTIRMASI.md) · Kullanılabilirlik testi: [`docs/KULLANILABILIRLIK-PROTOKOL.md`](docs/KULLANILABILIRLIK-PROTOKOL.md) → [sonuçlar](docs/KULLANILABILIRLIK-SONUCLARI.md) *(beş katılımcı, SUS 60,0, yedi bulgu)*
 Ekran görüntüleri: [`docs/gorseller/`](docs/gorseller/) — çalışan sistemden, `scripts/ekran_goruntuleri.py` ile yeniden üretilebilir
-Demo çekim senaryosu: [`docs/DEMO-SENARYOSU.md`](docs/DEMO-SENARYOSU.md) · Sunum içeriği: [`docs/SUNUM.md`](docs/SUNUM.md)
+Demo çekim senaryosu: [`docs/DEMO-SENARYOSU.md`](docs/DEMO-SENARYOSU.md) · Jüri sunumu (zorunlu şablon, betikle üretiliyor): [`docs/SUNUM/`](docs/SUNUM/_PLAN.md)
 
 ---
 

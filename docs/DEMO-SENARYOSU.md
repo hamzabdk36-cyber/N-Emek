@@ -21,6 +21,128 @@ ana gösterimin yerine geçmiyor:
 Bu yüzden burada iki çıktı üretilir: tam **4:30** sürüm (madde 2 ve 3 için) ve aşağıdaki
 "Süre daraltma" bölümünden türetilen **≤60 sn'lik kısa kesit** (madde 1 için).
 
+## Durum notu (15 Eylül)
+
+**Sıra.** Transkripte göre jüri günü akışı *15 dk sunum → kısa soru-cevap → jüri
+"prototipi gösterebilirsiniz" deyince 2–3 dk canlı gösterim*, kendi bilgisayarımızdan.
+Gösterim sunumun sonunda; süre "15 artı 2 gibi" ve değişebilir. Sunum PDF olarak teslim
+edildiği için ≤60 sn'lik klibin sunuma gömülmesi pratikte mümkün değil (PDF video
+oynatmaz); video yalnızca yedek ve teslimat kalemi olarak kalıyor.
+
+**Görev.** Sunumu Berra Özer, sistemi ve canlı demoyu Hamza Budak üstleniyor. Canlı
+demonun biçimi seçildi: **"canlı kanıt"** — bir sonraki bölüm. Ondan sonraki sahneler
+4:30'luk video içindir.
+
+**Bu belgedeki sayılar eski.** Ekrandakiyle karşılaştırma (yerel `data/nemek.db`,
+15 Eylül okuması):
+
+| Sahne | Bu belgede | Yerel demo veritabanı | Sunum sayfası |
+|---|---|---|---|
+| 4 · Ayşe kapsama | %85,2 | %87,1 | %87,2 (5. sayfa) |
+| 4 · Ayşe payı | %68,1 | %68,1 · ₺2.574,63 | %68,2 · ₺2.576,30 |
+| 5 · Burak ölçülen alan | %12,2 | %12,5 | %12,5 |
+| 6 · Burak → Ceyda bağı | %97 | 0,9965 | — |
+| 6 · Ayşe → Burak bağı | %87 | 0,8743 | — |
+| 8 · Ayşe kampanya toplamı | "34.500" | ₺34.541,45 | ₺34.548,96 (10. sayfa) |
+
+Güven 0,98 her üçünde aynı. Farkın sebebi, demo verisinin her `seed_demo.py --reset`
+koşusunda yeniden ölçülmesi; ekran görüntüleri büyük olasılıkla Docker birimindeki
+veritabanından çekildi (15 Eylül'de Docker kapalıydı, doğrulanmadı). Replikler, jüri
+günü kullanılacak veritabanı seçilip dondurulduktan sonra ondan okunarak güncellenecek.
+O veritabanı seçildikten sonra salonda `--reset` ya da `docker compose down -v`
+çalıştırılmaz: ikisi de demo verisini yeniden ölçer ve sayılar yine kayar.
+
+---
+
+## Canlı demo — "canlı kanıt" (jüri günü, 2:00 / 3:00)
+
+**Neden bu biçim.** Slaytlar Emek Kartı ekranlarını zaten gösteriyor; demonun katacağı
+şey jürinin gözü önünde **hattın gerçekten çalışması**. Kısa bir Emek Kartı turu, ardından
+Kaynak Bul'da iki canlı sorgu: sisteme hiç girmemiş bir türevde kaynak bulunur, ilgisiz
+bir fotoğrafta bağ önerilmez. Kaynak Bul kayıt yapmaz (`POST /api/verify`), yani demo
+verisi değişmez ve sonraki sorularda ekran aynı kalır.
+
+**Yürüten:** Hamza Budak (bilgisayar ve anlatım). Sunumu yapan Berra Özer, jüri
+"prototipi gösterebilirsiniz" deyince sözü devreder.
+
+### Sahneye çıkmadan (salon sırası gelmeden ~15 dk önce)
+
+```bash
+.venv/Scripts/python.exe -m uvicorn app.main:app --app-dir backend   # :8000, --reload YOK
+cd frontend && npm run dev                                           # :5173
+.venv/Scripts/python.exe scripts/demo_hazirla.py                     # "Hazır" yazmalı
+```
+
+- [ ] `demo_hazirla.py` **"Hazır"** yazdı. Betik iki dosyayı `data/demo/` altına üretir,
+      ikisini sunucuya gönderip modeli ısıtır ve sonucu denetler. "HAZIR DEĞİL" yazarsa
+      canlı sorgu adımı atlanır, akışın geri kalanı yapılır.
+- [ ] Neden şart: süreçteki **ilk** sorgu model yüklendiği için ölçümde ~9,5 sn sürdü,
+      ısındıktan sonra 0,3–0,4 sn. Isıtılmamış bir sistemde jüri önünde 10 sn boş ekran olur.
+- [ ] Tarayıcıda üç sekme hazır: Akış · "Bulduğum kare" Emek Kartı · Kaynak bul.
+      Kullanıcı seçici **Ayşe Yılmaz**'da. F11 tam ekran, yakınlaştırma %100.
+- [ ] Dosya seçme penceresi bir kez `data/demo/` klasöründe açılıp kapatıldı; sahnede
+      o klasörden açılır.
+- [ ] Windows: ekran **Çoğalt** (Win+P), uyku kapalı, bildirimler susturulmuş, şarj
+      kablosu takılı.
+- [ ] Wi-Fi kapalıyken en az bir tam prova yapıldı (salonda internet garantisi yok).
+
+### Akış (2:00)
+
+| Süre | Ekran ve hareket | Söylenecek |
+|---|---|---|
+| 0:00–0:10 | **Akış** | "Üç gönderi, tek zincir: Ayşe'nin fotoğrafı, Burak'ın remixi, Ceyda'nın ekran görüntüsü." |
+| 0:10–0:35 | "Bulduğum kare" → **Emek Kartı**, Köken paneli | "Ceyda'nın dosyasında içerik kimliği yoktu. Sistem kaynağı yine de buldu; güveni ekranda." |
+| 0:35–1:00 | Pay dağılımında **Ayşe** satırını aç | "Ayşe iki adım geride ama en büyük pay onun. Satırda kapsama, güven ve sönümleme; altındaki satır üçünün çarpımı." Sayıları **ekrandan okuyun**. |
+| 1:00–1:20 | **Burak** satırı → ölçülen bölge, "Kaynaktan gelen bölgeyi vurgula" kutusunu kapat/aç | "Parlak kalan pikseller ölçümle Burak'tan geldiği doğrulanan bölge. Burak'a yalnızca kendi kattığı alan yazılıyor." |
+| 1:20–1:45 | **Kaynak bul** → `kaynak-bul-turev.jpg` → Kökeni çöz | "Bu dosyayı sistem hiç görmedi: Ayşe'nin fotoğrafından kırpılıp üstüne yazı eklendi. Şimdi hattı çalıştırıyorum." Sonuç gelince: "Kaynak bulundu, kullanılan alan ölçüldü." |
+| 1:45–1:55 | Aynı ekranda `kaynak-bul-ilgisiz.jpg` → Kökeni çöz | "Bu fotoğrafın sistemde hiçbir kaynağı yok." Sonuç: **"Kaynak bulunamadı."** "Bulamadığında uydurmuyor." |
+| 1:55–2:00 | — | "Emek görünür olsun diye: tahminle değil, ölçümle." |
+
+15 Eylül yerel ölçümünde türev dosyası iki kaynak verdi: Sabah ışığı %93,0 ve
+Bulduğum kare %67,9 kullanılan alan. Bulduğum kare de Ayşe'nin piksellerini taşıdığı için
+çıkıyor. Sayılar veritabanına göre değişir; sahneden önce `demo_hazirla.py` çıktısından
+okunur.
+
+### 3 dakika verilirse (+1:00)
+
+- **1:55'ten sonra, +20 sn — itiraz.** Emek Kartı'na dönülür, Ayşe satırındaki "Yeniden
+  ölçüm iste" düğmesi **gösterilir, tıklanmaz**. "İtirazı yalnızca payın sahibi açabilir;
+  bağ daha hassas bir dedektörle yeniden ölçülür, çözülmezse insana gider."
+- **+20 sn — zincir.** Atıf zinciri grafiği: "Ok yönü türetme yönü; onaylanmamış bağ
+  kesikli çizilir."
+- **+20 sn — pay.** Tampon süre; jüri bir şey sorarsa buraya harcanır.
+
+### Jüri sorarsa
+
+| Soru | Cevap |
+|---|---|
+| "Türevde neden iki kaynak çıktı?" | Kaynak bul bir sorgu, pay hesabı değil. Pikseller iki gönderide de var; hangi bağın paya gireceğine yayında geçişli indirgeme karar veriyor. |
+| "Slayttaki sayıyla ekrandaki biraz farklı" | Demo verisi her kurulumda yeniden ölçülüyor ve koşumlar arasında binde birkaç fark çıkıyor. Sayılar elle yazılmıyor, o koşumun ölçümü. |
+| "Kendi görselimizle deneyelim" | Kaynak bul'a jürinin görselini yükle; kayıt yapmaz. Sistemde olmayan bir görselse beklenen sonuç "kaynak bulunamadı". |
+| "Yükleme / remix de gösterin" | Remix Stüdyo çalışır ama demo verisini değiştirir. Yapılırsa demo sonrasında `data/` yedeği geri yüklenir. |
+
+### Bir şey ters giderse
+
+| Belirti | Hamle |
+|---|---|
+| "Hat çalışıyor…" 5 sn'den uzun sürüyor | Beklemeyi bırak, Emek Kartı sekmesine dön: "Bu adımı az önce denetledik; asıl ölçüm burada görünüyor." |
+| Bir ekran hata veriyor | Başka bir ekrana geç. Hata sınırı başlığı ve gezinmeyi ayakta tutuyor. |
+| Sayfalar hiç yüklenmiyor | Yedek terminalde backend'i yeniden başlat. 30 sn içinde gelmezse `docs/gorseller/` kareleri (02 → 03 → 04 → 06) üzerinden anlat ve durumu açıkça söyle. |
+| Projeksiyon düşük çözünürlükte, mobil düzen açıldı | Devam et; düzen bilerek duyarlı. Gerekirse tarayıcı yakınlaştırmasını düşür. |
+
+### Sahnede yapılmayacaklar
+
+- Akışa içerik yüklemek, itiraz göndermek, kampanya dağıtmak, içerik silmek
+- `seed_demo.py --reset`, `docker compose down -v`, backend'i `--reload` ile çalıştırmak
+- API'yi `localhost` ile çağırmak: Windows'ta istek başına ~2 sn ekliyor, `127.0.0.1` kullanılır
+
+### Henüz açık
+
+- Jüri günü veritabanı seçilip dondurulmadı (yukarıdaki durum notu).
+- Wi-Fi kapalı prova yapılmadı. CLIP ağırlıkları önbellekte olsa da model yüklenirken
+  ağa çıkma denemesi olabilir; `HF_HUB_OFFLINE=1` ile sınanmalı.
+- Yedek terminaldeki yeniden başlatmanın süresi ölçülmedi.
+
 ---
 
 ## Çekim öncesi kontrol listesi
