@@ -143,6 +143,72 @@ okunur.
   ağa çıkma denemesi olabilir; `HF_HUB_OFFLINE=1` ile sınanmalı.
 - Yedek terminaldeki yeniden başlatmanın süresi ölçülmedi.
 
+### Kalan iş: demo verisini zenginleştirme (onaylandı, uygulanmadı — 15 Eylül)
+
+**Neden.** İndekste yalnızca altın senaryonun 3 içeriği var. Canlı Kaynak Bul sorgusu bu
+yüzden zayıf bir kanıt ("üç görselin içinden bulmak kolay"); akış da üç gönderiyle
+geliştirici demosu gibi duruyor. **Ön koşul:** önce jüri günü veritabanı (yerel ya da
+Docker) seçilir; betik o veritabanında çalıştırılır.
+
+**Değişmemesi gerekenler:**
+- altın senaryonun Emek Kartı sayıları
+- kampanya dağıtımı (sunumun 10. sayfası ₺34.548,96)
+- `demo_hazirla.py`'nin "ilgisiz görselde bağ yok" sonucu
+
+Uygulama koduna, `seed_demo.py`'ye ve testlere dokunulmaz.
+
+**Plan: yeni betik `scripts/demo_zenginlestir.py`.** `seed_demo.py` kalıbında, süreç içinde
+çalışır; `--reset` ve `drop_all` yok.
+
+1. **Ön koşullar.** Biri tutmazsa betik durur.
+   - Backend kapalı olmalı: `127.0.0.1:8000/api/health` yanıt veriyorsa betik çalışmaz.
+   - Altın senaryonun üç başlığı veritabanında bulunmalı.
+   - Eklenecek kullanıcı kimlikleri zaten varsa "zaten eklenmiş" deyip çıkar; iki kez çalıştırmak bir şey değiştirmez.
+   - Korpusta yeterli görsel olmalı.
+2. **Yedek.** `data/nemek.db`, `data/uploads/` ve `data/index/` klasörleri
+   `data/yedek/<zaman>/` altına kopyalanır; `.gitignore`'a `data/yedek/` eklenir.
+3. **Karşılaştırma için önceden kaydedilenler.**
+   - bağ sayısı
+   - her bağın kapsama ve güven değeri
+   - `Payout` sayısı ve toplam tutar
+   - Ceyda'nın Emek Kartı'ndaki pay satırları (`build_labour_card`)
+4. **Kullanıcılar.** 2–3 kurgusal kullanıcı, rolleri `user`; moderatör yalnızca Ceyda kalır.
+   Kimlik renkleri temanın anlam renklerinden ve mevcut mor/turkuaz/pembeden ayrık seçilir.
+5. **Aday görseller.** `sorted(data/raw/*.jpg)` sırasından alınır; iki sıra hariç tutulur:
+   - sıra 3: altın senaryonun kaynağı
+   - sıra 10: `demo_hazirla.ILGISIZ_SIRA`, sahnedeki ilgisiz görsel
+
+   Her aday yüklemeden önce `recovery.recover` ile sorgulanır. Bağ çıkan aday atlanır;
+   böylece yeni içerik ne altın zincire ne de birbirine bağlanır. Varsayılan hedef 20 içerik
+   (`--adet`).
+6. **Yükleme.** `ingest(..., campaign_id=None)` ile yapılır. Gelir 0 kalır, dağıtım
+   çağrılmaz. Başlıklar nötr ve tam imlalı Türkçe ("Günün karesi", "Arşivden" gibi).
+7. **Akış sırası.** Akış `created_at` alanına göre en yeniden eskiye sıralı. Yeni içeriklerin
+   tarihi Ayşe'nin gönderisinden `i+1` saat önceye çekilir, böylece altın üçlü en üstte kalır.
+8. **Sonra doğrulama.** Biri tutmazsa betik yedeği geri yükleyip durur.
+   - 3. adımdaki değerler birebir aynı olmalı.
+   - Yeni içeriklerde hiç bağ olmamalı.
+   - İndeks anlık görüntüsü güncellenir.
+   - Özet basılır.
+
+**Doğrulama sırası:**
+1. Önce veritabanı kopyasında, sonra gerçek veritabanında çalıştırılır.
+2. Backend başlatılır, `demo_hazirla.py` yeniden çalıştırılır; "Hazır" yazmalı.
+3. `/api/feed` sonucunun ilk üçü altın senaryo olmalı; `indexed_contents` = 3 + eklenen.
+4. Betik ikinci kez çalıştırılır; "zaten eklenmiş" deyip çıkmalı.
+5. `pytest -m "not slow"` ve `dokuman_denetimi.py` çalıştırılır.
+6. Arayüzde gözle bakılır: akış, kullanıcı seçici, Emek Kartı ve Kampanyalar.
+
+**Sonrasında güncellenecek belgeler:**
+- `CLAUDE.md`: betik listesi.
+- Bu belge: tek seferlik hazırlık adımı, "indekste N içerik" repliği, jüri sorusu "bu
+  içerikler ne?" ve video kontrol listesindeki `indexed_contents: 3`.
+- `docs/SUNUM/_PLAN.md`: 9. sayfadaki akış görüntüsü üç gönderi gösteriyor; yenilenip
+  yenilenmeyeceği Berra'nın kararı.
+
+**Docker notu.** Docker 24 görsel indiriyor; 20 ilgisiz içerik için yetmez.
+`NEMEK_CORPUS_COUNT` artırılır ya da hedef adet düşürülür.
+
 ---
 
 ## Çekim öncesi kontrol listesi

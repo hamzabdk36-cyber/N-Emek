@@ -235,6 +235,9 @@ sunum gününün kendisi. Aşağıdaki Faz 4c bu gerçeği yansıtıyor.
   "canlı kanıt"**, akış ve arıza planı `docs/DEMO-SENARYOSU.md`; hazırlık betiği
   `scripts/demo_hazirla.py`. Açık: jüri günü veritabanının seçilip dondurulması, Wi-Fi
   kapalı prova
+- **Kalan iş (onaylandı, uygulanmadı):** demo verisine kampanya dışı ~20 ilgisiz içerik
+  eklenmesi, altın senaryo sayıları değişmeden — plan `docs/DEMO-SENARYOSU.md`
+  "Kalan iş: demo verisini zenginleştirme"
 - 14 Eyl: ulaşım/konaklama formu doldurulur (idari, finale katılım ön şartı)
 - demo videosu çekilir (`docs/DEMO-SENARYOSU.md`, düzeltilmiş arayüzle) — tam 4:30
   sürüm + sunuma gömülecek ≤60 sn'lik kısa kesit
