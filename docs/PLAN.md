@@ -233,7 +233,7 @@ sunum gününün kendisi. Aşağıdaki Faz 4c bu gerçeği yansıtıyor.
 - **Görev dağılımı (15 Eyl):** sunum Berra Özer; sistem ve canlı demo Hamza Budak
 - canlı 2–3 dk demo (sunumun sonunda, jürinin çağrısıyla) — **biçim seçildi (15 Eyl):
   "canlı kanıt"**, akış ve arıza planı `docs/DEMO-SENARYOSU.md`; hazırlık betiği
-  `scripts/demo_hazirla.py`. Açık: Wi-Fi kapalı prova, veritabanı kopyasının USB'ye alınması
+  `scripts/demo_hazirla.py`. Açık: Wi-Fi kapalı prova, masaüstündeki veritabanı yedeğinin USB'ye aktarılması
 - **Jüri günü veritabanı seçildi (15 Eyl): yerel `data/nemek.db`.** Aynı gün
   `scripts/demo_zenginlestir.py` ile kampanya dışı 20 içerik eklendi; altın senaryo
   sayıları değişmedi, `demo_hazirla.py` "Hazır" — `docs/DEMO-SENARYOSU.md` "Demo verisi

@@ -146,7 +146,8 @@ okunur.
 
 ### Henüz açık
 
-- Veritabanı seçildi (yerel) ve zenginleştirildi, ama kopyası USB'ye alınmadı.
+- Veritabanı seçildi (yerel) ve zenginleştirildi. USB yedeği masaüstünde hazır
+  (`N-Emek-USB-yedek-20260915`, geri yükleme notu içinde); USB belleğe aktarılmadı.
 - Slayt sayıları (5. ve 10. sayfa) yerel veritabanındaki değerlere çekilmedi; karar
   Berra'nın (`docs/SUNUM/_PLAN.md`).
 - Wi-Fi kapalı prova yapılmadı. CLIP ağırlıkları önbellekte olsa da model yüklenirken
