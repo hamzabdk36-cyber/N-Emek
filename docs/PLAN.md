@@ -233,16 +233,21 @@ sunum gününün kendisi. Aşağıdaki Faz 4c bu gerçeği yansıtıyor.
 - **Görev dağılımı (15 Eyl):** sunum Berra Özer; sistem ve canlı demo Hamza Budak
 - canlı 2–3 dk demo (sunumun sonunda, jürinin çağrısıyla) — **biçim seçildi (15 Eyl):
   "canlı kanıt"**, akış ve arıza planı `docs/DEMO-SENARYOSU.md`; hazırlık betiği
-  `scripts/demo_hazirla.py`. Açık: Wi-Fi kapalı prova, masaüstündeki veritabanı yedeğinin USB'ye aktarılması
+  `scripts/demo_hazirla.py`. **Çevrimdışı koşum ölçüldü (17 Eyl):** `HF_HUB_OFFLINE=1`
+  ile ayağa kalkma 4,6 sn, ısıtma dahil ~12 sn, sonuçlar çevrimiçiyle birebir aynı.
+  Açık: Wi-Fi fiziksel kapalıyken bir tam tur, veritabanı yedeğinin USB'ye aktarılması
 - **Jüri günü veritabanı seçildi (15 Eyl): yerel `data/nemek.db`.** Aynı gün
   `scripts/demo_zenginlestir.py` ile kampanya dışı 20 içerik eklendi; altın senaryo
   sayıları değişmedi, `demo_hazirla.py` "Hazır" — `docs/DEMO-SENARYOSU.md` "Demo verisi
   zenginleştirildi"
 - 14 Eyl: ulaşım/konaklama formu doldurulur (idari, finale katılım ön şartı)
 - demo videosu çekilir (`docs/DEMO-SENARYOSU.md`, düzeltilmiş arayüzle) — tam 4:30
-  sürüm + sunuma gömülecek ≤60 sn'lik kısa kesit
-- ~16 Eyl: ikinci (son) genel mentörlük toplantısı — açık sorular sorulur
-  (`docs/MENTORLUK.md` §6)
+  sürüm. **17 Eyl:** replikler çalışan sistemden doğrulanan sayılarla düzeltildi, tek
+  parça okuma metni ve çekim kontrol listesi hazır; kayıt kaldı. Sunuma gömülecek
+  ≤60 sn'lik kesit fiilen gereksiz — sunum PDF olarak teslim ediliyor, PDF video oynatmaz
+- ~~~16 Eyl: ikinci (son) genel mentörlük toplantısı~~ → **yapılmadı.** Açık sorular hiç
+  sorulamadı; her biri için en kötü senaryo varsayımı alındı ve hazırlık ona göre
+  yapıldı (`docs/MENTORLUK.md` §6)
 - jüri makinesi tatbikatı (`docker compose down -v && up --build` sıfırdan; **evde,
   internetle** — ilk açılış korpus ve CLIP modeli indiriyor, salonda asla çalıştırılmaz) +
   internetsiz/GPU'suz ortamda canlı demo provası — jüri günü prototip video olarak

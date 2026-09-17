@@ -18,7 +18,7 @@ Ayırt edici iddia: kaynağı *bulmak* değil, kullanılan içerik oranını **�
 | 2 Eyl 2026 | Teknik rapor sonuçları |
 | ~~2–7 Eyl 2026~~ **12 Eyl 2026, 13:00 TSİ** | Mentörlük — ilk (genel) görüşme, yapıldı (bkz. `docs/MENTORLUK.md`) |
 | **14 Eyl 2026 Pzt** | Ulaşım/konaklama formu son gün — finale katılım ön şartı, doldurmayan alana giremez |
-| ~16 Eyl 2026 | Mentörlük — ikinci (son) genel toplantı, şablon sonrası soru-cevap |
+| ~~~16 Eyl 2026~~ | Mentörlük — ikinci (son) genel toplantı **yapılmadı**; açık sorular cevapsız kaldı, varsayımlar `docs/MENTORLUK.md` §6'da |
 | ~~14 Eyl 2026, 17:00 TSİ~~ **18 Eyl 2026 gece** | Sunum dosyası teslimi — bu tarihten sonra düzenlenemez |
 | **20 Eyl 2026, 09:00** | İstanbul — kura çekimi, jüri ve katılımcılara canlı sunum |
 | 30 Eyl – 4 Eki 2026 | TEKNOFEST Şanlıurfa — yalnızca dereceye giren üç takım |

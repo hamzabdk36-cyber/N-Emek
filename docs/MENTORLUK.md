@@ -11,8 +11,9 @@ değil, **22 takımın tamamının katıldığı genel bir tanışma ve idari so
 proje geri bildirimiyle değil, toplantıdan çıkan **bağlayıcı idari/biçimsel kararlarla**
 dolduruldu. En önemli çıktı: final teslim tarihi şartnamedeki "14 Eylül 17:00" değil,
 **sunum dosyasının 18 Eylül gecesi teslimi** — bkz. `CLAUDE.md` takvim notu,
-`docs/PLAN.md` Faz 4c. İkinci ve son genel toplantı **~16 Eylül**'de; açık kalan sorular
-§6'da.
+`docs/PLAN.md` Faz 4c. Beklenen ikinci ve son genel toplantı **yapılmadı** (17 Eylül
+itibarıyla); §6 bu yüzden "sorulacak sorular" listesi olmaktan çıkıp **cevapsız kalan
+sorular ve aldığımız varsayımlar** listesine dönüştü.
 
 ## Toplantı bilgileri
 
@@ -148,21 +149,27 @@ soruları listeliyor.
 
 ---
 
-## 6 · 16 Eylül toplantısına taşınacak açık sorular
+## 6 · Cevapsız kalan sorular ve aldığımız varsayımlar
 
-Bu görüşmede yanıtlanmayan, ikinci genel toplantıda sorulacak sorular:
+**İkinci genel toplantı yapılmadı.** 12 Eylül toplantısında "~16 Eylül'de son bir tur
+daha" denmişti; 17 Eylül itibarıyla böyle bir toplantı olmadı. Aşağıdaki sorular bu
+yüzden hiç sorulamadı.
 
-- ~~Şablonun başlık yapısı eski 17 slaytla örtüşüyor mu~~ → şablon geldi, içerik
-  yeniden kurgulandı (`docs/SUNUM/_PLAN.md`).
-- Canlı prototip süresi kesin olarak 2 dk mı, 3 dk mı? Jüri gösterimin içeriğini
-  yönlendirecek mi (ör. "bir görsel yükleyin"), yoksa akışı takım mı belirliyor?
-- Kendi bilgisayarımıza geçiş için kurulum süresi tanınıyor mu; HDMI kablo/anahtarlayıcı
-  salonda mı?
-- Jüriye sunumun basılı ya da ekrandan kopyası veriliyor mu?
-- 15 dakikalık süre jüri sorularını içeriyor mu, yoksa sorular bu sürenin dışında mı?
-- Canlı prototip gösterimi için salon tarafında internet erişimi sağlanacak mı, yoksa
-  ekip kendi bağlantısını (mobil hotspot vb.) mı getirmeli?
-- Ekranın çözünürlüğü ve bağlantı tipi (HDMI/USB-C) önceden bilinebilir mi — prova için
-  gerekli.
-- Bire bir proje geri bildirimi için ayrı bir kanal (mail, form) olacak mı, yoksa tüm
-  geri bildirim 16 Eylül toplantısında mı toplu verilecek?
+Cevapsız soruyla sahneye çıkılmaz. Her biri için **en kötü senaryo varsayımı** alındı ve
+hazırlık ona göre yapıldı; varsayım yanlış çıkarsa hepsi *bizim lehimize* yanılır
+(fazladan süre, çalışan internet, tanınan kurulum payı).
+
+| Cevapsız soru | Varsayım | Buna göre yapılan |
+|---|---|---|
+| Canlı prototip 2 dk mı 3 dk mı | **2 dk** | Akış 2:00'a kurgulandı; +1:00'lık uzatma (itiraz → zincir → tampon) hazırda bekliyor — `DEMO-SENARYOSU.md` "3 dakika verilirse" |
+| Jüri gösterimin içeriğini yönlendirecek mi | **Yönlendirebilir** | "Kendi görselimizle deneyelim" ve "yükleme/remix de gösterin" soru tablosunda cevaplı; Kaynak Bul kayıt yapmadığı için jürinin görseli demo verisini bozmuyor |
+| Salonda internet var mı | **Yok** | `HF_HUB_OFFLINE=1` ile tam koşum ölçüldü (17 Eyl): model yerel önbellekten yükleniyor, sonuçlar birebir aynı. Değişken jüri gününde de verilecek |
+| Kendi bilgisayarımıza geçiş için kurulum süresi tanınıyor mu | **Tanınmıyor** | Sistem sıra gelmeden ayakta ve **ısıtılmış** olacak; ilk sorgunun ~6–9 saniyesi sahnede değil, kulis sırasında harcanıyor |
+| HDMI kablo/anahtarlayıcı salonda mı | **Getireceğiz** | Kendi kablomuz ve adaptörümüz çantada; Windows "Çoğalt" (Win+P) önceden ayarlı |
+| Ekran çözünürlüğü / bağlantı tipi | **Bilinmiyor, düşük olabilir** | Düzen zaten duyarlı; mobil düzen açılırsa "devam et" talimatı arıza tablosunda |
+| 15 dakika jüri sorularını içeriyor mu | **İçeriyor** | Sunum notları bu varsayımla kısa tutulmalı — Berra'ya iletilecek bulgu (`docs/SUNUM/_PLAN.md` "Süre" satırı) |
+| Jüriye sunumun kopyası veriliyor mu | **Verilmiyor** | Punto kararı "perdeden okunur" varsayımıyla alınır; küçük punto riski Berra'nın B1/B2/B3 kararında |
+| Bire bir proje geri bildirimi kanalı | **Olmayacak** | Geri bildirim beklemeden ilerliyoruz; açık kalan teknik sorular kendi ölçümlerimizle kapatıldı |
+
+~~Şablonun başlık yapısı eski 17 slaytla örtüşüyor mu~~ → şablon geldi, içerik yeniden
+kurgulandı (`docs/SUNUM/_PLAN.md`).
