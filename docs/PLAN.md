@@ -241,8 +241,8 @@ sunum gününün kendisi. Aşağıdaki Faz 4c bu gerçeği yansıtıyor.
   sayıları değişmedi, `demo_hazirla.py` "Hazır" — `docs/DEMO-SENARYOSU.md` "Demo verisi
   zenginleştirildi"
 - 14 Eyl: ulaşım/konaklama formu doldurulur (idari, finale katılım ön şartı)
-- demo videosu çekilir (`docs/DEMO-SENARYOSU.md`, düzeltilmiş arayüzle) — tam 4:30
-  sürüm. **17 Eyl:** replikler çalışan sistemden doğrulanan sayılarla düzeltildi, tek
+- demo videosu çekilir (`docs/DEMO-SENARYOSU.md`, düzeltilmiş arayüzle) — tam ~5:00
+  sürüm; 18 Eyl'de Kaynak Bul sahnesi eklendi (canlı demonun yedeği olduğu için). **17 Eyl:** replikler çalışan sistemden doğrulanan sayılarla düzeltildi, tek
   parça okuma metni ve çekim kontrol listesi hazır; kayıt kaldı. Sunuma gömülecek
   ≤60 sn'lik kesit fiilen gereksiz — sunum PDF olarak teslim ediliyor, PDF video oynatmaz
 - ~~~16 Eyl: ikinci (son) genel mentörlük toplantısı~~ → **yapılmadı.** Açık sorular hiç

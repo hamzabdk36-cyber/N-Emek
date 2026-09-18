@@ -61,7 +61,7 @@ altında, yedi bulgu), kullanıcı araştırması dört profilden on görüşmey
 `data/kullanilabilirlik/` ve `data/kullanici-arastirmasi/` altında; sonuç belgelerini
 betikler üretiyor, elle düzenlenmez.
 Jüri sunumu: `docs/SUNUM/` — sayfa başına bir md, `scripts/sunum_pptx.py` şablona üretir, `scripts/sunum_powerpoint.ps1` taşmayı denetleyip önizleme/PDF çıkarır; devir notu ve açık revizyon kararları `docs/SUNUM/_PLAN.md`. Üretilen `.pptx`/`.pdf` depoda değil, elle düzenlenmez.
-Demo: `docs/DEMO-SENARYOSU.md` — canlı 2–3 dk demo "canlı kanıt" biçiminde (Emek Kartı turu + Kaynak Bul'da canlı türev ve ilgisiz görsel sorgusu), sahneden önce `scripts/demo_hazirla.py` modeli ısıtır ve sonucu denetler; jüri günü veritabanı yerel `data/nemek.db`, `scripts/demo_zenginlestir.py` ile kampanya dışı içerik eklendi (üstünde `seed_demo.py --reset` çalıştırılmaz); 4:30 video sahnelerindeki sayılar eski (başındaki durum notu) · `docs/SUNUM.md` eski Marp taslağı, yalnızca "Beklenen sorular" için tutuluyor
+Demo: `docs/DEMO-SENARYOSU.md` — canlı 2–3 dk demo "canlı kanıt" biçiminde (Emek Kartı turu + Kaynak Bul'da canlı türev ve ilgisiz görsel sorgusu), sahneden önce `scripts/demo_hazirla.py` modeli ısıtır ve sonucu denetler; jüri günü veritabanı yerel `data/nemek.db`, `scripts/demo_zenginlestir.py` ile kampanya dışı içerik eklendi (üstünde `seed_demo.py --reset` çalıştırılmaz); ~5 dk video senaryosu 17–18 Eyl'de çalışan sistemle hizalandı ve Kaynak Bul sahnesi eklendi; telefonda okunacak sürümü claude.ai'de yayımlı · `docs/SUNUM.md` eski Marp taslağı, yalnızca "Beklenen sorular" için tutuluyor
 Ölçümler: `docs/FAZ0-SONUCLARI.md` (risk kapatma) · `docs/DEGERLENDIRME.md` (tam korpus) · `docs/GECIKME.md` (uçtan uca) · `docs/ACILIS-SURESI.md` (indeks kalıcılığı)
 
 ## Kurulum

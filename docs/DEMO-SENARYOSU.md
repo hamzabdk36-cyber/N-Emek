@@ -1,6 +1,6 @@
 # Demo Videosu — Çekim Senaryosu
 
-**Hedef:** 4 dakika 30 saniye, Türkçe anlatım, ekran kaydı.
+**Hedef:** yaklaşık 5 dakika, Türkçe anlatım, ekran kaydı.
 **Anlatının omurgası:** kaynağı *bulmak* değil, kullanılan oranı **ölçmek**.
 
 Replikler olduğu gibi okunabilir. Ekranda görülecek her sayı gerçek demo verisinden;
@@ -18,7 +18,7 @@ ana gösterimin yerine geçmiyor:
 2. **Yedek**: canlı demo salon içinde (ağ, GPU, donanım) arızalanırsa gösterilecek.
 3. **Şartnamenin teslimat listesindeki "demo videosu" kalemi.**
 
-Bu yüzden burada iki çıktı üretilir: tam **4:30** sürüm (madde 2 ve 3 için) ve aşağıdaki
+Bu yüzden burada iki çıktı üretilir: tam **~5:00** sürüm (madde 2 ve 3 için) ve aşağıdaki
 "Süre daraltma" bölümünden türetilen **≤60 sn'lik kısa kesit** (madde 1 için).
 
 ## Durum notu (15 Eylül)
@@ -31,7 +31,7 @@ oynatmaz); video yalnızca yedek ve teslimat kalemi olarak kalıyor.
 
 **Görev.** Sunumu Berra Özer, sistemi ve canlı demoyu Hamza Budak üstleniyor. Canlı
 demonun biçimi seçildi: **"canlı kanıt"** — bir sonraki bölüm. Ondan sonraki sahneler
-4:30'luk video içindir.
+5 dakikalık video içindir.
 
 ## Sayılar düzeltildi (17 Eylül)
 
@@ -267,6 +267,8 @@ curl -s http://127.0.0.1:8000/api/health
 - [ ] "Bulduğum kare" gönderisinin geliri **₺4.200** — değiştiyse Gelir kutusundan geri alın
 - [ ] Emek Kartı'nda Ayşe satırı **%87,1 · 0,95 · 0,85 → %68,1 · ₺2.574,63**,
       Burak satırı **%12,5 · 0,98 · 1,00 → %11,9 · ₺449,37** (replikler bunları okuyor)
+- [ ] `demo_hazirla.py` iki sahne dosyasını `data/demo/` altına üretti; Kaynak bul'daki dosya
+      seçme penceresi bir kez o klasörde açılıp kapatıldı (Sahne 8'de klasör aramak yok)
 - [ ] Tarayıcı tam ekran, yer imleri çubuğu kapalı, bildirimler susturulmuş
 - [ ] Ekran çözünürlüğü 1920×1080, tarayıcı yakınlaştırması **%100**
 - [ ] Kayıt öncesi bir prova turu atın: fare hareketleri yavaş ve kararlı olmalı
@@ -406,7 +408,42 @@ değer Emek Kartı'ndaki "toplam görünen %99,7" satırında duruyor.
 
 ---
 
-## Sahne 8 — Marka tarafı · 4:05–4:25 (20 sn)
+## Sahne 8 — Kaynak Bul: hiç görülmemiş dosya · 4:05–4:35 (30 sn)
+
+**Neden bu sahne var.** Video, salonda canlı demo arızalanırsa oynatılacak yedek. Canlı
+demonun en güçlü anı da bu: sistem hiç görmediği bir türevde kaynağı buluyor, ilgisiz bir
+fotoğrafta ise bağ önermiyor. Önceki sahnelerin hepsi kayıtlı içerik gösteriyordu; hattın
+jürinin gözü önünde çalıştığı tek yer burası. Kaynak Bul kayıt yapmaz (`POST /api/verify`),
+yani kayıt sırasında demo verisi değişmez.
+
+**Ekran:** Üst menüden **Kaynak bul** → dosya seç → `data/demo/kaynak-bul-turev.jpg` →
+**Kökeni çöz**.
+
+> "Şimdiye kadar gördükleriniz sistemde kayıtlı içeriklerdi. Bir de sistemin hiç görmediği
+> bir dosyayı deneyelim: Ayşe'nin fotoğrafından kırpılmış, üstüne yazı eklenmiş."
+
+**Aksiyon:** Sonuç gelince (~0,4 sn) önce aşama çizelgesini, sonra Sabah ışığı satırındaki
+"kullanılan alan"ı fareyle gösterin.
+
+> "Kaynak bulundu: Ayşe'nin fotoğrafı, Sabah ışığı. Kullanılan alan **yüzde doksan üç**. Filigran ve
+> parmak izi burada da düştü; görsel benzerlik ve geometri taşıdı."
+
+**Ekran:** Aynı sayfada `data/demo/kaynak-bul-ilgisiz.jpg` → **Kökeni çöz**.
+
+> "Şimdi de sistemde hiçbir kaynağı olmayan bir fotoğraf.
+>
+> **Kaynak bulunamadı.** Bulamadığında uydurmuyor: yanlış bir atıf, kaçırılmış bir
+> atıftan daha ağır."
+
+**Yönerge:** Türev dosyada listede ikinci bir satır daha çıkar: Bulduğum kare, %67,9.
+Ceyda'nın gönderisi de Ayşe'nin piksellerini taşıdığı için bu doğru bir sonuç; replikte
+değinilmez, jüri sorarsa cevap canlı demo bölümündeki soru tablosunda. Sayılar 18 Eylül
+sabahı ölçüldü (`demo_hazirla.py`: Sabah ışığı %93,0 · Bulduğum kare %67,9, ilgisizde
+0 kaynak); sahneden önce yine betiğin çıktısından okunur.
+
+---
+
+## Sahne 9 — Marka tarafı · 4:35–4:55 (20 sn)
 
 **Ekran:** Kampanyalar sayfası.
 
@@ -418,7 +455,7 @@ değer Emek Kartı'ndaki "toplam görünen %99,7" satırında duruyor.
 
 ---
 
-## Sahne 9 — Kapanış · 4:25–4:30 (5 sn)
+## Sahne 10 — Kapanış · 4:55–5:00 (5 sn)
 
 **Ekran:** Akış sayfasına dönün.
 
@@ -519,7 +556,24 @@ yakınlaşın, "Kaynaktan gelen bölgeyi vurgula" kutusunu bir kez kapatıp aç�
 > Ölçüm yine sonuç veremezse karar insana bırakılıyor. Sistem karar veremediği yeri
 > gizlemiyor.
 
-**[4:05 · Kampanyalar sayfası.]**
+**[4:05 · Üst menüden Kaynak bul → `kaynak-bul-turev.jpg` → Kökeni çöz.]**
+
+> Şimdiye kadar gördükleriniz sistemde kayıtlı içeriklerdi. Bir de sistemin hiç görmediği
+> bir dosyayı deneyelim: Ayşe'nin fotoğrafından kırpılmış, üstüne yazı eklenmiş.
+
+**[Sonuç gelince aşama çizelgesini, sonra "kullanılan alan"ı fareyle gösterin.]**
+
+> Kaynak bulundu: Ayşe'nin fotoğrafı, Sabah ışığı. Kullanılan alan yüzde doksan üç. Filigran ve parmak
+> izi burada da düştü; görsel benzerlik ve geometri taşıdı.
+
+**[Aynı sayfada `kaynak-bul-ilgisiz.jpg` → Kökeni çöz.]**
+
+> Şimdi de sistemde hiçbir kaynağı olmayan bir fotoğraf.
+>
+> Kaynak bulunamadı. Bulamadığında uydurmuyor: yanlış bir atıf, kaçırılmış bir atıftan
+> daha ağır.
+
+**[4:35 · Kampanyalar sayfası.]**
 
 > Marka tarafında da aynı mantık. Elli bin liralık ödül havuzu, son paylaşana değil,
 > ölçülmüş katkıya göre zincirin tamamına bölünüyor.
@@ -527,7 +581,7 @@ yakınlaşın, "Kaynaktan gelen bölgeyi vurgula" kutusunu bir kez kapatıp aç�
 > Bu kampanyada Ayşe otuz dört bin beş yüz kırk bir lira aldı — bir içerik yükleyip hiç
 > remix yapmadan. Çünkü içeriği zincirde yaşıyor ve bu ölçüldü.
 
-**[4:25 · Akış sayfasına dönün.]**
+**[4:55 · Akış sayfasına dönün.]**
 
 > N-Emek. Emek görünür olsun diye — tahminle değil, ölçümle.
 
@@ -545,8 +599,10 @@ yakınlaşın, "Kaynaktan gelen bölgeyi vurgula" kutusunu bir kez kapatıp aç�
 Şu sırayla kısaltın — en az değer kaybettiren üstte:
 
 1. Sahne 6 (zincir) → 20 sn yerine 10 sn
-2. Sahne 8 (marka) → 20 sn yerine 12 sn
+2. Sahne 9 (marka) → 20 sn yerine 12 sn
 3. Sahne 1 (problem) → 25 sn yerine 15 sn
+
+**Kaynak Bul (Sahne 8) kısaltılmaz:** videodaki tek canlı sorgu ve canlı demonun yedeği.
 
 **Asla kısaltmayın:** Sahne 4 (payın gerekçesi) ve Sahne 5 (ölçüm görünür). Projenin
 ayırt edici iddiası bu iki sahnede.
@@ -578,4 +634,4 @@ onlar canlı prototip gösteriminde anlatılır, videoda tekrar edilmez.
 - [ ] Ses seviyesi eşitlenmiş, nefes sesleri temizlenmiş
 - [ ] Ekrandaki her sayı anlatılanla **birebir** aynı
 - [ ] Altyazı eklendi (jüri sessiz izleyebilir)
-- [ ] Süre 3–5 dakika aralığında
+- [ ] Süre ~5 dakika; 5:30'u geçerse yukarıdaki daraltma sırası uygulanır
