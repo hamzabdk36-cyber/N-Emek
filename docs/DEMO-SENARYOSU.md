@@ -99,7 +99,7 @@ verisi değişmez ve sonraki sorularda ekran aynı kalır.
 
 Tek seferlik hazırlık **yapıldı (15 Eyl):** `scripts/demo_zenginlestir.py` yerel veritabanına
 kampanya dışı 20 içerik ekledi. **18 Eyl:** `scripts/demo_zincirler.py` bu içeriklerden 8 türevle
-7 zincir kurdu (aşağıda). **18 Eyl gecesi** stok kareler ekibin 23 telefon fotoğrafıyla değiştirildi,
+7 zincir kurdu (aşağıda). **18 Eyl gecesi** stok kareler ekibin 21 telefon fotoğrafıyla değiştirildi,
 zincirler onlardan yeniden kuruldu ("Günlük fotoğraflar" bölümü). Tekrar gerekmez.
 
 **Tek adım: depo kökündeki `demo_baslat.bat` dosyasına çift tıkla.**
@@ -318,14 +318,14 @@ Sonuç: 28 içerik silindi, 22 kare ve 8 türev eklendi. Altın senaryo izi ayn�
 kare doğru yönde yüklendi ve dosyada EXIF kalmadı.
 
 **Gerçek veritabanında yapıldı (18 Eylül gecesi).** Masaüstündeki `günlük` klasöründen gelen
-27 fotoğrafın 24'ü kullanıldı. Üçü dışarıda bırakıldı:
+27 fotoğrafın 22 tanesi kullanıldı. Beşi dışarıda bırakıldı:
 - Vakko logosu ve uçak tescili görünen kare,
 - yüzün bir kısmı görünen kare,
 - akıştaki başka bir kareyle aynı bina (biri diğerinin kaynağı sanılırdı).
 
-Atatürk tabelası ve Anıtkabir akışta sade gönderi olarak duruyor; bunlardan türev üretilmiyor.
+Atatürk tabelası ve Anıtkabir kareleri de ekibin isteğiyle akıştan çıkarıldı.
 Kiraz fotoğrafı sahnedeki ilgisiz sorgu oldu. Dağılım şöyle:
-- 23 kare akışta ve 8 türev bunlardan kuruldu; indekste 34 içerik var.
+- 21 kare akışta ve 8 türev bunlardan kuruldu; indekste 32 içerik var.
 - İlk denemede kolajın ikinci kaynağı kumsal karesiydi ve bulunamadı. Karanlık gök ile denizde
   eşleşecek kadar doku yok. Betik bu adımı geri aldı; kaynak "Taş sokaklar" ile değiştirildi.
 - Altın senaryo izi aynı kaldı.
