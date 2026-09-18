@@ -99,7 +99,8 @@ verisi değişmez ve sonraki sorularda ekran aynı kalır.
 
 Tek seferlik hazırlık **yapıldı (15 Eyl):** `scripts/demo_zenginlestir.py` yerel veritabanına
 kampanya dışı 20 içerik ekledi. **18 Eyl:** `scripts/demo_zincirler.py` bu içeriklerden 8 türevle
-7 zincir kurdu (aşağıda). İkisi de tekrar gerekmez; iki kez çalıştırmak bir şey değiştirmez.
+7 zincir kurdu (aşağıda). **18 Eyl gecesi** stok kareler ekibin 23 telefon fotoğrafıyla değiştirildi,
+zincirler onlardan yeniden kuruldu ("Günlük fotoğraflar" bölümü). Tekrar gerekmez.
 
 **Tek adım: depo kökündeki `demo_baslat.bat` dosyasına çift tıkla.**
 Betik aşağıdaki dört komutu sırayla yürütür. Çevrimdışı değişkenleri koyar, backend'i `--reload` olmadan başlatır, arayüzü açar ve `demo_hazirla.py` ile modeli ısıtır. Sonunda büyük harfle **HAZIR** ya da **HAZIR DEĞİL** yazar ve üç sekmeyi açar.
@@ -277,7 +278,7 @@ aynı; demo türevi yalnızca altın içerikleri buluyor. `demo_baslat.bat` "HAZ
 
 **Geri dönmek gerekirse** (backend kapalıyken): yedek `data/yedek/20260918-174555/`.
 
-### Günlük fotoğraflar (18 Eylül: betik hazır, gerçek veritabanında henüz çalıştırılmadı)
+### Günlük fotoğraflar (18 Eylül, yapıldı)
 
 **Neden.** Berra'nın geri bildirimi: akış katalog ya da dergi gibi duruyor. Zenginleştirme
 içerikleri picsum/Unsplash korpusundan geliyor ve bunlar profesyonel stok kareler. Bunların
@@ -315,6 +316,23 @@ bilgisi yüklenen dosyaya geçmiyor.
 Ardından iki komut, Türkçe adlı ve EXIF'le döndürülmüş dosyalar içeren bir listeyle çalıştırıldı.
 Sonuç: 28 içerik silindi, 22 kare ve 8 türev eklendi. Altın senaryo izi aynı kaldı. Döndürülmüş
 kare doğru yönde yüklendi ve dosyada EXIF kalmadı.
+
+**Gerçek veritabanında yapıldı (18 Eylül gecesi).** Masaüstündeki `günlük` klasöründen gelen
+27 fotoğrafın 24'ü kullanıldı. Üçü dışarıda bırakıldı:
+- Vakko logosu ve uçak tescili görünen kare,
+- yüzün bir kısmı görünen kare,
+- akıştaki başka bir kareyle aynı bina (biri diğerinin kaynağı sanılırdı).
+
+Atatürk tabelası ve Anıtkabir akışta sade gönderi olarak duruyor; bunlardan türev üretilmiyor.
+Kiraz fotoğrafı sahnedeki ilgisiz sorgu oldu. Dağılım şöyle:
+- 23 kare akışta ve 8 türev bunlardan kuruldu; indekste 34 içerik var.
+- İlk denemede kolajın ikinci kaynağı kumsal karesiydi ve bulunamadı. Karanlık gök ile denizde
+  eşleşecek kadar doku yok. Betik bu adımı geri aldı; kaynak "Taş sokaklar" ile değiştirildi.
+- Altın senaryo izi aynı kaldı.
+- `demo_hazirla.py` "Hazır" verdi: Sabah ışığı %93,0 · Bulduğum kare %67,9, ilgisiz 0 kaynak,
+  ısınmış sorgu 226–405 ms.
+
+Geri dönmek gerekirse (backend kapalıyken): stok fotoğraflı son durum `data/yedek/20260918-223140/`.
 
 ---
 
