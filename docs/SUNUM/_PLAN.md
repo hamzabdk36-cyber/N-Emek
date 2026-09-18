@@ -192,7 +192,7 @@ prototip*; gösterim sunumun sonunda. Sayfa yazısı ve konuşma notu düzeltild
 | Okunabilirlik | Şablon 50,8 cm, yani standart geniş slaytın 1,5 katı: burada 12 pt, standartta 8 pt'ye denk. Yukarıdaki 18 pt kuralı uygulamada tutmadı; 32 yerde 11,5–13,5 pt, 31 yerde 14–16 pt var | B1 olduğu gibi · **B2 en az 16 pt, metin ~%25 kısalır, ayrıntı nota geçer** · B3 boş sayfa hakkı (Çözüm 3/3, Özgünlük 2/2) ile 16 sayfa |
 | Süre | Notlar ~9 dk | ~1.700 kelimeye (13 dk) genişletip 2 dk pay bırakmak |
 | Sayı tutarlılığı | 5. sayfa %87,2 · %68,2 · ₺2.576,30; yerel demo veritabanı %87,1 · %68,1 · ₺2.574,63. 10. sayfa ₺34.548,96; yerel veritabanı ₺34.541,45 | Demo yerel veritabanıyla yapılacak (15 Eyl kararı). Sayılar ondan okunup güncellenebilir ya da olduğu gibi bırakılır; demoda sayılar ekrandan okunuyor (`DEMO-SENARYOSU.md` başındaki durum notu) |
-| Küçük | 6. sayfada "Kimlik silinse / de" başlığı bölünüyor · 9. sayfadaki üç ekran görüntüsü perdede okunmuyor, akış görüntüsü de üç gönderi gösteriyor; canlı demoda akışta 23 gönderi var (15 Eyl zenginleştirme) · 13. sayfadaki "%69" ile 10. sayfadaki ₺34.548,96 aynı olguyu anlatıyor | — |
+| Küçük | 6. sayfada "Kimlik silinse / de" başlığı bölünüyor · 9. sayfadaki üç ekran görüntüsü perdede okunmuyor, akış görüntüsü de üç gönderi gösteriyor; canlı demoda akışta 31 gönderi var (15 Eyl zenginleştirme, 18 Eyl türev zincirleri) · 13. sayfadaki "%69" ile 10. sayfadaki ₺34.548,96 aynı olguyu anlatıyor | — |
 
 Şablon hataları dokunulmadan kalır: 13. sayfa alt bilgisinde "22026", Uygulanabilirlik
 başlığında "SÜRDÜRÜLEBİLİRİLİK", sağ şeritte üst üste binen iki bölüm adı.

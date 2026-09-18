@@ -98,7 +98,14 @@ verisi değişmez ve sonraki sorularda ekran aynı kalır.
 ### Sahneye çıkmadan (salon sırası gelmeden ~15 dk önce)
 
 Tek seferlik hazırlık **yapıldı (15 Eyl):** `scripts/demo_zenginlestir.py` yerel veritabanına
-kampanya dışı 20 içerik ekledi. Tekrar gerekmez; iki kez çalıştırmak bir şey değiştirmez.
+kampanya dışı 20 içerik ekledi. **18 Eyl:** `scripts/demo_zincirler.py` bu içeriklerden 8 türevle
+7 zincir kurdu (aşağıda). İkisi de tekrar gerekmez; iki kez çalıştırmak bir şey değiştirmez.
+
+**Tek adım: depo kökündeki `demo_baslat.bat` dosyasına çift tıkla.**
+Betik aşağıdaki dört komutu sırayla yürütür. Çevrimdışı değişkenleri koyar, backend'i `--reload` olmadan başlatır, arayüzü açar ve `demo_hazirla.py` ile modeli ısıtır. Sonunda büyük harfle **HAZIR** ya da **HAZIR DEĞİL** yazar ve üç sekmeyi açar.
+Zaten çalışan bir sunucu varsa onu yeniden kullanır; bu yüzden arıza anında yeniden başlatma için de kullanılabilir.
+Veritabanına dokunmaz. Durdurmak için açılan iki pencereyi kapatmak yeterli.
+Aşağıdaki elle komutlar yedek olarak duruyor.
 
 ```powershell
 $env:HF_HUB_OFFLINE = "1"          # salonda internet yoksa da model yerel onbellekten
@@ -137,7 +144,7 @@ olduğu durumda bile modelin ağa çıkmayı denemesini engelliyor.
 | 1:55–2:00 | — | "Emek görünür olsun diye: tahminle değil, ölçümle." |
 
 15 Eylül yerel ölçümünde türev dosyası iki kaynak verdi: Sabah ışığı %93,0 ve
-Bulduğum kare %67,9 kullanılan alan. Zenginleştirmeden sonra, indekste 23 içerikle, sonuç aynı. Bulduğum kare de Ayşe'nin piksellerini taşıdığı için
+Bulduğum kare %67,9 kullanılan alan. Zenginleştirmeden ve zincirlerden sonra, indekste 31 içerikle, sonuç aynı. Bulduğum kare de Ayşe'nin piksellerini taşıdığı için
 çıkıyor. Sayılar veritabanına göre değişir; sahneden önce `demo_hazirla.py` çıktısından
 okunur.
 
@@ -156,7 +163,7 @@ okunur.
 |---|---|
 | "Türevde neden iki kaynak çıktı?" | Kaynak bul bir sorgu, pay hesabı değil. Pikseller iki gönderide de var; hangi bağın paya gireceğine yayında geçişli indirgeme karar veriyor. |
 | "Slayttaki sayıyla ekrandaki biraz farklı" | Demo verisi her kurulumda yeniden ölçülüyor ve koşumlar arasında binde birkaç fark çıkıyor. Sayılar elle yazılmıyor, o koşumun ölçümü. |
-| "Akıştaki diğer gönderiler ne?" | Demo verisi: lisanslı test korpusundan, kampanya dışı, geliri yok. Kaynak bul türevin kaynağını bunların da bulunduğu indekste arıyor; ilgisiz fotoğraf hiçbiriyle eşleşmiyor. |
+| "Akıştaki diğer gönderiler ne?" | Demo verisi: lisanslı test korpusundan, kampanya dışı. Bir kısmı birbirinin remixi, ekran görüntüsü ya da kolajı; onların da Emek Kartı ve küçük gelirleri var. Kaynak bul türevin kaynağını bunların da bulunduğu indekste arıyor; ilgisiz fotoğraf hiçbiriyle eşleşmiyor. |
 | "Kendi görselimizle deneyelim" | Kaynak bul'a jürinin görselini yükle; kayıt yapmaz. Sistemde olmayan bir görselse beklenen sonuç "kaynak bulunamadı". |
 | "Filigran ve parmak izi neden bulamadı?" | Kırpma ve yeniden ölçekleme ikisini de götürüyor; bu bilinen ve belgelenmiş bir sınır. Hattın beş aşaması tam bunun için var: biri düştüğünde diğeri taşıyor. Burada kaynağı görsel benzerlik buldu, kararı geometrik ölçüm verdi. |
 | "Yükleme / remix de gösterin" | Remix Stüdyo çalışır ama demo verisini değiştirir. Yapılırsa demo sonrasında `data/` yedeği geri yüklenir. |
@@ -241,6 +248,34 @@ Emre Şahin, Selin Arslan) ve kampanya dışı, gelirsiz 20 içerik ekledi. İnd
 
 **Geri dönmek gerekirse** (backend kapalıyken): `data/yedek/20260915-115019/` altındaki
 `nemek.db`, `uploads/` ve `index/` `data/` altına geri kopyalanır.
+
+### Türev zincirleri (18 Eylül)
+
+**Neden.** Eklenen 20 içerik bağsızdı; Emek Kartları tek taraflı ve boş duruyordu. Akışta
+altın üçlünün dışında da dolu Emek Kartı olan gönderiler olsun diye `scripts/demo_zincirler.py`
+bu içeriklerden 8 türev yükledi, 7 zincir kuruldu. İndekste artık 31 içerik var.
+
+| Türev | Kaynak | Biçim | Emek Kartı (kaynak payları) |
+|---|---|---|---|
+| Günün karesi, benim yorumum | Günün karesi | beyanlı remix: kırpma + yazı | Deniz %80,0 |
+| Akıştan kaydettim | Arşivden | beyansız ekran görüntüsü | Emre %80,0 |
+| Yolda ama komik → Güldüren kare | Yolda | üç halka: beyanlı meme, sonra beyansız ekran görüntüsü | Selin %56,9 · Deniz %23,1 |
+| Hafta sonu kolajı | Hafta sonu + Pencereden | beyansız iki kaynaklı kolaj | Deniz %40,8 · Emre %39,2 |
+| Akşamüstü, çıkartmalı | Akşamüstü | beyanlı remix: çıkartma | Selin %80,0 |
+| Eski bir kareden kesit | Eski bir kare | beyansız kırpma + yazı | Deniz %79,2 |
+| Renkler ama şaka | Renkler | beyanlı meme | Selin %76,7 |
+
+Türevlere ₺190–870 arası gelir yazıldı; Emek Kartı tutarları bundan anlık hesaplıyor. Ödeme
+satırı yazılmadı, kampanyaya dokunulmadı. Her türev kaynağından 20 dk sonraya tarihlendi:
+akışta kaynağının hemen üstünde duruyor, altın üçlü yine en üstte.
+
+**Nasıl doğrulandı.** Betik her yüklemeden sonra bağların yalnızca beklenen kaynaklara (ve üç
+halkada onların atasına) gittiğini, her beklenen kaynağın Emek Kartı'nda pay aldığını sınadı.
+Altın senaryonun izi (bağlar, ödemeler, kazançlar, üç kart, kampanya) önce ve sonra birebir
+aynı; demo türevi yalnızca altın içerikleri buluyor. `demo_baslat.bat` "HAZIR" verdi: Sabah
+ışığı %93,0 · Bulduğum kare %67,9, ilgisiz 0 kaynak; Ceyda'nın kartında Ayşe %68,1.
+
+**Geri dönmek gerekirse** (backend kapalıyken): yedek `data/yedek/20260918-174555/`.
 
 ---
 
