@@ -277,6 +277,45 @@ aynı; demo türevi yalnızca altın içerikleri buluyor. `demo_baslat.bat` "HAZ
 
 **Geri dönmek gerekirse** (backend kapalıyken): yedek `data/yedek/20260918-174555/`.
 
+### Günlük fotoğraflar (18 Eylül: betik hazır, gerçek veritabanında henüz çalıştırılmadı)
+
+**Neden.** Berra'nın geri bildirimi: akış katalog ya da dergi gibi duruyor. Zenginleştirme
+içerikleri picsum/Unsplash korpusundan geliyor ve bunlar profesyonel stok kareler. Bunların
+yerine ekibin kendi telefon fotoğrafları konacak.
+
+**Değişmeyen.** Altın üçlü kahve fotoğrafıyla kalıyor. `seed_demo.py --reset` ölçümü yeniden
+yapıyor ve sayılar kayıyor: 18 Eylül'de bir kopyada denendi, Ceyda'nın kartında Ayşe %68,1
+yerine %67,9 (₺2.567,22) çıktı. Bu yüzden sıfırlama yok. Yalnızca deniz, emre ve selin'in
+içerikleri değişiyor.
+
+**Hazırlık.**
+1. Fotoğraflar `data/demo_fotolar/` klasörüne konur. Bu klasör depoya girmez.
+2. Aynı klasöre bir `liste.csv` yazılır. Sütunlar `dosya,baslik,aciklama,sahip,anahtar`.
+   Biçim `scripts/demo_fotolar.py` başında anlatılıyor.
+3. Sekiz fotoğrafa zincir yuvası atanır: `gunun`, `arsiv`, `yolda`, `hafta_sonu`, `pencereden`,
+   `aksam`, `eski`, `renkler`.
+4. Bir fotoğrafa `ilgisiz` yazılır. O kare akışa girmez ve Kaynak Bul'daki "bağ yok" sorgusu olur.
+5. İstenirse `zincirler.csv` (`adim,baslik,aciklama`) ile türev başlıkları fotoğraflara uyarlanır.
+
+**Kurulum** (backend kapalıyken):
+
+```bash
+.venv/Scripts/python.exe scripts/demo_zenginlestir.py --foto-klasoru data/demo_fotolar --degistir
+.venv/Scripts/python.exe scripts/demo_zincirler.py --foto-klasoru data/demo_fotolar
+demo_baslat.bat
+```
+
+`--degistir` eski 28 içeriği silme servisiyle kaldırıyor, yani görsel, bağ ve indeks birlikte
+gidiyor. Ardından fotoğrafları ekliyor. Altın içeriklere değen bağlar, ödemeler ve üç kart
+önce ve sonra karşılaştırılıyor. Biri tutmazsa betik yedeği geri yüklüyor. Fotoğraflar EXIF
+yönüne göre döndürülüyor ve uzun kenar 1080 px'e indiriliyor. Yeniden kodlandıkları için konum
+bilgisi yüklenen dosyaya geçmiyor.
+
+**Kopyada doğrulandı.** Geçici bir veritabanında önce eski durum kuruldu (20 içerik ve 8 türev).
+Ardından iki komut, Türkçe adlı ve EXIF'le döndürülmüş dosyalar içeren bir listeyle çalıştırıldı.
+Sonuç: 28 içerik silindi, 22 kare ve 8 türev eklendi. Altın senaryo izi aynı kaldı. Döndürülmüş
+kare doğru yönde yüklendi ve dosyada EXIF kalmadı.
+
 ---
 
 ## Çekim öncesi kontrol listesi

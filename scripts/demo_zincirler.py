@@ -21,10 +21,16 @@ anlik hesaplar. Odeme satiri yazilmaz, dagitim cagrilmaz.
 Kullanim (backend kapaliyken)
 -----------------------------
     .venv/Scripts/python.exe scripts/demo_zincirler.py
+    .venv/Scripts/python.exe scripts/demo_zincirler.py --foto-klasoru data/demo_fotolar
+
+Zenginlestirme `--foto-klasoru` ile yapildiysa burada da ayni klasor verilir:
+kaynaklar `liste.csv`'nin `anahtar` sutunundaki yuvalardan bulunur, turev
+basliklari `zincirler.csv`'den okunur (bkz. `scripts/demo_fotolar.py`).
 """
 
 from __future__ import annotations
 
+import argparse
 import datetime as dt
 import json
 import sys
@@ -60,6 +66,7 @@ from app.services import payout as payout_service  # noqa: E402
 from app.services.registry import get_index_service  # noqa: E402
 from eval import attacks  # noqa: E402
 
+import demo_fotolar  # noqa: E402
 import demo_hazirla  # noqa: E402
 from demo_zenginlestir import (  # noqa: E402
     ALTIN_BASLIKLAR,
@@ -73,6 +80,14 @@ from demo_zenginlestir import (  # noqa: E402
 
 RAW = ROOT / "data" / "raw"
 EK_KULLANICILAR = ("deniz", "emre", "selin")
+# Korpus kipinde zenginlestirme iceriklerinin basliklari; foto kipinde yuvanin
+# basligi liste.csv'deki `anahtar` sutunundan gelir.
+KORPUS_YUVALARI = {
+    "gunun": "Günün karesi", "arsiv": "Arşivden", "yolda": "Yolda",
+    "hafta_sonu": "Hafta sonu", "pencereden": "Pencereden", "aksam": "Akşamüstü",
+    "eski": "Eski bir kare", "renkler": "Renkler",
+}
+assert set(KORPUS_YUVALARI) == set(demo_fotolar.YUVALAR)
 
 
 # ---------------------------------------------------------------------------
@@ -122,7 +137,7 @@ class Adim:
     anahtar: str             # sonraki adimlarin kaynak olarak anacagi ad
     baslik: str
     aciklama: str
-    kaynaklar: tuple[str, ...]  # zenginlestirme basligi ya da onceki adimin anahtari
+    kaynaklar: tuple[str, ...]  # zenginlestirme yuvasi ya da onceki adimin anahtari
     donusum: object
     beyanli: bool            # remix studyosundan: kaynak beyani + C2PA remix manifesti
     eylemler: tuple[str, ...] = ()
@@ -132,31 +147,32 @@ class Adim:
 
 
 ADIMLAR = (
-    Adim("gunun", "Günün karesi, benim yorumum", "Akışta gördüğüm kareyi kırpıp yazı ekledim.",
-         ("Günün karesi",), lambda g: yazi_bandi(g[0], "BENIM YORUMUM"),
+    Adim("gunun_yorum", "Günün karesi, benim yorumum", "Akışta gördüğüm kareyi kırpıp yazı ekledim.",
+         ("gunun",), lambda g: yazi_bandi(g[0], "BENIM YORUMUM"),
          beyanli=True, eylemler=("c2pa.cropped", "c2pa.edited"), gelir=640.0),
-    Adim("arsiv", "Akıştan kaydettim", "Ekran görüntüsü aldım, çok güzeldi.",
-         ("Arşivden",), lambda g: ekran_goruntusu(g[0]),
+    Adim("arsiv_ss", "Akıştan kaydettim", "Ekran görüntüsü aldım, çok güzeldi.",
+         ("arsiv",), lambda g: ekran_goruntusu(g[0]),
          beyanli=False, gelir=380.0),
     Adim("yolda_meme", "Yolda ama komik", "Klasik şablon.",
-         ("Yolda",), lambda g: meme(g[0]),
+         ("yolda",), lambda g: meme(g[0]),
          beyanli=True, eylemler=("c2pa.edited",), gelir=520.0),
     Adim("yolda_ss", "Güldüren kare", "Arkadaştan geldi, paylaşıyorum.",
          ("yolda_meme",), lambda g: ekran_goruntusu(g[0]),
          beyanli=False, gelir=870.0, dakika=20),
     Adim("kolaj", "Hafta sonu kolajı", "İki kareyi yan yana koydum.",
-         ("Hafta sonu", "Pencereden"), lambda g: iki_kaynak_kolaj(g[0], g[1]),
+         ("hafta_sonu", "pencereden"), lambda g: iki_kaynak_kolaj(g[0], g[1]),
          beyanli=False, gelir=450.0),
-    Adim("aksam", "Akşamüstü, çıkartmalı", "Üstüne küçük bir çizim ekledim.",
-         ("Akşamüstü",), lambda g: cikartma(g[0]),
+    Adim("aksam_cikartma", "Akşamüstü, çıkartmalı", "Üstüne küçük bir çizim ekledim.",
+         ("aksam",), lambda g: cikartma(g[0]),
          beyanli=True, eylemler=("c2pa.drawing",), gelir=260.0),
-    Adim("eski", "Eski bir kareden kesit", "Bir köşesini alıp yazı ekledim.",
-         ("Eski bir kare",), lambda g: kirp_yaz(g[0]),
+    Adim("eski_kesit", "Eski bir kareden kesit", "Bir köşesini alıp yazı ekledim.",
+         ("eski",), lambda g: kirp_yaz(g[0]),
          beyanli=False, gelir=190.0),
-    Adim("renkler", "Renkler ama şaka", "Klasik şablon, kaynak belli.",
-         ("Renkler",), lambda g: meme(g[0]),
+    Adim("renkler_meme", "Renkler ama şaka", "Klasik şablon, kaynak belli.",
+         ("renkler",), lambda g: meme(g[0]),
          beyanli=True, eylemler=("c2pa.edited",), gelir=330.0),
 )
+assert not {a.anahtar for a in ADIMLAR} & set(KORPUS_YUVALARI)
 
 
 # Kaynaklarinin hepsi ozgun zenginlestirme icerigi olan adim yeni bir zincir baslatir.
@@ -225,7 +241,26 @@ def _tl(x: float) -> str:
 
 # ---------------------------------------------------------------------------
 def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--foto-klasoru", type=Path, default=None,
+                    help="demo_zenginlestir.py'ye verilen fotoğraf klasörü (ör. data/demo_fotolar)")
+    args = ap.parse_args()
     settings = get_settings()
+    if args.foto_klasoru:
+        yuvalar = {f.anahtar: f.baslik for f in demo_fotolar.foto_listesi(args.foto_klasoru)
+                   if f.anahtar in KORPUS_YUVALARI}
+        ustyazi = demo_fotolar.zincir_ustyazilari(args.foto_klasoru)
+        bilinmeyen = set(ustyazi) - {a.anahtar for a in ADIMLAR}
+        if bilinmeyen:
+            print(f"zincirler.csv: bilinmeyen adım {sorted(bilinmeyen)}")
+            return 1
+        for adim in ADIMLAR:
+            if adim.anahtar in ustyazi:
+                adim.baslik, adim.aciklama = ustyazi[adim.anahtar]
+            else:
+                print(f"Uyarı: \"{adim.anahtar}\" için zincirler.csv satırı yok; başlık \"{adim.baslik}\" kalıyor.")
+    else:
+        yuvalar = dict(KORPUS_YUVALARI)
     if _backend_calisiyor():
         print("Backend çalışıyor (127.0.0.1:8000). Önce sunucuyu kapatın.")
         return 2
@@ -252,9 +287,14 @@ def main() -> int:
             select(Content).where(Content.owner_id.in_([u.id for u in kullanicilar.values()]))
         )
     }
-    eksik = {k for a in ADIMLAR for k in a.kaynaklar if k not in ek_icerikler and k not in {b.anahtar for b in ADIMLAR}}
+    adim_anahtarlari = {b.anahtar for b in ADIMLAR}
+    eksik = sorted(
+        f"{k} ({yuvalar.get(k, 'liste.csv içinde atanmamış')})"
+        for a in ADIMLAR for k in a.kaynaklar
+        if k not in adim_anahtarlari and yuvalar.get(k) not in ek_icerikler
+    )
     if eksik:
-        print(f"Kaynak içerik bulunamadı: {sorted(eksik)}")
+        print(f"Kaynak içerik bulunamadı: {eksik}")
         return 1
 
     print(f"Veritabanı: {settings.database_url}")
@@ -274,7 +314,7 @@ def main() -> int:
     try:
         basla = time.perf_counter()
         for sira, adim in enumerate(ADIMLAR):
-            kaynaklar = [anahtarla.get(k) or ek_icerikler[k] for k in adim.kaynaklar]
+            kaynaklar = [anahtarla.get(k) or ek_icerikler[yuvalar[k]] for k in adim.kaynaklar]
             gorseller = [cv2.imread(k.file_path) for k in kaynaklar]
             veri = _jpeg(adim.donusum(gorseller))
 

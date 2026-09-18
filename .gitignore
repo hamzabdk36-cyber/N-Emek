@@ -20,6 +20,8 @@ data/uploads/
 data/poc/
 # Canli demo dosyalari: scripts/demo_hazirla.py calisan sistemden uretir.
 data/demo/
+# Ekibin demo fotograflari: kisisel, depoya girmez (scripts/demo_fotolar.py)
+data/demo_fotolar/
 data/yedek/
 data/index/
 # Degerlendirme ara ciktilari: yayinlanmis korpus, FAISS indeksi, sorgu tamponu.

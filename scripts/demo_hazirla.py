@@ -43,6 +43,8 @@ if hasattr(sys.stdout, "reconfigure"):
 import cv2
 import numpy as np
 
+import demo_fotolar
+
 KOK = Path(__file__).resolve().parents[1]
 HEDEF = KOK / "data" / "demo"
 KORPUS = KOK / "data" / "raw"
@@ -52,6 +54,8 @@ ILGISIZ = "kaynak-bul-ilgisiz.jpg"
 # Korpusun 4. gorseli (indeks 3) altin senaryonun kaynagi; 11. gorsel demo
 # verisinde indekslenmiyor. Docker 24 gorsel indirdigi icin ikisi de orada da var.
 ILGISIZ_SIRA = 10
+# data/demo_fotolar/liste.csv'de `ilgisiz` satiri varsa korpus yerine o kare
+# kullanilir: sahnede stok fotograf degil telefon fotografi sorgulanir.
 # Isitilmis sorgunun ust siniri. Olculen 0,3-0,4 sn; 1,5 sn'yi asmasi bir
 # seylerin ters gittigini gosterir (or. "localhost" gecikmesi, CPU'ya dusus).
 ISINMIS_SINIR_MS = 1500
@@ -95,6 +99,11 @@ def turev_uret(gorsel: np.ndarray) -> np.ndarray:
     return cv2.resize(kirpik, None, fx=0.8, fy=0.8)
 
 
+def ilgisiz_gorsel(korpus: list[Path]) -> np.ndarray:
+    yol = demo_fotolar.ilgisiz_yolu()
+    return demo_fotolar.foto_oku(yol) if yol else cv2.imread(str(korpus[ILGISIZ_SIRA]))
+
+
 def jpeg(gorsel: np.ndarray) -> bytes:
     ok, tampon = cv2.imencode(".jpg", gorsel, [cv2.IMWRITE_JPEG_QUALITY, 88])
     if not ok:
@@ -131,7 +140,7 @@ def main() -> int:
     HEDEF.mkdir(parents=True, exist_ok=True)
     dosyalar = {
         TUREV: jpeg(turev_uret(kaynak_gorsel)),
-        ILGISIZ: jpeg(cv2.imread(str(korpus[ILGISIZ_SIRA]))),
+        ILGISIZ: jpeg(ilgisiz_gorsel(korpus)),
     }
     for ad, veri in dosyalar.items():
         (HEDEF / ad).write_bytes(veri)

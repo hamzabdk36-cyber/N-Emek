@@ -30,6 +30,19 @@ Kullanim (backend kapaliyken)
 -----------------------------
     .venv/Scripts/python.exe scripts/demo_zenginlestir.py            # 20 icerik
     .venv/Scripts/python.exe scripts/demo_zenginlestir.py --adet 15
+    .venv/Scripts/python.exe scripts/demo_zenginlestir.py --foto-klasoru data/demo_fotolar
+
+`--foto-klasoru` verilirse korpus yerine ekibin telefon fotograflari ve
+`liste.csv`'deki basliklar kullanilir (bkz. `scripts/demo_fotolar.py`).
+
+`--degistir`: ek kullanicilar zaten varsa onlarin butun iceriklerini (onceki
+zenginlestirme ve `demo_zincirler.py` turevleri) silip yenilerini ekler.
+Altin uclu sifirlanmaz; `seed_demo.py --reset` olcumu yeniden yaptigi icin
+Emek Karti sayilari kuruluma gore bir iki binde kayabiliyor (19 Eyl'de
+%68,1 -> %67,9 goruldu). Karsilastirma bu kipte yalnizca altin iceriklere
+degen baglar uzerinden yapilir.
+
+    .venv/Scripts/python.exe scripts/demo_zenginlestir.py --foto-klasoru data/demo_fotolar --degistir
 """
 
 from __future__ import annotations
@@ -52,6 +65,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
+sys.path.insert(0, str(ROOT / "scripts"))
 
 from sqlalchemy import or_, select  # noqa: E402
 
@@ -67,10 +81,12 @@ from app.models.entities import (  # noqa: E402
     User,
 )
 from app.provenance import recovery  # noqa: E402
+from app.services import erasure as erasure_service  # noqa: E402
 from app.services import ingest as ingest_service  # noqa: E402
 from app.services import payout as payout_service  # noqa: E402
 from app.services.registry import get_index_service  # noqa: E402
 
+import demo_fotolar  # noqa: E402
 import demo_hazirla  # noqa: E402
 
 RAW = ROOT / "data" / "raw"
@@ -157,12 +173,14 @@ def geri_yukle(settings, yedek: Path) -> None:
 # ---------------------------------------------------------------------------
 # Degismemesi gerekenler
 # ---------------------------------------------------------------------------
-def olc(session, altin: dict[str, Content]) -> dict:
+def olc(session, altin: dict[str, Content], yalniz_altin: bool = False) -> dict:
     """Altin senaryonun sayisal izi. Once ve sonra birebir ayni olmali."""
+    altin_id = {c.id for c in altin.values()}
     baglar = sorted(
         (e.parent_id, e.child_id, e.stage.value, e.status.value,
          round(e.confidence, 6), None if e.visual_coverage is None else round(e.visual_coverage, 6))
         for e in session.scalars(select(AttributionEdge))
+        if not yalniz_altin or e.parent_id in altin_id or e.child_id in altin_id
     )
     odemeler = sorted(
         (p.content_id, p.user_id or "", round(p.share, 6), round(p.amount, 2))
@@ -202,7 +220,7 @@ def canli_demo_kontrolu(index, altin: dict[str, Content], korpus: list[Path]) ->
     turev = _sorgula(index, _jpeg(demo_hazirla.turev_uret(kaynak)))
     if altin[demo_hazirla.KAYNAK_BASLIK].id not in {l.parent_content_id for l in turev.links}:
         sorun.append(f"türevde \"{demo_hazirla.KAYNAK_BASLIK}\" bulunmadı")
-    ilgisiz = _sorgula(index, _jpeg(cv2.imread(str(korpus[demo_hazirla.ILGISIZ_SIRA]))))
+    ilgisiz = _sorgula(index, _jpeg(demo_hazirla.ilgisiz_gorsel(korpus)))
     if ilgisiz.links:
         sorun.append(f"ilgisiz görselde {len(ilgisiz.links)} bağ önerildi")
     return sorun
@@ -211,7 +229,12 @@ def canli_demo_kontrolu(index, altin: dict[str, Content], korpus: list[Path]) ->
 # ---------------------------------------------------------------------------
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--adet", type=int, default=20, help="eklenecek içerik sayısı")
+    ap.add_argument("--adet", type=int, default=None,
+                    help="eklenecek içerik sayısı (varsayılan: korpusta 20, fotoğraf klasöründe listenin tamamı)")
+    ap.add_argument("--foto-klasoru", type=Path, default=None,
+                    help="korpus yerine liste.csv'li fotoğraf klasörü (ör. data/demo_fotolar)")
+    ap.add_argument("--degistir", action="store_true",
+                    help="ek kullanıcıların mevcut içeriklerini silip yenilerini ekle")
     args = ap.parse_args()
     settings = get_settings()
 
@@ -220,10 +243,23 @@ def main() -> int:
         print("Backend çalışıyor (127.0.0.1:8000). Önce sunucuyu kapatın.")
         return 2
     korpus = sorted(RAW.glob("*.jpg"))
-    haric = {ALTIN_KAYNAK_SIRA, demo_hazirla.ILGISIZ_SIRA}
-    adaylar = [yol for sira, yol in enumerate(korpus) if sira not in haric]
-    if len(korpus) <= demo_hazirla.ILGISIZ_SIRA or len(adaylar) < args.adet:
+    if len(korpus) <= max(ALTIN_KAYNAK_SIRA, demo_hazirla.ILGISIZ_SIRA):
         print(f"Korpus yetersiz ({len(korpus)} görsel, {RAW}). Önce: scripts/fetch_eval_images.py")
+        return 1
+    # Aday: (ad, gorseli okuyan, baslik, aciklama, sahip handle ya da "")
+    if args.foto_klasoru:
+        fotolar = [f for f in demo_fotolar.foto_listesi(args.foto_klasoru) if f.anahtar != demo_fotolar.ILGISIZ]
+        adaylar = [(f.yol.name, (lambda y=f.yol: demo_fotolar.foto_oku(y)), f.baslik, f.aciklama, f.sahip)
+                   for f in fotolar]
+        print(f"Fotoğraf klasörü: {args.foto_klasoru} ({len(adaylar)} kare)")
+    else:
+        haric = {ALTIN_KAYNAK_SIRA, demo_hazirla.ILGISIZ_SIRA}
+        adaylar = [(yol.name, (lambda y=yol: cv2.imread(str(y))),
+                    BASLIKLAR[sira % len(BASLIKLAR)], ACIKLAMALAR[sira % len(ACIKLAMALAR)], "")
+                   for sira, yol in enumerate(y for i, y in enumerate(korpus) if i not in haric)]
+    adet = args.adet or (len(adaylar) if args.foto_klasoru else 20)
+    if len(adaylar) < adet:
+        print(f"Aday yetersiz: {len(adaylar)} görsel, {adet} isteniyor.")
         return 1
 
     create_schema()
@@ -236,9 +272,14 @@ def main() -> int:
             return 1
         altin[baslik] = icerik
     handles = [h for h, _, _ in KULLANICILAR]
-    if session.scalar(select(User).where(User.handle.in_(handles))) is not None:
+    mevcut = {u.handle: u for u in session.scalars(select(User).where(User.handle.in_(handles)))}
+    if mevcut and not args.degistir:
         print("Zaten eklenmiş: ek kullanıcılar veritabanında var. Bir şey yapılmadı.")
+        print("  Eskilerini silip yenilerini eklemek için: --degistir")
         return 0
+    eskiler = list(session.scalars(
+        select(Content).where(Content.owner_id.in_([u.id for u in mevcut.values()]))
+    )) if mevcut else []
 
     print(f"Veritabanı: {settings.database_url}")
     yedek = yedekle(settings)
@@ -246,7 +287,7 @@ def main() -> int:
 
     index = get_index_service()
     index.rebuild(session)
-    once = olc(session, altin)
+    once = olc(session, altin, yalniz_altin=bool(mevcut))
     print(f"Önce: {len(once['baglar'])} bağ, {len(once['odemeler'])} ödeme, indekste {len(index)} içerik")
 
     # --- Ekleme -----------------------------------------------------------
@@ -254,27 +295,34 @@ def main() -> int:
     eklenen: list[Content] = []
     atlanan: list[str] = []
     try:
-        kullanicilar = [User(handle=h, display_name=ad, accent=renk) for h, ad, renk in KULLANICILAR]
+        if eskiler:
+            for icerik in eskiler:
+                erasure_service.delete_content(session, icerik)
+            index.rebuild(session)
+            print(f"Silindi: ek kullanıcıların {len(eskiler)} eski içeriği; indekste {len(index)} içerik")
+        kullanicilar = [mevcut.get(h) or User(handle=h, display_name=ad, accent=renk)
+                        for h, ad, renk in KULLANICILAR]
         session.add_all(kullanicilar)
         session.commit()
+        handle_ile = {u.handle: u for u in kullanicilar}
 
         en_eski = min(c.created_at for c in altin.values())
         basla = time.perf_counter()
-        for yol in adaylar:
-            if len(eklenen) >= args.adet:
+        for ad, oku, baslik, aciklama, sahip in adaylar:
+            if len(eklenen) >= adet:
                 break
-            veri = _jpeg(cv2.imread(str(yol)))
+            veri = _jpeg(oku())
             on = _sorgula(index, veri)
             if on.links:
-                atlanan.append(f"{yol.name} ({len(on.links)} bağ)")
+                atlanan.append(f"{ad} ({len(on.links)} bağ)")
                 continue
             sira = len(eklenen)
             sonuc = ingest_service.ingest(
                 session, index,
                 raw_bytes=veri,
-                owner=kullanicilar[sira % len(kullanicilar)],
-                title=BASLIKLAR[sira % len(BASLIKLAR)],
-                caption=ACIKLAMALAR[sira % len(ACIKLAMALAR)],
+                owner=handle_ile.get(sahip) or kullanicilar[sira % len(kullanicilar)],
+                title=baslik,
+                caption=aciklama,
                 campaign_id=None,
             )
             if sonuc.created_edges:
@@ -283,14 +331,14 @@ def main() -> int:
             sonuc.content.created_at = en_eski - dt.timedelta(hours=sira + 1)
             session.commit()
             eklenen.append(sonuc.content)
-            print(f"  + {sonuc.content.title:<18} {yol.name}")
+            print(f"  + {sonuc.content.title:<18} {ad}")
         print(f"Ekleme: {len(eklenen)} içerik, {time.perf_counter() - basla:.0f} sn")
 
         # --- Sonra dogrulama ----------------------------------------------
-        if len(eklenen) < args.adet and not sorun:
+        if len(eklenen) < adet and not sorun:
             sorun.append(f"yalnızca {len(eklenen)} uygun aday bulundu")
         session.expire_all()
-        sonra = olc(session, altin)
+        sonra = olc(session, altin, yalniz_altin=bool(mevcut))
         sorun += [f"değişti: {anahtar}" for anahtar in fark(once, sonra)]
         yeni = [c.id for c in eklenen]
         bag = session.scalar(
@@ -318,8 +366,9 @@ def main() -> int:
     index.save_snapshot()
     if atlanan:
         print(f"Atlanan adaylar (bağ çıktı): {', '.join(atlanan)}")
+    silinen = f"{len(eskiler)} eski içerik silindi, " if eskiler else ""
     print(
-        f"\nTamam: {len(eklenen)} içerik ve {len(KULLANICILAR)} kullanıcı eklendi, "
+        f"\nTamam: {silinen}{len(eklenen)} içerik eklendi, "
         f"indekste {len(index)} içerik. Altın senaryo sayıları aynı."
     )
     print(f"Geri dönmek gerekirse (backend kapalıyken) yedek: {yedek}")
