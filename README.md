@@ -224,3 +224,10 @@ Dürüstlük, jüri karşısındaki güvenilirliğin temeli; bu yüzden çalış
   varsayımla (`unverified_coverage`) çalışır ve kaynak yeniden ölçüm isteyebilir.
 - Prototip **tek makinede, SQLite ve kaba kuvvet FAISS** ile çalışır. Ölçekleme yolu
   `docs/MIMARI.md` bölüm 6'da.
+
+---
+
+## Ekip
+
+- [@hamzabdk36-cyber](https://github.com/hamzabdk36-cyber)
+- [@arweniiaa](https://github.com/arweniiaa) — Berra Özer
