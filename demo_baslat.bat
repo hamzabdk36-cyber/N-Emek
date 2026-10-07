@@ -127,5 +127,6 @@ exit /b 0
 
 :hata
 echo.
+echo Bu bilgisayarda ilk kez çalıştırıyorsanız önce kurulum.bat'a çift tıklayın.
 pause
 exit /b 1

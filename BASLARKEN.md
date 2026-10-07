@@ -86,6 +86,21 @@ Docker yoksa aşağıdaki elle kurulum da çalışıyor.
 
 ---
 
+## Docker yoksa, Windows'ta tek tık
+
+Bilgisayarda hiçbir şey kurulu olmasa da olur. Proje klasöründe:
+
+1. **`kurulum.bat`**'a çift tıkla. Python 3.13 ve Node yoksa `winget` ile kurar, sonra
+   pencereyi kapatıp betiği **bir kez daha** çalıştırmanı ister (yeni kurulan programlar
+   ancak yeni pencerede görünüyor). İkinci çalıştırmada aşağıdaki dört adımın hepsini
+   kendisi yapar: sanal ortam, PyTorch (ekran kartı varsa CUDA, yoksa CPU), arayüz
+   paketleri, sertifikalar, 24 test görseli, demo verisi. İlk sefer 10–20 dakika,
+   ~5 GB disk ve internet ister. Yarıda kalırsa tekrar çalıştır; biten adımlar atlanır.
+2. **`demo_baslat.bat`**'a çift tıkla. Backend ve arayüzü açar, modeli ısıtır,
+   tarayıcıda **http://localhost:5173** sekmelerini açar.
+
+---
+
 ## Gerekenler
 
 - **Python 3.13** ve **Node 24**

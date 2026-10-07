@@ -8,3 +8,6 @@
 Dockerfile text eol=lf
 *.conf text eol=lf
 docker-compose.yml text eol=lf
+
+# Windows toplu dosyalari CRLF ister: LF ile etiket/goto satirlari kayabiliyor.
+*.bat text eol=crlf
